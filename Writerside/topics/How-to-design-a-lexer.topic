@@ -27,7 +27,7 @@
         </list>
         <p>
             No escape sequences though. As these are not required in the requirements of the project.
-            The idea is then to make so that the string is parsed by splitting the string by whitespaces,
+            The idea is then to make so that the string is parsed by splitting the string by whitespace,
             unless they are in quotes, as well as by special characters.
         </p>
     </chapter>

@@ -1,0 +1,2 @@
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qand\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qare responsible for breaking down the user input into tokens and analyzing them to determine their grammatical structure.\\E$"}
