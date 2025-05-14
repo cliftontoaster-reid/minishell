@@ -4,7 +4,10 @@
 
 <instance-profile id="m"
                  name="Minishell"
-                 start-page="starter-topic.md">
+                  start-page="About-Minishell.topic">
 
-    <toc-element topic="starter-topic.md"/>
+    <toc-element topic="About-Minishell.topic"/>
+    <toc-element toc-title="Lexer">
+        <toc-element topic="How-to-design-a-lexer.topic"/>
+    </toc-element>
 </instance-profile>

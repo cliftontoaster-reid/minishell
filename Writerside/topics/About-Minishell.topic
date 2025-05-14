@@ -5,5 +5,110 @@
        xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
        title="About Minishell" id="About-Minishell">
 
-    <p>Start typing here...</p>
+    <p>
+        Minishell is a small project in School 42 that aims to create an amateur of a shell.
+        It is therefore a recreation of the Unix shell, which is a program that allows users to
+        interact with the operating system through a command line interface.
+    </p>
+    <p>
+        The project is designed to help students learn about the inner workings of a shell,
+        including process management, signal handling, and input/output redirection.
+        It is a challenging project that requires a deep understanding of Unix systems and
+        programming in C.
+    </p>
+    <p>
+        Therefore, comes our goal of making computers able to understand more than two things:
+        1 and 0.
+    </p>
+    <p>
+        To do this our minishell will need multiple things, including:
+    </p>
+    <deflist collapsible="true" default-state="collapsed">
+        <def title="A lexer" id="a-lexer">
+            <p>
+                A lexer is a program that takes a string of text and breaks it down into
+                smaller pieces called tokens. Allowing for easier processing of the text
+                in subsequent steps.
+            </p>
+            <p>
+                In the context of a shell, a lexer is used to parse user input and
+                identify the different components of a command, such as the command itself,
+                its arguments, and any special characters or operators such as quotes or pipes.
+            </p>
+        </def>
+        <def title="A parser" id="a-parser">
+            <p>
+                A parser is a program that takes a sequence of tokens produced by a lexer
+                and analyzes them to determine their grammatical structure. It checks whether
+                the tokens follow the rules of the language and generates a parse tree or
+                abstract syntax tree (AST) that represents the structure of the input.
+            </p>
+            <p>
+                In the context of a shell, a parser is used to analyze the tokens produced
+                by the lexer and determine the meaning of the command. It checks for syntax errors,
+                identifies the command and its arguments, and generates a data structure that
+                represents the command and its components.
+            </p>
+        </def>
+        <def title="A command executor" id="a-command-executor">
+            <p>
+                A command executor is a program that takes a command and its arguments
+                and executes it. It is responsible for creating a new process to run the
+                command, setting up the environment, and handling input/output redirection.
+            </p>
+            <p>
+                In the context of a shell, a command executor is used to run the commands
+                entered by the user. It creates a new process for each command, sets up
+                the environment variables, and handles any input/output redirection specified
+                by the user.
+            </p>
+        </def>
+        <def title="A signal handler" id="a-signal-handler">
+            <p>
+                A signal handler is a function that is called in response to a specific
+                signal sent to a process. Signals are used in Unix systems to notify
+                processes of events such as interrupts, termination requests, or other
+                conditions that require attention.
+            </p>
+            <p>
+                In the context of a shell, a signal handler is used to manage signals
+                sent to the shell process. For example, it can handle the Ctrl+C signal
+                (SIGINT) to interrupt a running command, or the Ctrl+Z signal (SIGTSTP)
+                to suspend a command. The signal handler can also be used to manage
+                background processes and handle termination requests.
+            </p>
+        </def>
+    </deflist>
+    <p>
+        Though these four components can be categorized into two groups:
+    </p>
+    <deflist collapsible="true" default-state="collapsed">
+        <def title="The parser" id="the-lexer-and-parser">
+            <p>
+                <tooltip term="Lexer">The lexer</tooltip> and <tooltip term="Parser">parser</tooltip> are
+                responsible for breaking down the user input into tokens and analyzing them to determine
+                their grammatical structure. They work together to create a data structure that represents
+                the command and its components, which can then be passed to the command executor.
+            </p>
+        </def>
+        <def title="The executor" id="the-command-executor-and-signal-handler">
+            <p>
+                The command executor and signal handler are responsible for executing
+                the commands and managing signals. They work together to create new
+                processes, set up the environment, and handle input/output redirection.
+            </p>
+        </def>
+    </deflist>
+    <p>
+        In summary, the goal of the minishell project is to create a simple shell
+        that can parse and execute commands, handle input/output redirection, and
+        manage processes and signals. It is a challenging project that requires a
+        deep understanding of Unix systems and programming in C.
+    </p>
+
+    <seealso>
+        <category ref="related">
+            <a href="How-to-design-a-lexer.topic" />
+        </category>
+    </seealso>
 </topic>

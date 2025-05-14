@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE terms SYSTEM "https://resources.jetbrains.com/writerside/1.0/glossary.dtd">
+<terms>
+    <term name="Lexer">A lexer is a program that takes a string of text and breaks it down into
+        smaller pieces called tokens. Allowing for easier processing of the text in subsequent steps.</term>
+    <term name="Parser">A parser is a program that takes a string of tokens and builds a data structure
+        (usually a tree) that represents the structure of the text. This data structure can then be used for
+        various purposes, such as syntax highlighting or code generation.</term>
+</terms>

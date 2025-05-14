@@ -5,5 +5,31 @@
        xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
        title="How to design a lexer" id="How-to-design-a-lexer">
 
-    <p>Start typing here...</p>
+    <p>
+        The lexer is a crucial component of the shell, as it is responsible for breaking
+        down user input into manageable pieces. It is important to design the lexer carefully
+        to ensure that it can handle all possible input cases and produce accurate tokens.
+    </p>
+    <chapter title="Designing the Lexer" id="designing-the-lexer">
+        <p>
+            The lexer should be designed to handle a variety of input cases, including:
+        </p>
+        <list>
+            <li>
+                Simple tokens, such as a letter or a number.
+            </li>
+            <li>
+                Grouped tokens such as a string inside quotes. Single quotes using the content literally,
+                and double quotes evaluating variables.
+            </li>
+            <li>
+                Special characters, such as pipes or redirection operators.
+            </li>
+        </list>
+        <p>
+            No escape sequences though. As these are not required in the requirements of the project.
+            The idea is then to make so that the string is parsed by splitting the string by whitespaces,
+            unless they are in quotes, as well as by special characters.
+        </p>
+    </chapter>
 </topic>
