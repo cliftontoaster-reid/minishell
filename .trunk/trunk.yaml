@@ -24,6 +24,32 @@ lint:
     - prettier@3.5.3
     - trufflehog@3.88.29
     - yamllint@1.37.1
+    - Norminette
+    - c_formatter_42
+  definitions:
+    - name: Norminette
+      files:
+        - c-header
+        - c-source
+      commands:
+        - name: norminette
+          run: |
+            bash -c 'output=$(python3 -m norminette "${target}"); echo "$output"; if echo "$output" | grep -q "ERROR"; then exit 1; else exit 0; fi'
+          output: pass_fail
+          success_codes: [0, 1]
+          prepare_run: python3 -m pip install norminette --user --upgrade
+    - name: c_formatter_42
+      formatter: true
+      files:
+        - c-header
+        - c-source
+      commands:
+        - name: format
+          run: python3 -m c_formatter_42 ${target}
+          output: pass_fail
+          success_codes: [0, 1]
+          prepare_run: python3 -m pip install c_formatter_42 --user --upgrade
+
 actions:
   enabled:
     - trunk-announce
