@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   shared.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/14 14:24:32 by lfiorell@st       #+#    #+#             */
+/*   Updated: 2025/05/14 14:25:13 by lfiorell@st      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -5,7 +16,8 @@
 const int		g_status_code = 0;
 
 /// @brief The structure to hold the environment variables
-/// @note This structure is used to create a linked list of environment variables
+/// @note This structure is used to create a linked list
+///       of environment variables
 typedef struct s_env
 {
 	/// @brief The key of the environment variable
@@ -30,7 +42,8 @@ char			*getenv(const char *key);
 /// @brief Set the value of the environment variable
 /// @param key The key of the environment variable
 /// @param value The value to set
-/// @note The caller is responsible for freeing the value string if it was dynamically allocated
+/// @note The caller is responsible for freeing the value string
+///       if it was dynamically allocated
 void			setenv(const char *key, const char *value);
 
 /// @brief Unset the environment variable
@@ -59,7 +72,8 @@ typedef struct s_argument
 {
 	/// @brief The type of the argument
 	t_argtype	type;
-	/// @brief The key or value of the argument if it is not ARG_NONE or ARG_STATUS
+	/// @brief The key or value of the argument if it is not
+	///        `ARG_NONE` or `ARG_STATUS`
 	char		*value;
 }				t_argument;
 
@@ -139,3 +153,9 @@ bool			has_pipe_out(t_command *cmd);
 /// @param cmd The command to inspect
 /// @return true if soft redirect is set, false otherwise
 bool			has_soft_redirect(t_command *cmd);
+
+/// @brief Runs the commands
+/// @param cmd The commands to run
+/// @return The status code of the command
+/// @note This function will execute the command and return the status code
+int				run_commands(t_command *cmd);
