@@ -2,7 +2,7 @@ CC       = clang
 INC_DIR  = ./include
 SRC_DIR  = ./src
 OBJ_DIR  = ./target
-CFLAGS   = -Wall -Wextra -Werror -O3 -g3 -std=c17 -I$(INC_DIR) -pipe
+CFLAGS   = -Wall -Wextra -Werror -O3 -g3 -std=c17 -I$(INC_DIR) -pipe -MMD -MP
 LDFLAGS += -O3 -g3 -std=c17 -pipe
 NAME     = minishell
 SRCS     = $(wildcard $(SRC_DIR)/*.c)
