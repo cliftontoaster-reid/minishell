@@ -25,7 +25,7 @@ jobs:
 
       - name: Run Norminette
         run: |
-          norminette include/**/*.h src/**/*.c
+          python3 -m norminette --use-gitignore
 
       - name: Build project
         run: make all
