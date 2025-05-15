@@ -52,6 +52,7 @@ $(_LIB_FT):
 	$(MAKE) -C $(LFT_DIR) OBJ_DIR=$(abspath $(OBJ_DIR))/libft/build
 
 $(CRIT_PC):
+  @mkdir -p $(OBJ_DIR)
 	@wget https://github.com/Snaipe/Criterion/releases/download/v2.4.2/criterion-2.4.2-linux-x86_64.tar.xz -O $(CRIT_DIR).tar.xz;
 	@tar -xf $(CRIT_DIR).tar.xz -C $(OBJ_DIR)
 	@rm $(CRIT_DIR).tar.xz
