@@ -19,14 +19,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Norminette
-        run: |
-          python3 -m pip install norminette --upgrade --user
-
-      - name: Run Norminette
-        run: |
-          python3 -m norminette --use-gitignore
-
       - name: Build project
         run: make all
 
@@ -39,3 +31,17 @@ jobs:
           name: build-target
           path: target
           retention-days: 2
+  format_check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Norminette
+        run: |
+          python3 -m pip install norminette --upgrade --user
+
+      - name: Run Norminette
+        run: |
+          python3 -m norminette --use-gitignore
