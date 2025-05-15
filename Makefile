@@ -29,7 +29,7 @@ CC       = gcc
 endif
 
 # If mold is installed, use it as the linker
-ifeq ($(shell which mold),)
+ifneq ($(shell which mold),)
 LDFLAGS += -fuse-ld=mold
 endif
 

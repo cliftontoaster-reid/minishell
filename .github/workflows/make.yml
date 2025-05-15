@@ -22,7 +22,8 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y make clang wget tar gzip
+          sudo apt-get purge -y man-db
+          sudo apt-get install -y make clang wget tar gzip mold
 
       - name: Build project
         run: make all
