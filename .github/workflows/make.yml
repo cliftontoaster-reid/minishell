@@ -1,0 +1,41 @@
+name: CI
+permissions:
+  contents: read
+  pull-requests: read
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Norminette
+        run: |
+          python3 -m pip install norminette --upgrade --user
+
+      - name: Run Norminette
+        run: |
+          norminette include/**/*.h src/**/*.c
+
+      - name: Build project
+        run: make all
+
+      - name: Run tests
+        run: make run_test
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-target
+          path: target
+          retention-days: 2
