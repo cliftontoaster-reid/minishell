@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 15:41:18 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/05/15 14:44:21 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/05/15 18:14:30 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ bool	end_token(t_lexer *lexer)
 	}
 	ft_lstadd_back(&lexer->token_list, new_node);
 	lexer->state = LEXER_NONE;
+	lexer->start = lexer->pos;
 	return (true);
 }
 
@@ -70,6 +71,7 @@ void	lexer_special(t_lexer *lexer)
 	t_token_type	type;
 	bool			special;
 
+	type = TOKEN_NONE;
 	special = false;
 	if (lexer->text[lexer->pos] == '|')
 		type = TOKEN_PIPE;
@@ -108,6 +110,7 @@ void	lexer_special(t_lexer *lexer)
 	ft_lstadd_back(&lexer->token_list, new_node);
 	if (special)
 		lexer->pos++;
+	lexer->start = lexer->pos + 1;
 }
 
 /// @brief Handle the default lexer state when no token is in progress.
@@ -133,9 +136,6 @@ void	lexer_special(t_lexer *lexer)
 /// @param lexer Pointer to the lexer structure
 void	lexer_none(t_lexer *lexer)
 {
-	t_token_type	type;
-
-	type = TOKEN_NONE;
 	if (!ft_ciswhite(lexer->text[lexer->pos]))
 	{
 		end_token(lexer);
@@ -162,11 +162,11 @@ void	lexer_none(t_lexer *lexer)
 
 void	lexer_word(t_lexer *lexer)
 {
-	t_token_type	type;
-
-	type = TOKEN_NONE;
 	if (ft_ciswhite(lexer->text[lexer->pos]))
+	{
 		end_token(lexer);
+		lexer->start = lexer->pos;
+	}
 	else if (ft_strchr(SPECIAL_CHARS, lexer->text[lexer->pos]))
 	{
 		end_token(lexer);
@@ -183,11 +183,6 @@ void	lexer_word(t_lexer *lexer)
 		end_token(lexer);
 		lexer->state = LEXER_UNI;
 		lexer->start = lexer->pos;
-	}
-	else
-	{
-		if (end_token(lexer) == false)
-			return ;
 	}
 	lexer->pos++;
 }
@@ -230,7 +225,7 @@ t_list	*run_lexer(t_lexer *lexer)
 			lexer->pos++;
 		if (lexer->text[lexer->pos] == '\0')
 		{
-			if (lexer->state != LEXER_NONE || lexer->state != LEXER_WORD)
+			if ((lexer->state != LEXER_NONE) && (lexer->state != LEXER_WORD))
 				return (NULL);
 			end_token(lexer);
 			break ;

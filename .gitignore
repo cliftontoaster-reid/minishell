@@ -58,5 +58,6 @@ dkms.conf
 # End of https://www.toptal.com/developers/gitignore/api/c
 
 /minishell
+/minishell_test
 /libft
 /target

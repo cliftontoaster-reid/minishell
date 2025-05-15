@@ -1,11 +1,18 @@
 CC       = clang
 INC_DIR  = ./include
 SRC_DIR  = ./src
+TEST_DIR = ./.test
 OBJ_DIR  = ./target
+TEST_OBJD= $(OBJ_DIR)/test
 NAME     = minishell
+NTEST    = minishell_test
 
 SRCS     = $(shell find $(SRC_DIR) -type f -name '*.c')
+# add the source files from SRCS to the test files excluding 'src/main.c'
+TESTS = $(shell find $(TEST_DIR) -type f -name '*.c')
+
 OBJS     = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRCS))
+TESTOBJS = $(patsubst $(TEST_DIR)/%.c,$(TEST_OBJD)/%.o,$(TESTS)) $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(filter-out $(SRC_DIR)/main.c,$(SRCS)))
 
 LFT_DIR	 = $(OBJ_DIR)/libft/
 _LIB_FT	 = $(LFT_DIR)libft.a
@@ -32,9 +39,17 @@ $(NAME): $(CRIT_PC) $(_LIB_FT) $(OBJS)
 	@echo "$(CC) $(LDFLAGS) -o $@ $^"
 	@$(CC) $(LDFLAGS) -o $@ $(OBJS) $(_LIB_FT)
 
+run_test: test
+	@./$(NTEST) --verbose
+test: $(NTEST)
+
+$(NTEST): $(CRIT_PC) $(_LIB_FT) $(TESTOBJS)
+	@echo "$(CC) $(LDFLAGS) -o $@ $^"
+	@$(CC) $(LDFLAGS) -o $@ $(TESTOBJS) $(_LIB_FT)
+
 $(_LIB_FT):
 	@if [ ! -d $(LFT_DIR) ]; then git clone https://github.com/cliftontoaster-reid/libft $(LFT_DIR); fi
-	$(MAKE) -C $(LFT_DIR) OBJ_DIR=$(abspath $(OBJ_DIR))/libft
+	$(MAKE) -C $(LFT_DIR) OBJ_DIR=$(abspath $(OBJ_DIR))/libft/build
 
 $(CRIT_PC):
 	@wget https://github.com/Snaipe/Criterion/releases/download/v2.4.2/criterion-2.4.2-linux-x86_64.tar.xz -O $(CRIT_DIR).tar.xz;
@@ -42,6 +57,12 @@ $(CRIT_PC):
 	@rm $(CRIT_DIR).tar.xz
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+# Create the parent directory of the object file if it doesn't exist
+	@mkdir -p $(dir $@)
+	@echo "$(CC) $(CFLAGS) -c $< -o $@"
+	@$(CC) $(CFLAGS) -c $< -o $@
+
+$(TEST_OBJD)/%.o: $(TEST_DIR)/%.c
 # Create the parent directory of the object file if it doesn't exist
 	@mkdir -p $(dir $@)
 	@echo "$(CC) $(CFLAGS) -c $< -o $@"
