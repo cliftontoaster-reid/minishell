@@ -6,13 +6,14 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 15:41:18 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/05/14 16:38:42 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/05/15 10:03:42 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
 
-/// @brief Finalize the current token in the lexer and append it to its token list
+/// @brief Finalize the current token in the lexer and append it to its
+///        token list
 /// @param lexer Pointer to the lexer containing the current state, input text,
 ///              and token list
 ///
@@ -35,16 +36,19 @@
 /// @return (true on successful token finalization and addition); false on error
 bool	end_token(t_lexer *lexer)
 {
-	char	*value;
-	t_token	*token;
-	t_list	*new_node;
+	char			*value;
+	t_token			*token;
+	t_list			*new_node;
+	t_token_type	type;
 
 	if (lexer->state == LEXER_NONE)
-		return (true);
+		type = TOKEN_NONE;
+	else
+		type = TOKEN_WORD;
 	value = ft_substr(lexer->text, lexer->start, lexer->pos - lexer->start);
 	if (value == NULL)
 		return (false);
-	token = create_token(value, TOKEN_WORD);
+	token = create_token(value, type);
 	free(value);
 	if (token == NULL)
 		return (false);
@@ -57,6 +61,53 @@ bool	end_token(t_lexer *lexer)
 	ft_lstadd_back(&lexer->token_list, new_node);
 	lexer->state = LEXER_NONE;
 	return (true);
+}
+
+void	lexer_special(t_lexer *lexer)
+{
+	t_token			*token;
+	t_list			*new_node;
+	t_token_type	type;
+	bool			special;
+
+	special = false;
+	if (lexer->text[lexer->pos] == '|')
+		type = TOKEN_PIPE;
+	else
+	{
+		if (lexer->text[lexer->pos] == '>')
+		{
+			if (lexer->text[lexer->pos + 1] == '>')
+			{
+				type = TOKEN_REDIRECT_APPEND;
+				special = true;
+			}
+			else
+				type = TOKEN_REDIRECT_OUT;
+		}
+		else if (lexer->text[lexer->pos] == '<')
+		{
+			if (lexer->text[lexer->pos + 1] == '<')
+			{
+				type = TOKEN_REDIRECT_HEREDOC;
+				special = true;
+			}
+			else
+				type = TOKEN_REDIRECT_IN;
+		}
+	}
+	token = create_token(ft_substr(lexer->text, lexer->pos, 1 + special), type);
+	if (token == NULL)
+		return ;
+	new_node = ft_lstnew(token);
+	if (new_node == NULL)
+	{
+		free_token(token);
+		return ;
+	}
+	ft_lstadd_back(&lexer->token_list, new_node);
+	if (special)
+		lexer->pos++;
 }
 
 /// @brief Handle the default lexer state when no token is in progress.
@@ -82,73 +133,61 @@ bool	end_token(t_lexer *lexer)
 /// @param lexer Pointer to the lexer structure
 void	lexer_none(t_lexer *lexer)
 {
-	t_token			*token;
-	t_list			*new_node;
 	t_token_type	type;
-	bool			special;
+
+	type = TOKEN_NONE;
+	if (!ft_ciswhite(lexer->text[lexer->pos]))
+	{
+		end_token(lexer);
+		if (lexer->text[lexer->pos] == '"')
+		{
+			lexer->state = LEXER_DUO;
+			lexer->start = lexer->pos;
+		}
+		else if (lexer->text[lexer->pos] == '\'')
+		{
+			lexer->state = LEXER_UNI;
+			lexer->start = lexer->pos;
+		}
+		else if (ft_strchr(SPECIAL_CHARS, lexer->text[lexer->pos]))
+			lexer_special(lexer);
+		else
+		{
+			lexer->state = LEXER_WORD;
+			lexer->start = lexer->pos;
+		}
+	}
+	lexer->pos++;
+}
+
+void	lexer_word(t_lexer *lexer)
+{
+	t_token_type	type;
 
 	type = TOKEN_NONE;
 	if (ft_ciswhite(lexer->text[lexer->pos]))
+		end_token(lexer);
+	else if (ft_strchr(SPECIAL_CHARS, lexer->text[lexer->pos]))
 	{
-		lexer->pos++;
-		return ;
+		end_token(lexer);
+		lexer_special(lexer);
 	}
 	else if (lexer->text[lexer->pos] == '"')
 	{
+		end_token(lexer);
 		lexer->state = LEXER_DUO;
 		lexer->start = lexer->pos;
 	}
 	else if (lexer->text[lexer->pos] == '\'')
 	{
+		end_token(lexer);
 		lexer->state = LEXER_UNI;
 		lexer->start = lexer->pos;
 	}
-	else if (ft_strchr(SPECIAL_CHARS, lexer->text[lexer->pos]))
-	{
-		special = false;
-		if (lexer->text[lexer->pos] == '|')
-			type = TOKEN_PIPE;
-		else
-		{
-			if (lexer->text[lexer->pos] == '>')
-			{
-				if (lexer->text[lexer->pos + 1] == '>')
-				{
-					type = TOKEN_REDIRECT_APPEND;
-					special = true;
-				}
-				else
-					type = TOKEN_REDIRECT_OUT;
-			}
-			else if (lexer->text[lexer->pos] == '<')
-			{
-				if (lexer->text[lexer->pos + 1] == '<')
-				{
-					type = TOKEN_REDIRECT_HEREDOC;
-					special = true;
-				}
-				else
-					type = TOKEN_REDIRECT_IN;
-			}
-		}
-		token = create_token(ft_substr(lexer->text, lexer->pos, 1 + special),
-				type);
-		if (token == NULL)
-			return ;
-		new_node = ft_lstnew(token);
-		if (new_node == NULL)
-		{
-			free_token(token);
-			return ;
-		}
-		ft_lstadd_back(&lexer->token_list, new_node);
-		if (special)
-			lexer->pos++;
-	}
 	else
 	{
-		lexer->state = LEXER_WORD;
-		lexer->start = lexer->pos;
+		if (end_token(lexer) == false)
+			return ;
 	}
 	lexer->pos++;
 }
@@ -161,8 +200,8 @@ t_list	*run_lexer(t_lexer *lexer)
 	{
 		if (lexer->state == LEXER_NONE)
 			lexer_none(lexer);
-		// else if (lexer->state == LEXER_WORD)
-		//	lexer_word(lexer);
+		else if (lexer->state == LEXER_WORD)
+			lexer_word(lexer);
 		// else if (lexer->state == LEXER_UNI)
 		//	lexer_uni(lexer);
 		// else if (lexer->state == LEXER_DUO)
