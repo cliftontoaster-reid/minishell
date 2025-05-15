@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 15:41:18 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/05/15 10:03:42 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/05/15 14:44:21 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,6 +192,26 @@ void	lexer_word(t_lexer *lexer)
 	lexer->pos++;
 }
 
+void	lexer_uni(t_lexer *lexer)
+{
+	if (lexer->text[lexer->pos] == '\'')
+	{
+		end_token(lexer);
+		lexer->state = LEXER_NONE;
+	}
+	lexer->pos++;
+}
+
+void	lexer_duo(t_lexer *lexer)
+{
+	if (lexer->text[lexer->pos] == '"')
+	{
+		end_token(lexer);
+		lexer->state = LEXER_NONE;
+	}
+	lexer->pos++;
+}
+
 t_list	*run_lexer(t_lexer *lexer)
 {
 	if (lexer == NULL || lexer->text == NULL)
@@ -202,12 +222,19 @@ t_list	*run_lexer(t_lexer *lexer)
 			lexer_none(lexer);
 		else if (lexer->state == LEXER_WORD)
 			lexer_word(lexer);
-		// else if (lexer->state == LEXER_UNI)
-		//	lexer_uni(lexer);
-		// else if (lexer->state == LEXER_DUO)
-		//	lexer_duo(lexer);
+		else if (lexer->state == LEXER_UNI)
+			lexer_uni(lexer);
+		else if (lexer->state == LEXER_DUO)
+			lexer_duo(lexer);
 		else
 			lexer->pos++;
+		if (lexer->text[lexer->pos] == '\0')
+		{
+			if (lexer->state != LEXER_NONE || lexer->state != LEXER_WORD)
+				return (NULL);
+			end_token(lexer);
+			break ;
+		}
 	}
 	return (lexer->token_list);
 }
