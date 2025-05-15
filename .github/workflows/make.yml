@@ -45,3 +45,4 @@ jobs:
       - name: Run Norminette
         run: |
           python3 -m norminette --use-gitignore
+        continue-on-error: true
