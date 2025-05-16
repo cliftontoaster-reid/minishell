@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 15:41:18 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/05/15 18:14:30 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/05/16 14:31:25 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,12 +142,12 @@ void	lexer_none(t_lexer *lexer)
 		if (lexer->text[lexer->pos] == '"')
 		{
 			lexer->state = LEXER_DUO;
-			lexer->start = lexer->pos;
+			lexer->start = lexer->pos + 1;
 		}
 		else if (lexer->text[lexer->pos] == '\'')
 		{
 			lexer->state = LEXER_UNI;
-			lexer->start = lexer->pos;
+			lexer->start = lexer->pos + 1;
 		}
 		else if (ft_strchr(SPECIAL_CHARS, lexer->text[lexer->pos]))
 			lexer_special(lexer);
@@ -176,13 +176,13 @@ void	lexer_word(t_lexer *lexer)
 	{
 		end_token(lexer);
 		lexer->state = LEXER_DUO;
-		lexer->start = lexer->pos;
+		lexer->start = lexer->pos + 1;
 	}
 	else if (lexer->text[lexer->pos] == '\'')
 	{
 		end_token(lexer);
 		lexer->state = LEXER_UNI;
-		lexer->start = lexer->pos;
+		lexer->start = lexer->pos + 1;
 	}
 	lexer->pos++;
 }
@@ -193,6 +193,7 @@ void	lexer_uni(t_lexer *lexer)
 	{
 		end_token(lexer);
 		lexer->state = LEXER_NONE;
+		lexer->start = lexer->pos + 1;
 	}
 	lexer->pos++;
 }
@@ -203,13 +204,14 @@ void	lexer_duo(t_lexer *lexer)
 	{
 		end_token(lexer);
 		lexer->state = LEXER_NONE;
+		lexer->start = lexer->pos + 1;
 	}
 	lexer->pos++;
 }
 
 t_list	*run_lexer(t_lexer *lexer)
 {
-	if (lexer == NULL || lexer->text == NULL)
+	if (lexer == NULL || lexer->text == NULL || lexer->text[0] == '\0')
 		return (NULL);
 	while (lexer->text[lexer->pos] != '\0')
 	{
@@ -223,13 +225,9 @@ t_list	*run_lexer(t_lexer *lexer)
 			lexer_duo(lexer);
 		else
 			lexer->pos++;
-		if (lexer->text[lexer->pos] == '\0')
-		{
-			if ((lexer->state != LEXER_NONE) && (lexer->state != LEXER_WORD))
-				return (NULL);
-			end_token(lexer);
-			break ;
-		}
 	}
+	end_token(lexer);
+	if (lexer->state == LEXER_UNI || lexer->state == LEXER_DUO)
+		return (NULL);
 	return (lexer->token_list);
 }
