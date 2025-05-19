@@ -6,16 +6,18 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:52:34 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/05/14 16:33:50 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/05/19 14:43:27 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include <stdbool.h>
-#include <stddef.h>
-#include <stdint.h>
+#ifndef LEXER_H
 
-#define SPECIAL_CHARS "|><"
+# include "libft.h"
+# include <stdbool.h>
+# include <stddef.h>
+# include <stdint.h>
+
+# define SPECIAL_CHARS "|><"
 
 /// @brief The different types of tokens that can be used in the lexer
 typedef enum e_token_type
@@ -87,3 +89,5 @@ t_list				*run_lexer(t_lexer *lexer);
 void				free_lexer(t_lexer *lexer);
 
 bool				end_token(t_lexer *lexer);
+
+#endif

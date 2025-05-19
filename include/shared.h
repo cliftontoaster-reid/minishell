@@ -6,12 +6,15 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:24:32 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/05/19 14:27:42 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/05/19 15:46:08 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdbool.h>
-#include <stdint.h>
+#ifndef SHARED_H
+# define SHARED_H
+
+# include <stdbool.h>
+# include <stdint.h>
 
 const int		g_status_code = 0;
 
@@ -87,7 +90,7 @@ typedef struct s_command
 	/// @brief The arguments to pass to the command
 	char		**argv;
 	/// @brief The environment variables
-	t_env		**envp;
+	t_env		*envp;
 
 	/// @brief Flags used to determine how to handle the command
 	///
@@ -159,3 +162,5 @@ bool			has_soft_redirect(t_command *cmd);
 /// @return The status code of the command
 /// @note This function will execute the command and return the status code
 int				run_commands(t_command *cmd);
+
+#endif
