@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 14:38:32 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/05/19 15:53:46 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/05/19 17:03:46 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ typedef struct s_parser
 	t_list			*token_list;
 	t_token			*current_token;
 
-	t_lexer_state	state;
+	t_parser_state	state;
 	size_t			pos;
 	size_t			len;
 }					t_parser;

@@ -6,11 +6,13 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:49:10 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/05/14 14:49:36 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/05/19 17:05:29 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
+
+const int	g_status_code = 0;
 
 int	main(void)
 {

@@ -6,11 +6,12 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:52:34 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/05/19 14:43:27 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/05/19 16:59:14 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LEXER_H
+# define LEXER_H
 
 # include "libft.h"
 # include <stdbool.h>
