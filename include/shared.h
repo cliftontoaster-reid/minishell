@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:24:32 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/05/14 14:25:13 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/05/19 14:27:42 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ typedef struct s_command
 	/// @brief The number of arguments
 	int			argc;
 	/// @brief The arguments to pass to the command
-	s_argument	**argv;
+	char		**argv;
 	/// @brief The environment variables
 	t_env		**envp;
 
