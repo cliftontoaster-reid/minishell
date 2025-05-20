@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 17:08:16 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/05/20 12:44:28 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/05/20 12:54:14 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -663,5 +663,210 @@ Test(join_words, simple_adjacent_3)
 	token_test(get_n_token(token_list, 6), TOKEN_NONE, " ", "whitespace");
 	token_test(get_n_token(token_list, 7), TOKEN_WORD, "within", "word 5");
 	//
+	ft_lstclear(&token_list, free_tok);
+}
+// Tests based on "Bury the Light" lyrics
+Test(join_words, lyric_I_am_the_storm)
+{
+	t_lexer	lexer;
+	t_list	*token_list;
+
+	lexer.text = "I am the storm that is approaching";
+	lexer.pos = 0;
+	lexer.state = LEXER_NONE;
+	lexer.start = 0;
+	lexer.token_list = NULL;
+	token_list = run_lexer(&lexer);
+	join_words(&lexer);
+	cr_assert_eq(ft_lstsize(token_list), 14, "Expected 14 tokens, got %d",
+		ft_lstsize(token_list));
+	token_test(get_n_token(token_list, 1), TOKEN_WORD, "I", "lyric1 start");
+	token_test(get_n_token(token_list, 13), TOKEN_WORD, "approaching",
+		"lyric1 end");
+	ft_lstclear(&token_list, free_tok);
+}
+Test(join_words, lyric_Provoking)
+{
+	t_lexer	lexer;
+	t_list	*token_list;
+
+	lexer.text = "Provoking";
+	lexer.pos = 0;
+	lexer.state = LEXER_NONE;
+	lexer.start = 0;
+	lexer.token_list = NULL;
+	token_list = run_lexer(&lexer);
+	join_words(&lexer);
+	cr_assert_eq(ft_lstsize(token_list), 2, "Expected 2 tokens, got %d",
+		ft_lstsize(token_list));
+	token_test(get_n_token(token_list, 1), TOKEN_WORD, "Provoking",
+		"lyric2 single");
+	ft_lstclear(&token_list, free_tok);
+}
+Test(join_words, lyric_Black_clouds_in_isolation)
+{
+	t_lexer	lexer;
+	t_list	*token_list;
+
+	lexer.text = "Black clouds in isolation";
+	lexer.pos = 0;
+	lexer.state = LEXER_NONE;
+	lexer.start = 0;
+	lexer.token_list = NULL;
+	token_list = run_lexer(&lexer);
+	join_words(&lexer);
+	cr_assert_eq(ft_lstsize(token_list), 8, "Expected 8 tokens, got %d",
+		ft_lstsize(token_list));
+	token_test(get_n_token(token_list, 1), TOKEN_WORD, "Black", "lyric3 first");
+	token_test(get_n_token(token_list, 7), TOKEN_WORD, "isolation",
+		"lyric3 last");
+	ft_lstclear(&token_list, free_tok);
+}
+Test(join_words, lyric_I_am_reclaimer_of_my_name)
+{
+	t_lexer	lexer;
+	t_list	*token_list;
+
+	lexer.text = "I am reclaimer of my name";
+	lexer.pos = 0;
+	lexer.state = LEXER_NONE;
+	lexer.start = 0;
+	lexer.token_list = NULL;
+	token_list = run_lexer(&lexer);
+	join_words(&lexer);
+	cr_assert_eq(ft_lstsize(token_list), 12, "Expected 12 tokens, got %d",
+		ft_lstsize(token_list));
+	token_test(get_n_token(token_list, 1), TOKEN_WORD, "I", "lyric4 start");
+	token_test(get_n_token(token_list, 11), TOKEN_WORD, "name", "lyric4 end");
+	ft_lstclear(&token_list, free_tok);
+}
+Test(join_words, lyric_Born_in_flames)
+{
+	t_lexer	lexer;
+	t_list	*token_list;
+
+	lexer.text = "Born in flames";
+	lexer.pos = 0;
+	lexer.state = LEXER_NONE;
+	lexer.start = 0;
+	lexer.token_list = NULL;
+	token_list = run_lexer(&lexer);
+	join_words(&lexer);
+	cr_assert_eq(ft_lstsize(token_list), 6, "Expected 6 tokens, got %d",
+		ft_lstsize(token_list));
+	token_test(get_n_token(token_list, 1), TOKEN_WORD, "Born", "lyric5 first");
+	token_test(get_n_token(token_list, 5), TOKEN_WORD, "flames", "lyric5 last");
+	ft_lstclear(&token_list, free_tok);
+}
+Test(join_words, lyric_I_have_been_blessed)
+{
+	t_lexer	lexer;
+	t_list	*token_list;
+
+	lexer.text = "I have been blessed";
+	lexer.pos = 0;
+	lexer.state = LEXER_NONE;
+	lexer.start = 0;
+	lexer.token_list = NULL;
+	token_list = run_lexer(&lexer);
+	join_words(&lexer);
+	cr_assert_eq(ft_lstsize(token_list), 8, "Expected 8 tokens, got %d",
+		ft_lstsize(token_list));
+	token_test(get_n_token(token_list, 1), TOKEN_WORD, "I", "lyric6 start");
+	token_test(get_n_token(token_list, 7), TOKEN_WORD, "blessed", "lyric6 end");
+	ft_lstclear(&token_list, free_tok);
+}
+Test(join_words, lyric_My_family_crest_is_a_demon_of_death)
+{
+	t_lexer	lexer;
+	t_list	*token_list;
+
+	lexer.text = "My family crest is a demon of death";
+	lexer.pos = 0;
+	lexer.state = LEXER_NONE;
+	lexer.start = 0;
+	lexer.token_list = NULL;
+	token_list = run_lexer(&lexer);
+	join_words(&lexer);
+	cr_assert_eq(ft_lstsize(token_list), 16, "Expected 16 tokens, got %d",
+		ft_lstsize(token_list));
+	token_test(get_n_token(token_list, 1), TOKEN_WORD, "My", "lyric7 start");
+	token_test(get_n_token(token_list, 15), TOKEN_WORD, "death", "lyric7 end");
+	ft_lstclear(&token_list, free_tok);
+}
+Test(join_words, lyric_Forsakened_I_am_awakened)
+{
+	t_lexer	lexer;
+	t_list	*token_list;
+
+	lexer.text = "Forsakened I am awakened";
+	lexer.pos = 0;
+	lexer.state = LEXER_NONE;
+	lexer.start = 0;
+	lexer.token_list = NULL;
+	token_list = run_lexer(&lexer);
+	join_words(&lexer);
+	cr_assert_eq(ft_lstsize(token_list), 8, "Expected 8 tokens, got %d",
+		ft_lstsize(token_list));
+	token_test(get_n_token(token_list, 1), TOKEN_WORD, "Forsakened",
+		"lyric8 start");
+	token_test(get_n_token(token_list, 7), TOKEN_WORD, "awakened",
+		"lyric8 end");
+	ft_lstclear(&token_list, free_tok);
+}
+Test(join_words, lyric_A_phoenixs_ash_in_dark_divine)
+{
+	t_lexer	lexer;
+	t_list	*token_list;
+
+	lexer.text = "A phoenix\"'\"s ash in dark divine";
+	lexer.pos = 0;
+	lexer.state = LEXER_NONE;
+	lexer.start = 0;
+	lexer.token_list = NULL;
+	token_list = run_lexer(&lexer);
+	join_words(&lexer);
+	cr_assert_eq(ft_lstsize(token_list), 14, "Expected 14 tokens, got %d",
+		ft_lstsize(token_list));
+	token_test(get_n_token(token_list, 1), TOKEN_WORD, "A", "lyric9 start");
+	token_test(get_n_token(token_list, 13), TOKEN_WORD, "divine", "lyric9 end");
+	ft_lstclear(&token_list, free_tok);
+}
+Test(join_words, lyric_Descending_misery)
+{
+	t_lexer	lexer;
+	t_list	*token_list;
+
+	lexer.text = "Descending misery";
+	lexer.pos = 0;
+	lexer.state = LEXER_NONE;
+	lexer.start = 0;
+	lexer.token_list = NULL;
+	token_list = run_lexer(&lexer);
+	join_words(&lexer);
+	cr_assert_eq(ft_lstsize(token_list), 4, "Expected 4 tokens, got %d",
+		ft_lstsize(token_list));
+	token_test(get_n_token(token_list, 1), TOKEN_WORD, "Descending",
+		"lyric10 start");
+	token_test(get_n_token(token_list, 3), TOKEN_WORD, "misery", "lyric10 end");
+	ft_lstclear(&token_list, free_tok);
+}
+Test(join_words, lyric_Destiny_chasing_time)
+{
+	t_lexer	lexer;
+	t_list	*token_list;
+
+	lexer.text = "Destiny chasing time";
+	lexer.pos = 0;
+	lexer.state = LEXER_NONE;
+	lexer.start = 0;
+	lexer.token_list = NULL;
+	token_list = run_lexer(&lexer);
+	join_words(&lexer);
+	cr_assert_eq(ft_lstsize(token_list), 6, "Expected 6 tokens, got %d",
+		ft_lstsize(token_list));
+	token_test(get_n_token(token_list, 1), TOKEN_WORD, "Destiny",
+		"lyric11 start");
+	token_test(get_n_token(token_list, 5), TOKEN_WORD, "time", "lyric11 end");
 	ft_lstclear(&token_list, free_tok);
 }
