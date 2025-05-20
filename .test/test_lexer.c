@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 17:08:16 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/05/16 14:49:48 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/05/20 12:44:28 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,15 +155,7 @@ Test(run_lexer, whitespace)
 	lexer.start = 0;
 	lexer.token_list = NULL;
 	token_list = run_lexer(&lexer);
-	cr_assert_not_null(token_list, "Expected token list to be NULL");
-	cr_assert(token_list->next == NULL);
-	cr_assert_eq(((t_token *)token_list->content)->type, TOKEN_NONE,
-		"Expected token type to be TOKEN_NONE");
-	cr_assert_eq(strcmp(((t_token *)token_list->content)->value, "   "), 0,
-		"Expected token value to be '   '");
-	cr_assert_eq(lexer.pos, 3, "Expected lexer position to be 3");
-	cr_assert_eq(lexer.state, LEXER_NONE,
-		"Expected lexer state to be LEXER_NONE");
+	cr_assert_null(token_list, "Expected token list to be NULL");
 	//
 	ft_lstclear(&token_list, free_tok);
 }
@@ -344,14 +336,13 @@ Test(run_lexer, duo_simple)
 	cr_assert_not_null(token_list, "Expected token list to be not NULL");
 	cr_assert_eq(lexer.state, LEXER_NONE,
 		"Expected lexer state to be LEXER_NONE");
-	cr_assert_eq(ft_lstsize(token_list), 5, "Expected token list len 5, got %d",
+	cr_assert_eq(ft_lstsize(token_list), 4, "Expected token list len 4, got %d",
 		ft_lstsize(token_list));
 	//
 	token_test(get_n_token(token_list, 0), TOKEN_NONE, "", "start");
 	token_test(get_n_token(token_list, 1), TOKEN_WORD, "ls", "command");
 	token_test(get_n_token(token_list, 2), TOKEN_NONE, " ", "whitespace");
 	token_test(get_n_token(token_list, 3), TOKEN_WORD, "hello world", "arg");
-	token_test(get_n_token(token_list, 4), TOKEN_NONE, "", "end");
 	//
 	ft_lstclear(&token_list, free_tok);
 }
@@ -370,16 +361,14 @@ Test(run_lexer, duo_messy)
 	cr_assert_not_null(token_list, "Expected token list to be not NULL");
 	cr_assert_eq(lexer.state, LEXER_NONE,
 		"Expected lexer state to be LEXER_NONE");
-	cr_assert_eq(ft_lstsize(token_list), 6, "Expected token list len 6, got %d",
+	cr_assert_eq(ft_lstsize(token_list), 5, "Expected token list len 5, got %d",
 		ft_lstsize(token_list));
 	//
 	token_test(get_n_token(token_list, 0), TOKEN_NONE, "", "start");
 	token_test(get_n_token(token_list, 1), TOKEN_WORD, "ls", "command");
 	token_test(get_n_token(token_list, 2), TOKEN_NONE, " ", "whitespace");
 	token_test(get_n_token(token_list, 3), TOKEN_WORD, "hello", "arg");
-	token_test(get_n_token(token_list, 4), TOKEN_WORD, " world", "arg 2");
-	token_test(get_n_token(token_list, 5), TOKEN_NONE, "", "end");
-	//
+	token_test(get_n_token(token_list, 4), TOKEN_WORD, " world", "arg 2"); //
 	ft_lstclear(&token_list, free_tok);
 }
 
@@ -397,14 +386,13 @@ Test(run_lexer, uni_simple)
 	cr_assert_not_null(token_list, "Expected token list to be not NULL");
 	cr_assert_eq(lexer.state, LEXER_NONE,
 		"Expected lexer state to be LEXER_NONE");
-	cr_assert_eq(ft_lstsize(token_list), 5, "Expected token list len 5, got %d",
+	cr_assert_eq(ft_lstsize(token_list), 4, "Expected token list len 4, got %d",
 		ft_lstsize(token_list));
 	//
 	token_test(get_n_token(token_list, 0), TOKEN_NONE, "", "start");
 	token_test(get_n_token(token_list, 1), TOKEN_WORD, "ls", "command");
 	token_test(get_n_token(token_list, 2), TOKEN_NONE, " ", "whitespace");
 	token_test(get_n_token(token_list, 3), TOKEN_WORD, "hello world", "arg");
-	token_test(get_n_token(token_list, 4), TOKEN_NONE, "", "end");
 	//
 	ft_lstclear(&token_list, free_tok);
 }
@@ -423,7 +411,7 @@ Test(run_lexer, uni_messy)
 	cr_assert_not_null(token_list, "Expected token list to be not NULL");
 	cr_assert_eq(lexer.state, LEXER_NONE,
 		"Expected lexer state to be LEXER_NONE");
-	cr_assert_eq(ft_lstsize(token_list), 6, "Expected token list len 6, got %d",
+	cr_assert_eq(ft_lstsize(token_list), 5, "Expected token list len 5, got %d",
 		ft_lstsize(token_list));
 	//
 	token_test(get_n_token(token_list, 0), TOKEN_NONE, "", "start");
@@ -431,7 +419,6 @@ Test(run_lexer, uni_messy)
 	token_test(get_n_token(token_list, 2), TOKEN_NONE, " ", "whitespace");
 	token_test(get_n_token(token_list, 3), TOKEN_WORD, "hello", "arg");
 	token_test(get_n_token(token_list, 4), TOKEN_WORD, " world", "arg 2");
-	token_test(get_n_token(token_list, 5), TOKEN_NONE, "", "end");
 	//
 	ft_lstclear(&token_list, free_tok);
 }
@@ -450,7 +437,7 @@ Test(run_lexer, uno_dos_holyfuck)
 	cr_assert_not_null(token_list, "Expected token list to be not NULL");
 	cr_assert_eq(lexer.state, LEXER_NONE,
 		"Expected lexer state to be LEXER_NONE");
-	cr_assert_eq(ft_lstsize(token_list), 9, "Expected token list len 9, got %d",
+	cr_assert_eq(ft_lstsize(token_list), 8, "Expected token list len 9, got %d",
 		ft_lstsize(token_list));
 	token_test(get_n_token(token_list, 0), TOKEN_NONE, "", "start");
 	token_test(get_n_token(token_list, 1), TOKEN_WORD, "ls", "command");
@@ -462,7 +449,7 @@ Test(run_lexer, uno_dos_holyfuck)
 	token_test(get_n_token(token_list, 6), TOKEN_WORD, "uwu", "word 2");
 	token_test(get_n_token(token_list, 7), TOKEN_WORD, "hello\" world",
 		"quoted 2");
-	token_test(get_n_token(token_list, 8), TOKEN_NONE, "", "end");
+	//	token_test(get_n_token(token_list, 8), TOKEN_NONE, "", "end");
 	ft_lstclear(&token_list, free_tok);
 }
 
@@ -515,7 +502,7 @@ Test(run_lexer, ultimate_messy)
 	cr_assert_not_null(token_list, "Expected token list to be not NULL");
 	cr_assert_eq(lexer.state, LEXER_NONE,
 		"Expected lexer state to be LEXER_NONE");
-	cr_assert_eq(ft_lstsize(token_list), 32, "Expected 32 tokens, got %d",
+	cr_assert_eq(ft_lstsize(token_list), 31, "Expected 31 tokens, got %d",
 		ft_lstsize(token_list));
 	//
 	token_test(get_n_token(token_list, 0), TOKEN_NONE, "", "start");
@@ -558,7 +545,123 @@ Test(run_lexer, ultimate_messy)
 	token_test(get_n_token(token_list, 29), TOKEN_NONE, " ", "ws10");
 	token_test(get_n_token(token_list, 30), TOKEN_WORD, "mix\"ed",
 		"single-quoted mix");
-	token_test(get_n_token(token_list, 31), TOKEN_NONE, "", "end");
+	//
+	ft_lstclear(&token_list, free_tok);
+}
+
+Test(join_words, simple)
+{
+	t_lexer	lexer;
+	t_list	*token_list;
+
+	lexer.text = "hello world";
+	lexer.pos = 0;
+	lexer.state = LEXER_NONE;
+	lexer.start = 0;
+	lexer.token_list = NULL;
+	token_list = run_lexer(&lexer);
+	cr_assert_not_null(token_list, "Expected token list to be not NULL");
+	cr_assert_eq(lexer.state, LEXER_NONE,
+		"Expected lexer state to be LEXER_NONE");
+	cr_assert_eq(ft_lstsize(token_list), 4, "Expected token list len 4, got %d",
+		ft_lstsize(token_list));
+	join_words(&lexer);
+	cr_assert_eq(ft_lstsize(token_list), 4, "The token list should not change");
+	//
+	token_test(get_n_token(token_list, 0), TOKEN_NONE, "", "start");
+	token_test(get_n_token(token_list, 1), TOKEN_WORD, "hello", "word 1");
+	token_test(get_n_token(token_list, 2), TOKEN_NONE, " ", "whitespace");
+	token_test(get_n_token(token_list, 3), TOKEN_WORD, "world", "word 2");
+	//
+	ft_lstclear(&token_list, free_tok);
+}
+
+Test(join_words, simple_adjacent)
+{
+	t_lexer	lexer;
+	t_list	*token_list;
+
+	lexer.text = "hello world'hello'";
+	lexer.pos = 0;
+	lexer.state = LEXER_NONE;
+	lexer.start = 0;
+	lexer.token_list = NULL;
+	token_list = run_lexer(&lexer);
+	cr_assert_not_null(token_list, "Expected token list to be not NULL");
+	cr_assert_eq(lexer.state, LEXER_NONE,
+		"Expected lexer state to be LEXER_NONE");
+	cr_assert_eq(ft_lstsize(token_list), 5, "Expected token list len 5, got %d",
+		ft_lstsize(token_list));
+	join_words(&lexer);
+	cr_assert_eq(ft_lstsize(token_list), 4,
+		"Expected token list len 4 after join, got %d", ft_lstsize(token_list));
+	//
+	token_test(get_n_token(token_list, 0), TOKEN_NONE, "", "start");
+	token_test(get_n_token(token_list, 1), TOKEN_WORD, "hello", "word 1");
+	token_test(get_n_token(token_list, 2), TOKEN_NONE, " ", "whitespace");
+	token_test(get_n_token(token_list, 3), TOKEN_WORD, "worldhello", "word 2");
+	//
+	ft_lstclear(&token_list, free_tok);
+}
+
+Test(join_words, simple_adjacent_2)
+{
+	t_lexer	lexer;
+	t_list	*token_list;
+
+	lexer.text = "hello world'hello' world";
+	lexer.pos = 0;
+	lexer.state = LEXER_NONE;
+	lexer.start = 0;
+	lexer.token_list = NULL;
+	token_list = run_lexer(&lexer);
+	cr_assert_not_null(token_list, "Expected token list to be not NULL");
+	cr_assert_eq(lexer.state, LEXER_NONE,
+		"Expected lexer state to be LEXER_NONE");
+	cr_assert_eq(ft_lstsize(token_list), 7, "Expected token list len 7, got %d",
+		ft_lstsize(token_list));
+	join_words(&lexer);
+	cr_assert_eq(ft_lstsize(token_list), 6,
+		"Expected token list len 6 after join, got %d", ft_lstsize(token_list));
+	//
+	token_test(get_n_token(token_list, 0), TOKEN_NONE, "", "start");
+	token_test(get_n_token(token_list, 1), TOKEN_WORD, "hello", "word 1");
+	token_test(get_n_token(token_list, 2), TOKEN_NONE, " ", "whitespace");
+	token_test(get_n_token(token_list, 3), TOKEN_WORD, "worldhello", "word 2");
+	token_test(get_n_token(token_list, 4), TOKEN_NONE, " ", "whitespace");
+	token_test(get_n_token(token_list, 5), TOKEN_WORD, "world", "word 3");
+	//
+	ft_lstclear(&token_list, free_tok);
+}
+
+Test(join_words, simple_adjacent_3)
+{
+	t_lexer	lexer;
+	t_list	*token_list;
+
+	lexer.text = "Bury t'he' \"light deep\" within";
+	lexer.pos = 0;
+	lexer.state = LEXER_NONE;
+	lexer.start = 0;
+	lexer.token_list = NULL;
+	token_list = run_lexer(&lexer);
+	cr_assert_not_null(token_list, "Expected token list to be not NULL");
+	cr_assert_eq(lexer.state, LEXER_NONE,
+		"Expected lexer state to be LEXER_NONE");
+	cr_assert_eq(ft_lstsize(token_list), 9, "Expected token list len 8, got %d",
+		ft_lstsize(token_list));
+	join_words(&lexer);
+	cr_assert_eq(ft_lstsize(token_list), 8,
+		"Expected token list len 7 after join, got %d", ft_lstsize(token_list));
+	//
+	token_test(get_n_token(token_list, 0), TOKEN_NONE, "", "start");
+	token_test(get_n_token(token_list, 1), TOKEN_WORD, "Bury", "word 1");
+	token_test(get_n_token(token_list, 2), TOKEN_NONE, " ", "whitespace");
+	token_test(get_n_token(token_list, 3), TOKEN_WORD, "the", "word 2");
+	token_test(get_n_token(token_list, 4), TOKEN_NONE, " ", "whitespace");
+	token_test(get_n_token(token_list, 5), TOKEN_WORD, "light deep", "word 4");
+	token_test(get_n_token(token_list, 6), TOKEN_NONE, " ", "whitespace");
+	token_test(get_n_token(token_list, 7), TOKEN_WORD, "within", "word 5");
 	//
 	ft_lstclear(&token_list, free_tok);
 }

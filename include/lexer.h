@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:52:34 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/05/19 16:59:14 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/05/20 11:14:11 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,5 +90,7 @@ t_list				*run_lexer(t_lexer *lexer);
 void				free_lexer(t_lexer *lexer);
 
 bool				end_token(t_lexer *lexer);
+
+void				join_words(t_lexer *lexer);
 
 #endif

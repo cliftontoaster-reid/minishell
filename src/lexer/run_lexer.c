@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 15:41:18 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/05/16 14:31:25 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/05/20 12:37:39 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,7 +226,8 @@ t_list	*run_lexer(t_lexer *lexer)
 		else
 			lexer->pos++;
 	}
-	end_token(lexer);
+	if (lexer->state == LEXER_WORD)
+		end_token(lexer);
 	if (lexer->state == LEXER_UNI || lexer->state == LEXER_DUO)
 		return (NULL);
 	return (lexer->token_list);
