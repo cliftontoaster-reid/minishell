@@ -40,7 +40,11 @@ $(NAME): $(CRIT_PC) $(_LIB_FT) $(OBJS)
 	@$(CC) $(LDFLAGS) -o $@ $(OBJS) $(_LIB_FT)
 
 run_test: test
-	@./$(NTEST) --verbose
+	@if [ "$(CRIT_DEV)" = "1" ]; then \
+		./$(NTEST) --verbose; \
+	else \
+		./$(NTEST); \
+	fi
 test: $(NTEST)
 
 $(NTEST): $(CRIT_PC) $(_LIB_FT) $(TESTOBJS)
