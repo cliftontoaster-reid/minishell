@@ -13,17 +13,37 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, ubuntu-22.04, ubuntu-20.04, macos-latest]
+        include:
+          - os: ubuntu-latest
+            name: Ubuntu Latest
+          - os: ubuntu-22.04
+            name: Ubuntu 22.04
+          - os: ubuntu-20.04
+            name: Ubuntu 20.04
+
+          - os: macos-latest
+            name: macOS Latest, cause, why not?
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install dependencies
+      - name: Install dependencies (UwU buntu)
+        if: startsWith(runner.os, 'ubuntu')
         run: |
           sudo apt-get update
           sudo apt-get purge -y man-db
           sudo apt-get install -y make clang wget tar gzip mold
+
+      - name: Install dependencies (macOS)
+        if: startsWith(runner.os, 'macos')
+        run: |
+          brew update
+          brew install make llvm mold
 
       - name: Build project
         run: make all
