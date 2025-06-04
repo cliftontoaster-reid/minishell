@@ -6,13 +6,14 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:24:32 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/05/19 17:05:09 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/04 10:55:12 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SHARED_H
 # define SHARED_H
 
+# include "libft.h"
 # include <stdbool.h>
 # include <stdint.h>
 
@@ -54,112 +55,48 @@ void				b_setenv(const char *key, const char *value, t_list *envp);
 void				b_unsetenv(const char *key, void (*del)(void *),
 						t_list *envp);
 
-/// @brief The different types of arguments that can be passed to a command
-/// @note This is used to determine how to handle the argument
-typedef enum e_argtype
+typedef enum e_command_type
 {
-	/// @brief No argument, should be ignored
-	ARG_NONE = 0,
-	/// @brief A string argument, should be passed as is
-	ARG_STRING,
-	/// @brief A key value pair argument, it should be taken from env
-	ARG_VAR,
-	/// @brief A status argument, it should be taken from `g_status_code`
-	ARG_STATUS,
-}					t_argtype;
+	COMMAND_COMMAND,          // A command to be executed
+	COMMAND_BUILTIN,          // A builtin command (e.g., cd, exit)
+	COMMAND_PIPE,             // A pipe component
+	COMMAND_REDIRECT_IN,      // A redirection from a file
+	COMMAND_REDIRECT_OUT,     // A redirection to a file
+	COMMAND_REDIRECT_APPEND,  // A append redirection
+	COMMAND_REDIRECT_HEREDOC, // A heredoc redirection
+	COMMAND_AND,              // A component of an AND operation `BONUS_ONLY`
+	COMMAND_OR,               // A component of an OR operation  `BONUS_ONLY`
+}					t_command_type;
 
-/// @brief The different types of commands that can be executed
-/// @note This is used to determine how to handle the command
-typedef struct s_argument
-{
-	/// @brief The type of the argument
-	t_argtype		type;
-	/// @brief The key or value of the argument if it is not
-	///        `ARG_NONE` or `ARG_STATUS`
-	char			*value;
-}					t_argument;
-
-/// @brief A structure to hold everything needed to execute a command
 typedef struct s_command
 {
-	/// @brief The command to execute
-	char			*name;
-	/// @brief The number of arguments
-	int				argc;
-	/// @brief The arguments to pass to the command
-	char			**argv;
-	/// @brief The environment variables
-	t_env			*envp;
-
-	/// @brief Flags used to determine how to handle the command
-	///
-	/// @note Functions like `is_builtin`, `has_input_redirect`,
-	/// etc. will use these flags to determine
-	///
-	/// - bit 0 : command is a builtin
-	///
-	/// - bit 1 : has input redirection
-	///
-	/// - bit 2 : has output redirection
-	///
-	/// - bit 3 : has error redirection
-	///
-	/// - bit 4 : has pipe in
-	///
-	/// - bit 5 : has pipe out
-	///
-	/// - bit 6 : soft redirect
-	///
-	/// - bit 7 : is local
-	uint8_t			flags;
-
-	/// @brief The file descriptors from which to read stdin
-	int				input_fd;
-	/// @brief The file descriptors to which to write stdout
-	int				output_fd;
-	/// @brief The file descriptors to which to write stderr
-	int				error_fd;
+	char *name;  // The name of the command
+	char **args; // The arguments for the command
 }					t_command;
 
-/// @brief Check if the command is a built-in
-/// @param cmd The command to check
-/// @return true if the command is a built-in, false otherwise
-bool				is_builtin(t_command *cmd);
+typedef struct s_builtin
+{
+	int				(*cmd)(struct s_builtin *ctx);
+	t_list			*envp;
+	int fd_in;   // pipe input
+	int fd_out;  // pipe output
+	int fd_err;  // pipe error
+	char **args; // The arguments for the builtin command
+}					t_builtin;
 
-/// @brief Check if the command has input redirection
-/// @param cmd The command to inspect
-/// @return true if input redirection is set, false otherwise
-bool				has_input_redirect(t_command *cmd);
+typedef union u_command_data
+{
+	t_command command; // A command to be executed
+	t_builtin builtin; // A builtin command (e.g., cd, exit)
+	char *pipe;        // A pipe component
+	char *redirect;    // A redirection component
+	void *and_or;      // A component of an AND or OR operation `BONUS_ONLY`
+}					t_command_data;
 
-/// @brief Check if the command has output redirection
-/// @param cmd The command to inspect
-/// @return true if output redirection is set, false otherwise
-bool				has_output_redirect(t_command *cmd);
-
-/// @brief Check if the command has error redirection
-/// @param cmd The command to inspect
-/// @return true if error redirection is set, false otherwise
-bool				has_error_redirect(t_command *cmd);
-
-/// @brief Check if the command has a pipe input
-/// @param cmd The command to inspect
-/// @return true if pipe input is set, false otherwise
-bool				has_pipe_in(t_command *cmd);
-
-/// @brief Check if the command has a pipe output
-/// @param cmd The command to inspect
-/// @return true if pipe output is set, false otherwise
-bool				has_pipe_out(t_command *cmd);
-
-/// @brief Check if the command uses a soft redirect
-/// @param cmd The command to inspect
-/// @return true if soft redirect is set, false otherwise
-bool				has_soft_redirect(t_command *cmd);
-
-/// @brief Runs the commands
-/// @param cmd The commands to run
-/// @return The status code of the command
-/// @note This function will execute the command and return the status code
-int					run_commands(t_command *cmd);
+typedef struct s_cmd_token
+{
+	t_command_type type; // The type of the command token
+	t_command_data data; // The data associated with the command token
+}					t_cmd_token;
 
 #endif

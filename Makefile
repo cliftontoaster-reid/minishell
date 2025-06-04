@@ -7,7 +7,7 @@ TEST_OBJD= $(OBJ_DIR)/test
 NAME     = minishell
 NTEST    = minishell_test
 
-SRCS     = $(shell find $(SRC_DIR) -type f -name '*.c')
+SRCS     = $(shell find $(SRC_DIR) -type f -name '*.c' | shuf)
 # add the source files from SRCS to the test files excluding 'src/main.c'
 TESTS = $(shell find $(TEST_DIR) -type f -name '*.c')
 
