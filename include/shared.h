@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:24:32 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/04 10:55:12 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/05 11:54:00 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ void				b_setenv(const char *key, const char *value, t_list *envp);
 /// @note The caller is responsible for setting the correct delete function
 void				b_unsetenv(const char *key, void (*del)(void *),
 						t_list *envp);
+
+t_list				*b_fromenvp(char *const *envp);
 
 typedef enum e_command_type
 {
