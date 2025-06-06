@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 11:14:25 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/05/20 12:08:14 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/06 14:17:34 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static void	try_join(t_list *token)
 
 void	join_words(t_lexer *lexer)
 {
-	t_list *token;
+	t_list	*token;
 
 	token = lexer->token_list;
 	while (token)

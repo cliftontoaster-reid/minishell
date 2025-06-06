@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:24:32 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/05 11:54:00 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/06 14:16:57 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,52 +53,74 @@ void				b_setenv(const char *key, const char *value, t_list *envp);
 /// @param del The function to call to delete the value
 /// @note The caller is responsible for setting the correct delete function
 void				b_unsetenv(const char *key, void (*del)(void *),
-						t_list *envp);
+						t_list **envp);
 
 t_list				*b_fromenvp(char *const *envp);
 
 typedef enum e_command_type
 {
-	COMMAND_COMMAND,          // A command to be executed
-	COMMAND_BUILTIN,          // A builtin command (e.g., cd, exit)
-	COMMAND_PIPE,             // A pipe component
-	COMMAND_REDIRECT_IN,      // A redirection from a file
-	COMMAND_REDIRECT_OUT,     // A redirection to a file
-	COMMAND_REDIRECT_APPEND,  // A append redirection
-	COMMAND_REDIRECT_HEREDOC, // A heredoc redirection
-	COMMAND_AND,              // A component of an AND operation `BONUS_ONLY`
-	COMMAND_OR,               // A component of an OR operation  `BONUS_ONLY`
+	/* A command to be executed */
+	COMMAND_COMMAND,
+	/* A builtin command (e.g., cd, exit) */
+	COMMAND_BUILTIN,
+	/* A pipe component */
+	COMMAND_PIPE,
+	/* A redirection from a file */
+	COMMAND_REDIRECT_IN,
+	/* A redirection to a file */
+	COMMAND_REDIRECT_OUT,
+	/* A append redirection */
+	COMMAND_REDIRECT_APPEND,
+	/* A heredoc redirection */
+	COMMAND_REDIRECT_HEREDOC,
+	/* A component of an AND operation `BONUS_ONLY` */
+	COMMAND_AND,
+	/* A component of an OR operation `BONUS_ONLY` */
+	COMMAND_OR,
 }					t_command_type;
 
 typedef struct s_command
 {
-	char *name;  // The name of the command
-	char **args; // The arguments for the command
+	// The name of the command
+	char			*name;
+	// The arguments for the command
+	char			**args;
 }					t_command;
 
 typedef struct s_builtin
 {
 	int				(*cmd)(struct s_builtin *ctx);
 	t_list			*envp;
-	int fd_in;   // pipe input
-	int fd_out;  // pipe output
-	int fd_err;  // pipe error
-	char **args; // The arguments for the builtin command
+	// pipe input
+	int				fd_in;
+	// pipe output
+	int				fd_out;
+	// pipe error
+	int				fd_err;
+	// The arguments for the builtin command
+	char			**args;
 }					t_builtin;
 
 typedef union u_command_data
 {
-	t_command command; // A command to be executed
-	t_builtin builtin; // A builtin command (e.g., cd, exit)
-	char *pipe;        // A pipe component
-	char *redirect;    // A redirection component
-	void *and_or;      // A component of an AND or OR operation `BONUS_ONLY`
+	// A command to be executed
+	t_command		command;
+	// A builtin command (e.g., cd, exit)
+	t_builtin		builtin;
+	// A pipe component
+	char			*pipe;
+	// A redirection component
+	char			*redirect;
+	// A component of an AND or OR operation `BONUS_ONLY`
+	void			*and_or;
 }					t_command_data;
 
 typedef struct s_cmd_token
 {
-	t_command_type type; // The type of the command token
-	t_command_data data; // The data associated with the command token
+	// The type of the command token
+	t_command_type	type;
+	// The data associated with the command token
+	t_command_data	data;
 }					t_cmd_token;
 
 #endif

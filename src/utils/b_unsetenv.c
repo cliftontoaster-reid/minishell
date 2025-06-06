@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 11:00:00 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/05 11:54:00 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/06 14:12:18 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,30 +40,46 @@ static void	free_env_entry(void *content)
 	free(env);
 }
 
-void	b_unsetenv(const char *key, void (*del)(void *), t_list *envp)
+static void	remove_env_node(t_list *prev, t_list *current, t_list **envp,
+		void (*del)(void *))
+{
+	if (prev)
+		prev->next = current->next;
+	else
+		*envp = current->next;
+	if (del)
+		del(current->content);
+	else
+		free_env_entry(current->content);
+	free(current);
+}
+
+static int	is_matching_env(t_list *node, const char *key)
+{
+	t_env	*env_entry;
+
+	if (!node || !node->content)
+		return (0);
+	env_entry = (t_env *)node->content;
+	if (!env_entry || !env_entry->key)
+		return (0);
+	return (str_equal(env_entry->key, key));
+}
+
+void	b_unsetenv(const char *key, void (*del)(void *), t_list **envp)
 {
 	t_list	*current;
 	t_list	*prev;
-	t_env	*env_entry;
 
-	if (!key || !envp)
+	if (!key || !envp || !*envp)
 		return ;
-	current = envp;
+	current = *envp;
 	prev = NULL;
 	while (current)
 	{
-		env_entry = (t_env *)current->content;
-		if (env_entry && env_entry->key && str_equal(env_entry->key, key))
+		if (is_matching_env(current, key))
 		{
-			if (prev)
-				prev->next = current->next;
-			else
-				envp = current->next;
-			if (del)
-				del(current->content);
-			else
-				free_env_entry(current->content);
-			free(current);
+			remove_env_node(prev, current, envp, del);
 			return ;
 		}
 		prev = current;

@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 14:38:32 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/05/19 17:03:46 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/06 14:13:18 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,6 @@
 /// - bit 6 : soft redirect
 ///
 /// - bit 7 : is local
-#define FLAG_BUILTIN (1 << 0)
-#define FLAG_INPUT_REDIRECT (1 << 1)
-#define FLAG_OUTPUT_REDIRECT (1 << 2)
-#define FLAG_ERROR_REDIRECT (1 << 3)
-#define FLAG_PIPE_IN (1 << 4)
-#define FLAG_PIPE_OUT (1 << 5)
-#define FLAG_SOFT_REDIRECT (1 << 6)
-#define FLAG_LOCAL (1 << 7)
 
 typedef enum e_parsing_error
 {

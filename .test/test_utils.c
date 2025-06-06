@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 12:01:29 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/05 13:29:22 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/06 14:12:17 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -801,7 +801,7 @@ Test(b_unsetenv, remove_existing_variable)
 	cr_assert_not_null(env_list);
 	cr_assert_eq(ft_lstsize(env_list), 3);
 	// Remove middle variable
-	b_unsetenv("HOME", free_env_data, env_list);
+	b_unsetenv("HOME", free_env_data, &env_list);
 	cr_assert_eq(ft_lstsize(env_list), 2);
 	// Verify HOME is gone
 	env_data = find_env_var(env_list, "HOME");
@@ -830,7 +830,7 @@ Test(b_unsetenv, remove_first_variable)
 	// The function will free the first node but cannot update our pointer,
 	// leading to potential memory issues. This test documents the limitation.
 	// For safety, we'll test with a non-first element instead
-	b_unsetenv("SECOND", free_env_data, env_list);
+	b_unsetenv("SECOND", free_env_data, &env_list);
 	cr_assert_eq(ft_lstsize(env_list), 2);
 	// Verify SECOND is gone but others remain
 	env_data = find_env_var(env_list, "SECOND");
@@ -852,7 +852,7 @@ Test(b_unsetenv, remove_last_variable)
 	cr_assert_not_null(env_list);
 	cr_assert_eq(ft_lstsize(env_list), 3);
 	// Remove last variable
-	b_unsetenv("THIRD", free_env_data, env_list);
+	b_unsetenv("THIRD", free_env_data, &env_list);
 	cr_assert_eq(ft_lstsize(env_list), 2);
 	// Verify THIRD is gone
 	env_data = find_env_var(env_list, "THIRD");
@@ -878,7 +878,7 @@ Test(b_unsetenv, remove_nonexistent_variable)
 	cr_assert_not_null(env_list);
 	original_size = ft_lstsize(env_list);
 	// Try to remove non-existent variable
-	b_unsetenv("NONEXISTENT", free_env_data, env_list);
+	b_unsetenv("NONEXISTENT", free_env_data, &env_list);
 	// List should remain unchanged
 	cr_assert_eq(ft_lstsize(env_list), original_size);
 	// Verify existing variables are still there
@@ -899,7 +899,7 @@ Test(b_unsetenv, null_inputs)
 	env_list = b_fromenvp(envp);
 	cr_assert_not_null(env_list);
 	// Test NULL key - should not crash
-	b_unsetenv(NULL, free_env_data, env_list);
+	b_unsetenv(NULL, free_env_data, &env_list);
 	cr_assert_eq(ft_lstsize(env_list), 1); // List unchanged
 	// Test NULL env_list - should not crash
 	b_unsetenv("USER", free_env_data, NULL);
@@ -918,7 +918,7 @@ Test(b_unsetenv, empty_key)
 	cr_assert_not_null(env_list);
 	original_size = ft_lstsize(env_list);
 	// Try to remove with empty key
-	b_unsetenv("", free_env_data, env_list);
+	b_unsetenv("", free_env_data, &env_list);
 	// List should remain unchanged
 	cr_assert_eq(ft_lstsize(env_list), original_size);
 	ft_lstclear(&env_list, free_env_data);
@@ -935,7 +935,7 @@ Test(b_unsetenv, case_sensitivity)
 	cr_assert_not_null(env_list);
 	cr_assert_eq(ft_lstsize(env_list), 3);
 	// Remove middle variable (USER)
-	b_unsetenv("USER", free_env_data, env_list);
+	b_unsetenv("USER", free_env_data, &env_list);
 	cr_assert_eq(ft_lstsize(env_list), 2);
 	// Verify only USER is gone, others remain
 	env_data = find_env_var(env_list, "USER");
@@ -958,7 +958,7 @@ Test(b_unsetenv, remove_single_variable_list)
 	cr_assert_not_null(env_list);
 	cr_assert_eq(ft_lstsize(env_list), 2);
 	// Remove the second variable to avoid first-element removal issues
-	b_unsetenv("ONLY_VAR", free_env_data, env_list);
+	b_unsetenv("ONLY_VAR", free_env_data, &env_list);
 	// List should now have one element
 	cr_assert_eq(ft_lstsize(env_list), 1);
 	ft_lstclear(&env_list, free_env_data);
@@ -975,9 +975,9 @@ Test(b_unsetenv, remove_multiple_variables)
 	cr_assert_not_null(env_list);
 	cr_assert_eq(ft_lstsize(env_list), 4);
 	// Remove multiple variables (avoiding first element due to function limitation)
-	b_unsetenv("VAR2", free_env_data, env_list);
+	b_unsetenv("VAR2", free_env_data, &env_list);
 	cr_assert_eq(ft_lstsize(env_list), 3);
-	b_unsetenv("VAR4", free_env_data, env_list);
+	b_unsetenv("VAR4", free_env_data, &env_list);
 	cr_assert_eq(ft_lstsize(env_list), 2);
 	// Note: Cannot remove VAR1 (first element) due to function design limitation
 	// Verify removed variables are gone
@@ -1005,7 +1005,7 @@ Test(b_unsetenv, variable_with_empty_value)
 	cr_assert_not_null(env_list);
 	cr_assert_eq(ft_lstsize(env_list), 2);
 	// Remove variable with empty value (second element)
-	b_unsetenv("EMPTY_VAR", free_env_data, env_list);
+	b_unsetenv("EMPTY_VAR", free_env_data, &env_list);
 	cr_assert_eq(ft_lstsize(env_list), 1);
 	// Verify EMPTY_VAR is gone
 	env_data = find_env_var(env_list, "EMPTY_VAR");
@@ -1028,7 +1028,7 @@ Test(b_unsetenv, variable_with_complex_value)
 	cr_assert_not_null(env_list);
 	cr_assert_eq(ft_lstsize(env_list), 2);
 	// Remove variable with complex value (second element)
-	b_unsetenv("COMPLEX", free_env_data, env_list);
+	b_unsetenv("COMPLEX", free_env_data, &env_list);
 	cr_assert_eq(ft_lstsize(env_list), 1);
 	// Verify COMPLEX is gone
 	env_data = find_env_var(env_list, "COMPLEX");
@@ -1050,9 +1050,9 @@ Test(b_unsetenv, partial_key_match)
 	cr_assert_not_null(env_list);
 	cr_assert_eq(ft_lstsize(env_list), 2);
 	// Try to remove with partial key - should not match
-	b_unsetenv("HOM", free_env_data, env_list);
+	b_unsetenv("HOM", free_env_data, &env_list);
 	cr_assert_eq(ft_lstsize(env_list), 2); // No change
-	b_unsetenv("HOST", free_env_data, env_list);
+	b_unsetenv("HOST", free_env_data, &env_list);
 	cr_assert_eq(ft_lstsize(env_list), 2); // No change
 	// Verify both variables still exist
 	env_data = find_env_var(env_list, "HOME");
@@ -1074,7 +1074,7 @@ Test(b_unsetenv, single_character_key)
 	cr_assert_not_null(env_list);
 	cr_assert_eq(ft_lstsize(env_list), 3);
 	// Remove single character key
-	b_unsetenv("B", free_env_data, env_list);
+	b_unsetenv("B", free_env_data, &env_list);
 	cr_assert_eq(ft_lstsize(env_list), 2);
 	// Verify B is gone
 	env_data = find_env_var(env_list, "B");
@@ -1098,7 +1098,7 @@ Test(b_unsetenv, custom_delete_function)
 	cr_assert_not_null(env_list);
 	// Test with custom delete function (using the existing free_env_data)
 	// Remove second element to avoid first-element removal limitation
-	b_unsetenv("TEST", free_env_data, env_list);
+	b_unsetenv("TEST", free_env_data, &env_list);
 	cr_assert_eq(ft_lstsize(env_list), 1);
 	ft_lstclear(&env_list, free_env_data);
 }
@@ -1113,7 +1113,7 @@ Test(b_unsetenv, null_delete_function)
 	cr_assert_eq(ft_lstsize(env_list), 2);
 	// Use NULL delete function - should use internal free_env_entry
 	// Remove second element to avoid first-element removal limitation
-	b_unsetenv("TEST", NULL, env_list);
+	b_unsetenv("TEST", NULL, &env_list);
 	cr_assert_eq(ft_lstsize(env_list), 1);
 	ft_lstclear(&env_list, free_env_data);
 }
