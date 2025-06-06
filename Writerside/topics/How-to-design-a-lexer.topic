@@ -14,7 +14,7 @@
 
     <chapter title="What is Lexical Analysis?" id="lexical-analysis-intro">
         <p>
-            Lexical analysis, or tokenization, is the first phase of shell command processing.
+            Lexical analysis, or tokenisation, is the first phase of shell command processing.
             Think of it as reading a sentence and identifying individual words, punctuation,
             and meaning - but for shell commands instead of natural language.
         </p>
@@ -79,7 +79,7 @@
             <p>
                 <b>Why is this important?</b> Without lexical analysis, the shell would
                 struggle to distinguish between a command name and its arguments, or between
-                a pipe symbol and the letter in a filename. Tokenization creates clear boundaries
+                a pipe symbol and a letter in a filename. Tokenisation creates clear boundaries
                 and assigns meaning to each piece of input.
             </p>
         </note>
@@ -87,7 +87,7 @@
 
     <chapter title="Token Types and Recognition" id="token-types">
         <p>
-            Our Minishell lexer recognizes several distinct types of tokens, each serving
+            Our Minishell lexer recognises several distinct types of tokens, each serving
             a specific purpose in shell command processing:
         </p>
 
@@ -117,71 +117,71 @@
 
             <def title="🔗 TOKEN_PIPE" id="token-pipe">
                 <p>
-                    <b>Symbol:</b> <code>|</code><br/>
+                    <b>Symbol:</b> <code>|</code><br />
                     <b>Purpose:</b> Connects commands in a pipeline, passing the output
                     of one command as input to the next.
                 </p>
                 <code-block lang="bash">
-                # Example: count lines in all .c files
-                find . -name "*.c" | wc -l
-                #                  ^
-                #              TOKEN_PIPE
+                    # Example: count lines in all .c files
+                    find . -name "*.c" | wc -l
+                    # ^
+                    # TOKEN_PIPE
                 </code-block>
             </def>
 
             <def title="📥 TOKEN_REDIRECT_IN" id="token-redirect-in">
                 <p>
-                    <b>Symbol:</b> <code>&lt;</code><br/>
+                    <b>Symbol:</b> <code>&lt;</code><br />
                     <b>Purpose:</b> Redirects input from a file to a command.
                 </p>
                 <code-block lang="bash">
-                # Read input from file.txt
-                sort &lt; file.txt
-                #    ^
-                # TOKEN_REDIRECT_IN
+                    # Read input from file.txt
+                    sort &lt; file.txt
+                    # ^
+                    # TOKEN_REDIRECT_IN
                 </code-block>
             </def>
 
             <def title="📤 TOKEN_REDIRECT_OUT" id="token-redirect-out">
                 <p>
-                    <b>Symbol:</b> <code>&gt;</code><br/>
+                    <b>Symbol:</b> <code>&gt;</code><br />
                     <b>Purpose:</b> Redirects command output to a file (overwrites existing content).
                 </p>
                 <code-block lang="bash">
-                # Write output to file.txt
-                echo "Hello" &gt; file.txt
-                #            ^
-                #      TOKEN_REDIRECT_OUT
+                    # Write output to file.txt
+                    echo "Hello" &gt; file.txt
+                    # ^
+                    # TOKEN_REDIRECT_OUT
                 </code-block>
             </def>
 
             <def title="📝 TOKEN_REDIRECT_APPEND" id="token-redirect-append">
                 <p>
-                    <b>Symbol:</b> <code>&gt;&gt;</code><br/>
+                    <b>Symbol:</b> <code>&gt;&gt;</code><br />
                     <b>Purpose:</b> Redirects command output to a file (appends to existing content).
                 </p>
                 <code-block lang="bash">
-                # Append output to log.txt
-                echo "New entry" &gt;&gt; log.txt
-                #                ^
-                #         TOKEN_REDIRECT_APPEND
+                    # Append output to log.txt
+                    echo "New entry" &gt;&gt; log.txt
+                    # ^
+                    # TOKEN_REDIRECT_APPEND
                 </code-block>
             </def>
 
             <def title="📋 TOKEN_REDIRECT_HEREDOC" id="token-redirect-heredoc">
                 <p>
-                    <b>Symbol:</b> <code>&lt;&lt;</code><br/>
+                    <b>Symbol:</b> <code>&lt;&lt;</code><br />
                     <b>Purpose:</b> Starts a here-document, allowing multi-line input
                     until a delimiter is reached.
                 </p>
                 <code-block lang="bash">
-                # Here-document example
-                cat &lt;&lt; EOF
-                #   ^
-                # TOKEN_REDIRECT_HEREDOC
-                Line 1
-                Line 2
-                EOF
+                    # Here-document example
+                    cat &lt;&lt; EOF
+                    # ^
+                    # TOKEN_REDIRECT_HEREDOC
+                    Line 1
+                    Line 2
+                    EOF
                 </code-block>
             </def>
         </deflist>
@@ -208,28 +208,28 @@
             <step>
                 <p><b>LEXER_NONE</b> - Initial state, no token being built</p>
                 <p>In this state, the lexer scans for the start of new tokens. It skips
-                whitespace and determines what type of token to begin based on the current character.</p>
+                    whitespace and determines what type of token to begin based on the current character.</p>
             </step>
             <step>
                 <p><b>LEXER_WORD</b> - Building a regular word token</p>
                 <p>Accumulates characters that aren't whitespace, quotes, or special operators
-                into a word token. Transitions out when encountering delimiters.</p>
+                    into a word token. Transitions out when encountering delimiters.</p>
             </step>
             <step>
                 <p><b>LEXER_UNI</b> - Inside single quotes</p>
                 <p>Treats all characters literally until the closing single quote.
-                No variable expansion or special character interpretation occurs.</p>
+                    No variable expansion or special character interpretation occurs.</p>
             </step>
             <step>
                 <p><b>LEXER_DUO</b> - Inside double quotes</p>
                 <p>Similar to single quotes but allows variable expansion (though this
-                happens in later processing phases, not during lexical analysis).</p>
+                    happens in later processing phases, not during lexical analysis).</p>
             </step>
         </procedure>
 
         <note>
             <p>
-                <b>State Machine Visualization:</b> The lexer transitions between
+                <b>State Machine Visualisation:</b> The lexer transitions between
                 four states (NONE → WORD/UNI/DUO → NONE) based on input characters.
                 Each state has specific rules for character handling and token creation.
             </p>
@@ -252,11 +252,11 @@
 
         <procedure title="Example: Processing echo &quot;Hello World&quot; | grep Hello" id="processing-example">
             <step>
-                <p><b>Initialize:</b> State = LEXER_NONE, Position = 0</p>
+                <p><b>Initialise:</b> State = LEXER_NONE, Position = 0</p>
                 <code-block lang="text">
-                Input: echo "Hello World" | grep Hello
-                       ^
-                       Position 0, State: LEXER_NONE
+                    Input: echo "Hello World" | grep Hello
+                    ^
+                    Position 0, State: LEXER_NONE
                 </code-block>
             </step>
             <step>
@@ -275,7 +275,7 @@
                 </list>
             </step>
             <step>
-                <p><b>Character 5 ('"'):</b></p>
+                <p><b>Character 5 ('\"'):</b></p>
                 <list>
                     <li>Double quote → State = LEXER_DUO</li>
                     <li>Start = 6 (position after opening quote)</li>
@@ -289,7 +289,7 @@
                 </list>
             </step>
             <step>
-                <p><b>Character 17 ('"'):</b></p>
+                <p><b>Character 17 ('\"'):</b></p>
                 <list>
                     <li>Closing quote → End token with value "Hello World"</li>
                     <li>Create TOKEN_WORD, State = LEXER_NONE</li>
@@ -307,20 +307,20 @@
         <tabs>
             <tab title="State Transitions">
                 <code-block lang="text">
-                Position: 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20
-                Input:    e  c  h  o     "  H  e  l  l  o     W  o  r  l  d  "     |
-                State:    W  W  W  W  N  D  D  D  D  D  D  D  D  D  D  D  D  N  N  N  N
+                    Position: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
+                    Input: e c h o " H e l l o W o r l d " |
+                    State: W W W W N D D D D D D D D D D D D N N N N
 
-                Legend: N=LEXER_NONE, W=LEXER_WORD, D=LEXER_DUO
+                    Legend: N=LEXER_NONE, W=LEXER_WORD, D=LEXER_DUO
                 </code-block>
             </tab>
             <tab title="Token Creation">
                 <code-block lang="text">
-                Position 4: TOKEN_WORD("echo")
-                Position 17: TOKEN_WORD("Hello World")
-                Position 19: TOKEN_PIPE("|")
-                Position 24: TOKEN_WORD("grep")
-                Position 30: TOKEN_WORD("Hello")
+                    Position 4: TOKEN_WORD("echo")
+                    Position 17: TOKEN_WORD("Hello World")
+                    Position 19: TOKEN_PIPE("|")
+                    Position 24: TOKEN_WORD("grep")
+                    Position 30: TOKEN_WORD("Hello")
                 </code-block>
             </tab>
         </tabs>
@@ -337,7 +337,7 @@
     <chapter title="Special Character Handling" id="special-characters">
         <p>
             Special characters require immediate attention and create tokens as soon as
-            they're encountered. The lexer recognizes both single-character and
+            they're encountered. The lexer recognises both single-character and
             two-character operators.
         </p>
 
@@ -374,16 +374,16 @@
                     encounters '&gt;' or '&lt;', it checks the next character:
                 </p>
                 <code-block lang="c">
-                if (lexer->text[lexer->pos] == '>')
-                {
+                    if (lexer->text[lexer->pos] == '>')
+                    {
                     if (lexer->text[lexer->pos + 1] == '>')
                     {
-                        type = TOKEN_REDIRECT_APPEND;  // ">>"
-                        special = true;  // Advance by 2 positions
+                    type = TOKEN_REDIRECT_APPEND; // ">>"
+                    special = true; // Advance by 2 positions
                     }
                     else
-                        type = TOKEN_REDIRECT_OUT;  // ">"
-                }
+                    type = TOKEN_REDIRECT_OUT; // ">"
+                    }
                 </code-block>
                 <p>
                     The <code>special</code> flag indicates whether to advance by 1 or 2 positions,
@@ -408,19 +408,19 @@
             variable expansion in later phases).
         </p>
 
-        <chapter title="Single Quote Behavior" id="single-quotes">
+        <chapter title="Single Quote Behaviour" id="single-quotes">
             <p>
                 Single quotes preserve everything literally. No special characters, variables,
                 or escape sequences are interpreted within single quotes.
             </p>
 
             <code-block lang="bash">
-            # Examples of single quote behavior
-            echo 'Hello $USER'           # Outputs: Hello $USER
-            echo 'pipe | redirect >'     # Outputs: pipe | redirect >
-            echo 'multi
-            line
-            text'                        # Preserves newlines literally
+                # Examples of single quote behavior
+                echo 'Hello $USER' # Outputs: Hello $USER
+                echo 'pipe | redirect >' # Outputs: pipe | redirect >
+                echo 'multi
+                line
+                text' # Preserves newlines literally
             </code-block>
 
             <procedure title="Single Quote Processing" id="single-quote-process">
@@ -442,7 +442,7 @@
             </procedure>
         </chapter>
 
-        <chapter title="Double Quote Behavior" id="double-quotes">
+        <chapter title="Double Quote Behaviour" id="double-quotes">
             <p>
                 Double quotes allow variable expansion and some special character interpretation,
                 though the actual expansion happens in later processing phases. During lexical
@@ -450,10 +450,10 @@
             </p>
 
             <code-block lang="bash">
-            # Examples of double quote behavior
-            echo "Hello $USER"           # $USER will be expanded later
-            echo "Current dir: $(pwd)"   # Command substitution preserved
-            echo "Tab:	Space: "         # Whitespace preserved literally
+                # Examples of double quote behavior
+                echo "Hello $USER" # $USER will be expanded later
+                echo "Current dir: $(pwd)" # Command substitution preserved
+                echo "Tab:\tSpace: " # Whitespace preserved literally
             </code-block>
 
             <note>
@@ -474,26 +474,26 @@
             <deflist>
                 <def title="Empty Quotes" id="empty-quotes">
                     <code-block lang="bash">
-                    echo ""      # Creates TOKEN_WORD with empty string value
-                    echo ''      # Creates TOKEN_WORD with empty string value
+                        echo "" # Creates TOKEN_WORD with empty string value
+                        echo '' # Creates TOKEN_WORD with empty string value
                     </code-block>
                     <p>Empty quotes are valid and create word tokens with empty string values.</p>
                 </def>
 
                 <def title="Adjacent Quotes" id="adjacent-quotes">
                     <code-block lang="bash">
-                    echo "Hello"'World'     # Two separate tokens: "Hello" and "World"
-                    echo 'Part1'"Part2"     # Two separate tokens that get joined later
+                        echo "Hello"'World' # Two separate tokens: "Hello" and "World"
+                        echo 'Part1'\"Part2\" # Two separate tokens that get joined later
                     </code-block>
                     <p>Adjacent quoted strings create separate tokens that are joined in post-processing.</p>
                 </def>
 
                 <def title="Unclosed Quotes" id="unclosed-quotes">
                     <code-block lang="bash">
-                    echo "unclosed quote    # ERROR: EINVAL returned
-                    echo 'missing end       # ERROR: EINVAL returned
+                        echo "unclosed quote # ERROR: EINVAL returned
+                        echo 'missing end # ERROR: EINVAL returned
                     </code-block>
-                    <p>Unclosed quotes result in lexer error and command rejection.</p>
+                    <p>Unclosed quotes result in a lexer error and command rejection.</p>
                 </def>
             </deflist>
         </chapter>
@@ -501,7 +501,7 @@
 
     <chapter title="Word Token Joining" id="word-joining">
         <p>
-            After initial tokenization, the lexer performs a post-processing step to join
+            After initial tokenisation, the lexer performs a post-processing step to join
             adjacent word tokens. This handles cases where quoted strings appear next to
             regular words or other quoted strings.
         </p>
@@ -523,26 +523,26 @@
         </p>
 
         <code-block lang="c">
-        // Simplified joining logic
-        static void try_join(t_list *token)
-        {
+            // Simplified joining logic
+            static void try_join(t_list *token)
+            {
             t_token *current = token->content;
             t_token *next = token->next->content;
 
             // Only join adjacent word tokens
             if (current->type != TOKEN_WORD || next->type != TOKEN_WORD)
-                return;
+            return;
 
             // Create new combined token
             t_token *new_token = create_token(
-                ft_strjoin(current->value, next->value),
-                TOKEN_WORD
+            ft_strjoin(current->value, next->value),
+            TOKEN_WORD
             );
 
             // Replace current token and remove next
             token->content = new_token;
-            // ... cleanup and continue joining
-        }
+            // ... clean-up and continue joining
+            }
         </code-block>
 
         <procedure title="Joining Examples" id="joining-examples">
@@ -583,24 +583,24 @@
         <deflist collapsible="true" default-state="expanded">
             <def title="Memory Management" id="memory-management">
                 <p>
-                    The lexer carefully manages memory allocation and cleanup:
+                    The lexer carefully manages memory allocation and clean-up:
                 </p>
                 <list>
                     <li><b>Token Creation:</b> Each token allocates memory for its value string</li>
-                    <li><b>List Management:</b> Tokens are stored in a linked list with proper cleanup functions</li>
+                    <li><b>List Management:</b> Tokens are stored in a linked list with proper clean-up functions</li>
                     <li><b>Error Recovery:</b> On allocation failure, partial tokens are cleaned up</li>
                     <li><b>ENOMEM Handling:</b> Memory exhaustion sets errno and returns gracefully</li>
                 </list>
 
                 <code-block lang="c">
-                // Error handling in token creation
-                t_token *token = create_token(value, type);
-                if (token == NULL)
-                {
-                    free(value);          // Clean up partial allocation
-                    errno = ENOMEM;       // Set error code
-                    return (false);       // Indicate failure
-                }
+                    // Error handling in token creation
+                    t_token *token = create_token(value, type);
+                    if (token == NULL)
+                    {
+                    free(value); // Clean up partial allocation
+                    errno = ENOMEM; // Set error code
+                    return (false); // Indicate failure
+                    }
                 </code-block>
             </def>
 
@@ -615,21 +615,21 @@
                 </list>
 
                 <code-block lang="c">
-                t_list *run_lexer(t_lexer *lexer)
-                {
+                    t_list *run_lexer(t_lexer *lexer)
+                    {
                     // Input validation
-                    if (lexer == NULL || lexer->text == NULL || lexer->text[0] == '\0')
-                        return (NULL);
+                    if (lexer == NULL || lexer->text == NULL || lexer->text[0] == '\\0')
+                    return (NULL);
 
                     // ... processing ...
 
                     // Quote validation at end
                     if (lexer->state == LEXER_UNI || lexer->state == LEXER_DUO)
                     {
-                        errno = EINVAL;   // Invalid input
-                        return (NULL);
+                    errno = EINVAL; // Invalid input
+                    return (NULL);
                     }
-                }
+                    }
                 </code-block>
             </def>
 
@@ -657,7 +657,7 @@
     <chapter title="Performance Considerations" id="performance">
         <p>
             While correctness is paramount, the lexer is also designed with performance
-            in mind. Several optimizations ensure efficient processing of shell input.
+            in mind. Several optimisations ensure efficient processing of shell input.
         </p>
 
         <deflist>
@@ -671,11 +671,11 @@
 
             <def title="Minimal Memory Allocation" id="minimal-allocation">
                 <p>
-                    Memory allocation is minimized through:
+                    Memory allocation is minimised through:
                 </p>
                 <list>
                     <li>Using <code>ft_substr()</code> to extract token values efficiently</li>
-                    <li>Reusing lexer structure across multiple tokenization calls</li>
+                    <li>Reusing lexer structure across multiple tokenisation calls</li>
                     <li>Avoiding unnecessary string copying during state transitions</li>
                 </list>
             </def>
@@ -690,9 +690,9 @@
 
         <tip>
             <p>
-                <b>Optimization Opportunity:</b> For extremely long command lines,
-                the token joining phase could be optimized by maintaining adjacency information
-                during initial tokenization, eliminating the need for a separate joining pass.
+                <b>Optimisation Opportunity:</b> For extremely long command lines,
+                the token joining phase could be optimised by maintaining adjacency information
+                during initial tokenisation, eliminating the need for a separate joining pass.
             </p>
         </tip>
     </chapter>
@@ -737,11 +737,11 @@
             </p>
 
             <code-block lang="c">
-            typedef struct s_token
-            {
-                char         *value;    // Token content (malloc'd string)
-                t_token_type type;      // Token classification
-            } t_token;
+                typedef struct s_token
+                {
+                char *value; // Token content (malloc'd string)
+                t_token_type type; // Token classification
+                } t_token;
             </code-block>
 
             <p>
@@ -761,47 +761,47 @@
         <tabs>
             <tab title="Basic Functionality">
                 <code-block lang="bash">
-                # Simple commands
-                echo hello
-                ls -la
-                cat file.txt
+                    # Simple commands
+                    echo hello
+                    ls -la
+                    cat file.txt
 
-                # Expected tokens: [echo][hello], [ls][-la], [cat][file.txt]
+                    # Expected tokens: [echo][hello], [ls][-la], [cat][file.txt]
                 </code-block>
             </tab>
             <tab title="Quote Handling">
                 <code-block lang="bash">
-                # Various quote scenarios
-                echo "hello world"
-                echo 'literal $USER'
-                echo "mixed 'quotes'"
-                echo ""
-                echo ''
+                    # Various quote scenarios
+                    echo "hello world"
+                    echo 'literal $USER'
+                    echo "mixed 'quotes'"
+                    echo ""
+                    echo ''
 
-                # Test both quote types and nesting
+                    # Test both quote types and nesting
                 </code-block>
             </tab>
             <tab title="Special Operators">
                 <code-block lang="bash">
-                # All operator types
-                echo hello | grep h
-                cat &lt; input.txt
-                echo output &gt; file.txt
-                echo append &gt;&gt; log.txt
-                cat &lt;&lt; EOF
+                    # All operator types
+                    echo hello | grep h
+                    cat &lt; input.txt
+                    echo output &gt; file.txt
+                    echo append &gt;&gt; log.txt
+                    cat &lt;&lt; EOF
 
-                # Verify correct token types generated
+                    # Verify correct token types generated
                 </code-block>
             </tab>
             <tab title="Edge Cases">
                 <code-block lang="bash">
-                # Complex scenarios
-                echo"no spaces"between'quotes'
-                command|pipe>redirect
-                echo "unclosed quote
-                multiple    spaces     between   words
+                    # Complex scenarios
+                    echo"no spaces"between'quotes'
+                    command|pipe>redirect
+                    echo "unclosed quote
+                    multiple spaces between words
 
-                # Test error handling and boundary conditions
+                    # Test error handling and boundary conditions
                 </code-block>
             </tab>
         </tabs>
@@ -825,11 +825,11 @@
             <def title="Incorrect Quote Handling" id="quote-pitfalls">
                 <p><b>Problem:</b> Treating quotes as part of the token value.</p>
                 <p><b>Solution:</b> Set token start position after opening quote,
-                end before closing quote. Quotes are delimiters, not content.</p>
+                    end before closing quote. Quotes are delimiters, not content.</p>
 
                 <code-block lang="text">
-                ❌ Wrong: "hello" → TOKEN_WORD("\"hello\"")
-                ✅ Right: "hello" → TOKEN_WORD("hello")
+                    ❌ Wrong: "hello" → TOKEN_WORD("\"hello\"")
+                    ✅ Right: "hello" → TOKEN_WORD("hello")
                 </code-block>
             </def>
 
@@ -838,35 +838,35 @@
                 <p><b>Solution:</b> Implement post-processing to join adjacent word tokens.</p>
 
                 <code-block lang="text">
-                ❌ Wrong: file"name" → ["file", "name"] (2 arguments)
-                ✅ Right: file"name" → ["filename"] (1 argument)
+                    ❌ Wrong: file"name" → ["file", "name"] (2 arguments)
+                    ✅ Right: file"name" → ["filename"] (1 argument)
                 </code-block>
             </def>
 
             <def title="Operator Precedence Issues" id="operator-pitfalls">
-                <p><b>Problem:</b> Not recognizing two-character operators like '>>'.</p>
-                <p><b>Solution:</b> Use lookahead to match longest possible operator first.</p>
+                <p><b>Problem:</b> Not recognising two-character operators like '>>'.</p>
+                <p><b>Solution:</b> Use lookahead to match the longest possible operator first.</p>
 
                 <code-block lang="text">
-                ❌ Wrong: >> → [">"][">"] (two redirections)
-                ✅ Right: >> → [">>"] (one append redirection)
+                    ❌ Wrong: >> → [">"][">"] (two redirections)
+                    ✅ Right: >> → [">>"] (one append redirection)
                 </code-block>
             </def>
 
             <def title="Memory Leaks" id="memory-pitfalls">
                 <p><b>Problem:</b> Forgetting to free token values and list nodes.</p>
-                <p><b>Solution:</b> Implement proper cleanup functions and use them consistently.</p>
+                <p><b>Solution:</b> Implement proper clean-up functions and use them consistently.</p>
 
                 <code-block lang="c">
-                // Proper cleanup
-                void free_token(t_token *token)
-                {
+                    // Proper cleanup
+                    void free_token(t_token *token)
+                    {
                     if (token)
                     {
-                        free(token->value);    // Free the string
-                        free(token);           // Free the structure
+                    free(token->value); // Free the string
+                    free(token); // Free the structure
                     }
-                }
+                    }
                 </code-block>
             </def>
         </deflist>
@@ -883,10 +883,14 @@
             <b>Key Takeaways:</b>
         </p>
         <list>
-            <li><b>State machines provide clarity:</b> The FSM approach makes complex parsing logic manageable and debuggable</li>
-            <li><b>Details matter:</b> Quote handling, operator recognition, and edge cases require careful attention</li>
-            <li><b>Clean interfaces enable composition:</b> Well-defined token types create clear boundaries between shell components</li>
-            <li><b>Error handling is crucial:</b> Robust error detection prevents issues from propagating to later stages</li>
+            <li><b>State machines provide clarity:</b> The FSM approach makes complex parsing logic manageable and
+                debuggable</li>
+            <li><b>Details matter:</b> Quote handling, operator recognition, and edge cases require careful attention
+            </li>
+            <li><b>Clean interfaces enable composition:</b> Well-defined token types create clear boundaries between
+                shell components</li>
+            <li><b>Error handling is crucial:</b> Robust error detection prevents issues from propagating to later
+                stages</li>
         </list>
 
         <p>
@@ -906,7 +910,7 @@
 
     <seealso>
         <category ref="related">
-            <a href="About-Minishell.topic"/>
+            <a href="About-Minishell.topic" />
         </category>
         <category ref="external">
             <a href="https://en.wikipedia.org/wiki/Lexical_analysis">Lexical Analysis on Wikipedia</a>
