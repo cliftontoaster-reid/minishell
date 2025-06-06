@@ -1,0 +1,51 @@
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qecho \"Hello World\" | grep Hello > output.txt\\E$"}
+{"rule":"UNLIKELY_OPENING_PUNCTUATION","sentence":"^\\Q, the lexer doesn't see this as one long string.\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Q\"echo\"\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qoutput.txt\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Q\"output.txt\"\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qfile.txt\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Q\"quoted string\"\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Q'literal text'\\E$"}
+{"rule":"COMMA_PARENTHESIS_WHITESPACE","sentence":"^\\Q# Example: count lines in all .c files find .\\E$"}
+{"rule":"BEING_BEGIN","sentence":"^\\QIt skips whitespace and determines what type of token to begin based on the current character.\\E$"}
+{"rule":"EN_UNPAIRED_QUOTES","sentence":"^\\QChars 'c', 'h', 'o': Continue in LEXER_WORD state\\E$"}
+{"rule":"EN_UNPAIRED_QUOTES","sentence":"^\\QCharacter 5 ('\\\"'):\\E$"}
+{"rule":"EN_UNPAIRED_QUOTES","sentence":"^\\QCharacter 17 ('\\\"'):\\E$"}
+{"rule":"COMMA_PARENTHESIS_WHITESPACE","sentence":"^\\QPosition: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 Input: e c h o \" H e l l o W o r l d \" | State: W W W W N D D D D D D D D D D D D N N N N Legend: N=LEXER_NONE, W=LEXER_WORD, D=LEXER_DUO\\E$"}
+{"rule":"ARROWS","sentence":"^\\Qif (lexer->text[lexer->pos] == '>') { if (lexer->text[lexer->pos + 1] == '>') { type = TOKEN_REDIRECT_APPEND; // \">>\" special = true; // Advance by 2 positions } else type = TOKEN_REDIRECT_OUT; // \">\" }\\E$"}
+{"rule":"ARROWS","sentence":"^\\Qif (lexer->text[lexer->pos] == '>') { if (lexer->text[lexer->pos + 1] == '>') { type = TOKEN_REDIRECT_APPEND; // \">>\" special = true; // Advance by 2 positions } else type = TOKEN_REDIRECT_OUT; // \">\" }\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_GB","sentence":"^\\Qif (lexer->text[lexer->pos] == '>') { if (lexer->text[lexer->pos + 1] == '>') { type = TOKEN_REDIRECT_APPEND; // \">>\" special = true; // Advance by 2 positions } else type = TOKEN_REDIRECT_OUT; // \">\" }\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qif (lexer->text[lexer->pos] == '>') { if (lexer->text[lexer->pos + 1] == '>') { type = TOKEN_REDIRECT_APPEND; // \">>\" special = true; // Advance by 2 positions } else type = TOKEN_REDIRECT_OUT; // \">\" }\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qflag indicates whether to advance by 1 or 2 positions, ensuring two-character operators are consumed completely.\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_GB","sentence":"^\\Q# Examples of double quote behaviour echo \"Hello $USER\" # $USER will be expanded later echo \"Current dir: $(pwd)\" # Command substitution preserved echo \"Tab:\\tSpace: \" # Whitespace preserved literally\\E$"}
+{"rule":"COMMA_PARENTHESIS_WHITESPACE","sentence":"^\\Q# Examples of double quote behaviour echo \"Hello $USER\" # $USER will be expanded later echo \"Current dir: $(pwd)\" # Command substitution preserved echo \"Tab:\\tSpace: \" # Whitespace preserved literally\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qecho \"\" # Creates TOKEN_WORD with empty string value echo '' # Creates TOKEN_WORD with empty string value\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qecho \"Hello\"'World' # Two separate tokens: \"Hello\" and \"World\" echo 'Part1'\\\"Part2\\\" # Two separate tokens that get joined later\\E$"}
+{"rule":"EN_UNPAIRED_QUOTES","sentence":"^\\Qecho \"Hello\"'World' # Two separate tokens: \"Hello\" and \"World\" echo 'Part1'\\\"Part2\\\" # Two separate tokens that get joined later\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qecho \"unclosed quote # ERROR: EINVAL returned echo 'missing end # ERROR: EINVAL returned\\E$"}
+{"rule":"EN_UNPAIRED_QUOTES","sentence":"^\\Qecho \"unclosed quote # ERROR: EINVAL returned echo 'missing end # ERROR: EINVAL returned\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qhello\"world\"test\\E$"}
+{"rule":"EN_UNPAIRED_QUOTES","sentence":"^\\Qhello\"world\"test\\E$"}
+{"rule":"NON_STANDARD_WORD","sentence":"^\\Q// Simplified joining logic static void try_join(t_list *token) { t_token *current = token->content; t_token *next = token->next->content; // Only join adjacent word tokens if (current->type != TOKEN_WORD || next->type != TOKEN_WORD) return; // Create new combined token t_token *new_token = create_token( ft_strjoin(current->value, next->value), TOKEN_WORD ); // Replace current token and remove next token->content = new_token; // ... clean-up and continue joining }\\E$"}
+{"rule":"ARROWS","sentence":"^\\Q// Simplified joining logic static void try_join(t_list *token) { t_token *current = token->content; t_token *next = token->next->content; // Only join adjacent word tokens if (current->type != TOKEN_WORD || next->type != TOKEN_WORD) return; // Create new combined token t_token *new_token = create_token( ft_strjoin(current->value, next->value), TOKEN_WORD ); // Replace current token and remove next token->content = new_token; // ... clean-up and continue joining }\\E$"}
+{"rule":"COMMA_PARENTHESIS_WHITESPACE","sentence":"^\\Q// Simplified joining logic static void try_join(t_list *token) { t_token *current = token->content; t_token *next = token->next->content; // Only join adjacent word tokens if (current->type != TOKEN_WORD || next->type != TOKEN_WORD) return; // Create new combined token t_token *new_token = create_token( ft_strjoin(current->value, next->value), TOKEN_WORD ); // Replace current token and remove next token->content = new_token; // ... clean-up and continue joining }\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qfile\"name\".txt\\E$"}
+{"rule":"EN_UNPAIRED_QUOTES","sentence":"^\\Qfile\"name\".txt\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qecho \"Hello \"'World'\\E$"}
+{"rule":"EN_UNPAIRED_QUOTES","sentence":"^\\Qecho \"Hello \"'World'\\E$"}
+{"rule":"EN_UNPAIRED_QUOTES","sentence":"^\\Q[\"echo\", \"Hello \", \"World\"]\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qcommand arg1 | next\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qfile|command\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qdoesn't become a single word token.\\E$"}
+{"rule":"ARROWS","sentence":"^\\Qt_list *run_lexer(t_lexer *lexer) { // Input validation if (lexer == NULL || lexer->text == NULL || lexer->text[0] == '\\\\0') return (NULL); // ... processing ... // Quote validation at end if (lexer->state == LEXER_UNI || lexer->state == LEXER_DUO) { errno = EINVAL; // Invalid input return (NULL); } }\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qt_list *run_lexer(t_lexer *lexer) { // Input validation if (lexer == NULL || lexer->text == NULL || lexer->text[0] == '\\\\0') return (NULL); // ... processing ... // Quote validation at end if (lexer->state == LEXER_UNI || lexer->state == LEXER_DUO) { errno = EINVAL; // Invalid input return (NULL); } }\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qft_substr()\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qto extract token values efficiently\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qft_strchr(SPECIAL_CHARS, char)\\E$"}
+{"rule":"UNLIKELY_OPENING_PUNCTUATION","sentence":"^\\Q, which provides fast O(1) lookup for the small set of special characters.\\E$"}
+{"rule":"ENGLISH_WORD_REPEAT_RULE","sentence":"^\\Qtypedef struct s_token { char *value; // Token content (malloc'd string) t_token_type type; // Token classification } t_token;\\E$"}
+{"rule":"EN_UNPAIRED_QUOTES","sentence":"^\\Q# Complex scenarios echo\"no spaces\"between'quotes' command|pipe>redirect echo \"unclosed quote multiple spaces between words # Test error handling and boundary conditions\\E$"}
+{"rule":"EN_UNPAIRED_QUOTES","sentence":"^\\Q❌ Wrong: \"hello\" → TOKEN_WORD(\"\\\"hello\\\"\") ✅ Right: \"hello\" → TOKEN_WORD(\"hello\")\\E$"}
+{"rule":"EN_UNPAIRED_QUOTES","sentence":"^\\Q❌ Wrong: file\"name\" → [\"file\", \"name\"] (2 arguments) ✅ Right: file\"name\" → [\"filename\"] (1 argument)\\E$"}
+{"rule":"NON_STANDARD_WORD","sentence":"^\\Q// Proper clean-up void free_token(t_token *token) { if (token) { free(token->value); // Free the string free(token); // Free the structure } }\\E$"}
+{"rule":"ARROWS","sentence":"^\\Q// Proper clean-up void free_token(t_token *token) { if (token) { free(token->value); // Free the string free(token); // Free the structure } }\\E$"}

@@ -14,7 +14,7 @@
 
     <chapter title="What is Lexical Analysis?" id="lexical-analysis-intro">
         <p>
-            Lexical analysis, or tokenisation, is the first phase of shell command processing.
+            Lexical analysis, or tokenization, is the first phase of shell command processing.
             Think of it as reading a sentence and identifying individual words, punctuation,
             and meaning - but for shell commands instead of natural language.
         </p>
@@ -79,7 +79,7 @@
             <p>
                 <b>Why is this important?</b> Without lexical analysis, the shell would
                 struggle to distinguish between a command name and its arguments, or between
-                a pipe symbol and a letter in a filename. Tokenisation creates clear boundaries
+                a pipe symbol and a letter in a filename. Tokenization creates clear boundaries
                 and assigns meaning to each piece of input.
             </p>
         </note>
@@ -87,7 +87,7 @@
 
     <chapter title="Token Types and Recognition" id="token-types">
         <p>
-            Our Minishell lexer recognises several distinct types of tokens, each serving
+            Our Minishell lexer recognizes several distinct types of tokens, each serving
             a specific purpose in shell command processing:
         </p>
 
@@ -229,7 +229,7 @@
 
         <note>
             <p>
-                <b>State Machine Visualisation:</b> The lexer transitions between
+                <b>State Machine Visualization:</b> The lexer transitions between
                 four states (NONE → WORD/UNI/DUO → NONE) based on input characters.
                 Each state has specific rules for character handling and token creation.
             </p>
@@ -252,7 +252,7 @@
 
         <procedure title="Example: Processing echo &quot;Hello World&quot; | grep Hello" id="processing-example">
             <step>
-                <p><b>Initialise:</b> State = LEXER_NONE, Position = 0</p>
+                <p><b>Initialize:</b> State = LEXER_NONE, Position = 0</p>
                 <code-block lang="text">
                     Input: echo "Hello World" | grep Hello
                     ^
@@ -337,7 +337,7 @@
     <chapter title="Special Character Handling" id="special-characters">
         <p>
             Special characters require immediate attention and create tokens as soon as
-            they're encountered. The lexer recognises both single-character and
+            they're encountered. The lexer recognizes both single-character and
             two-character operators.
         </p>
 
@@ -370,7 +370,7 @@
 
             <def title="Two-Character Operators" id="two-char-ops">
                 <p>
-                    The lexer uses lookahead to detect two-character operators. When it
+                    The lexer uses look ahead to detect two-character operators. When it
                     encounters '&gt;' or '&lt;', it checks the next character:
                 </p>
                 <code-block lang="c">
@@ -415,7 +415,7 @@
             </p>
 
             <code-block lang="bash">
-                # Examples of single quote behavior
+                # Examples of single quote behaviour
                 echo 'Hello $USER' # Outputs: Hello $USER
                 echo 'pipe | redirect >' # Outputs: pipe | redirect >
                 echo 'multi
@@ -450,7 +450,7 @@
             </p>
 
             <code-block lang="bash">
-                # Examples of double quote behavior
+                # Examples of double quote behaviour
                 echo "Hello $USER" # $USER will be expanded later
                 echo "Current dir: $(pwd)" # Command substitution preserved
                 echo "Tab:\tSpace: " # Whitespace preserved literally
@@ -501,7 +501,7 @@
 
     <chapter title="Word Token Joining" id="word-joining">
         <p>
-            After initial tokenisation, the lexer performs a post-processing step to join
+            After initial tokenization, the lexer performs a post-processing step to join
             adjacent word tokens. This handles cases where quoted strings appear next to
             regular words or other quoted strings.
         </p>
@@ -657,7 +657,7 @@
     <chapter title="Performance Considerations" id="performance">
         <p>
             While correctness is paramount, the lexer is also designed with performance
-            in mind. Several optimisations ensure efficient processing of shell input.
+            in mind. Several optimizations ensure efficient processing of shell input.
         </p>
 
         <deflist>
@@ -671,11 +671,11 @@
 
             <def title="Minimal Memory Allocation" id="minimal-allocation">
                 <p>
-                    Memory allocation is minimised through:
+                    Memory allocation is minimized through:
                 </p>
                 <list>
                     <li>Using <code>ft_substr()</code> to extract token values efficiently</li>
-                    <li>Reusing lexer structure across multiple tokenisation calls</li>
+                    <li>Reusing lexer structure across multiple tokenization calls</li>
                     <li>Avoiding unnecessary string copying during state transitions</li>
                 </list>
             </def>
@@ -690,9 +690,9 @@
 
         <tip>
             <p>
-                <b>Optimisation Opportunity:</b> For extremely long command lines,
-                the token joining phase could be optimised by maintaining adjacency information
-                during initial tokenisation, eliminating the need for a separate joining pass.
+                <b>Optimization Opportunity:</b> For extremely long command lines,
+                the token joining phase could be optimized by maintaining adjacency information
+                during initial tokenization, eliminating the need for a separate joining pass.
             </p>
         </tip>
     </chapter>
@@ -844,8 +844,8 @@
             </def>
 
             <def title="Operator Precedence Issues" id="operator-pitfalls">
-                <p><b>Problem:</b> Not recognising two-character operators like '>>'.</p>
-                <p><b>Solution:</b> Use lookahead to match the longest possible operator first.</p>
+                <p><b>Problem:</b> Not recognizing two-character operators like '>>'.</p>
+                <p><b>Solution:</b> Use look ahead to match the longest possible operator first.</p>
 
                 <code-block lang="text">
                     ❌ Wrong: >> → [">"][">"] (two redirections)
@@ -858,7 +858,7 @@
                 <p><b>Solution:</b> Implement proper clean-up functions and use them consistently.</p>
 
                 <code-block lang="c">
-                    // Proper cleanup
+                    // Proper clean-up
                     void free_token(t_token *token)
                     {
                     if (token)

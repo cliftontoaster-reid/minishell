@@ -1,0 +1,16 @@
+&lt
+&gt
+lexer
+grep
+Minishell
+wc
+HEREDOC
+LEXER
+EINVAL
+Lexer
+helloworldtest
+ENOMEM
+errno
+typedef
+malloc
+lexers
