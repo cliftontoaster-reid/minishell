@@ -77,7 +77,7 @@ clean:
 	@rm -rf $(OBJ_DIR)
 
 fclean: clean
-	@rm -f $(NAME)
+	@rm -f $(NAME) $(NTEST)
 
 re: fclean all
 
