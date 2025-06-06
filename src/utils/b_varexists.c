@@ -6,11 +6,13 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 11:00:00 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/05 11:54:00 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/06 15:00:46 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
 #include "shared.h"
+#include <errno.h>
 
 static int	str_equal(const char *s1, const char *s2)
 {
@@ -32,7 +34,10 @@ bool	b_varexists(const char *key, t_list *envp)
 	t_env	*env_entry;
 
 	if (!key || !envp)
+	{
+		errno = EINVAL;
 		return (false);
+	}
 	current = envp;
 	while (current)
 	{

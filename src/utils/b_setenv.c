@@ -6,11 +6,13 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 11:00:00 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/05 12:42:22 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/06 15:00:12 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
 #include "shared.h"
+#include <errno.h>
 
 static int	str_equal(const char *s1, const char *s2)
 {
@@ -18,7 +20,10 @@ static int	str_equal(const char *s1, const char *s2)
 	size_t	len2;
 
 	if (!s1 || !s2)
+	{
+		errno = EINVAL;
 		return (0);
+	}
 	len1 = ft_strlen(s1);
 	len2 = ft_strlen(s2);
 	if (len1 != len2)
@@ -32,11 +37,15 @@ static t_env	*create_new_env_var(const char *key, const char *value)
 
 	env = malloc(sizeof(t_env));
 	if (!env)
+	{
+		errno = ENOMEM;
 		return (NULL);
+	}
 	env->key = ft_strdup(key);
 	if (!env->key)
 	{
 		free(env);
+		errno = ENOMEM;
 		return (NULL);
 	}
 	env->value = ft_strdup(value);
@@ -44,6 +53,7 @@ static t_env	*create_new_env_var(const char *key, const char *value)
 	{
 		free(env->key);
 		free(env);
+		errno = ENOMEM;
 		return (NULL);
 	}
 	return (env);
@@ -55,7 +65,10 @@ static bool	update_existing_var(t_env *env_entry, const char *value)
 
 	new_value = ft_strdup(value);
 	if (!new_value)
+	{
+		errno = ENOMEM;
 		return (false);
+	}
 	free(env_entry->value);
 	env_entry->value = new_value;
 	return (true);
@@ -75,6 +88,7 @@ static void	add_new_env_var(const char *key, const char *value, t_list **envp)
 		free(new_env->key);
 		free(new_env->value);
 		free(new_env);
+		errno = ENOMEM;
 		return ;
 	}
 	ft_lstadd_back(envp, new_node);

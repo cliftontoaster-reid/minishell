@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 11:14:25 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/06 14:17:34 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/06 14:53:30 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,11 @@ static void	try_join(t_list *token)
 			TOKEN_WORD);
 	if (!new_token)
 		return ;
-	{
-		del = token->next;
-		token->content = new_token;
-		token->next = del->next;
-		ft_lstdelone(del, freerf);
-		free_token(current);
-	}
+	del = token->next;
+	token->content = new_token;
+	token->next = del->next;
+	ft_lstdelone(del, freerf);
+	free_token(current);
 	try_join(token);
 }
 

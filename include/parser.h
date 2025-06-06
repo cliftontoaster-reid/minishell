@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 14:38:32 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/06 14:13:18 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/06 14:41:08 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,4 +88,4 @@ t_parsing_error		parser_parse(t_parser *parser);
 /// @brief Turns the AST into a list of commands
 /// @param parser The parser to use
 /// @return A list of commands
-t_list				*parser_to_list(t_parser *parser);
+t_cmd_token			*parser_to_list(t_parser *parser);

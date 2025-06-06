@@ -6,11 +6,13 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 12:00:57 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/05 12:24:46 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/06 14:58:18 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
 #include "shared.h"
+#include <errno.h>
 
 void	free_split(char **split)
 {
@@ -31,13 +33,17 @@ static t_env	*create_env_entry(char *key, char *value)
 {
 	t_env	*env;
 
-	env = malloc(sizeof(t_env));
+	env = ft_calloc(1, sizeof(t_env));
 	if (!env)
+	{
+		errno = ENOMEM;
 		return (NULL);
+	}
 	env->key = ft_strdup(key);
 	if (!env->key)
 	{
 		free(env);
+		errno = ENOMEM;
 		return (NULL);
 	}
 	env->value = ft_strdup(value);
@@ -45,6 +51,7 @@ static t_env	*create_env_entry(char *key, char *value)
 	{
 		free(env->key);
 		free(env);
+		errno = ENOMEM;
 		return (NULL);
 	}
 	return (env);
@@ -59,16 +66,21 @@ static int	parse_env_string(char *env_str, char **key, char **value)
 		return (0);
 	*key = ft_substr(env_str, 0, equals_pos - env_str);
 	if (!*key)
+	{
+		errno = ENOMEM;
 		return (0);
+	}
 	if (ft_strlen(*key) == 0)
 	{
 		free(*key);
+		errno = EINVAL;
 		return (0);
 	}
 	*value = ft_strdup(equals_pos + 1);
 	if (!*value)
 	{
 		free(*key);
+		errno = ENOMEM;
 		return (0);
 	}
 	return (1);
@@ -86,7 +98,10 @@ static int	process_env_entry(char *env_str, t_list **env_list)
 	free(key);
 	free(value);
 	if (!env)
+	{
+		errno = ENOMEM;
 		return (0);
+	}
 	ft_lstadd_back(env_list, ft_lstnew(env));
 	return (1);
 }

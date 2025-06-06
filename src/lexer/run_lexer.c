@@ -6,11 +6,12 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 15:41:18 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/05/20 12:37:39 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/06 15:01:31 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
+#include <errno.h>
 
 /// @brief Finalize the current token in the lexer and append it to its
 ///        token list
@@ -47,15 +48,22 @@ bool	end_token(t_lexer *lexer)
 		type = TOKEN_WORD;
 	value = ft_substr(lexer->text, lexer->start, lexer->pos - lexer->start);
 	if (value == NULL)
+	{
+		errno = ENOMEM;
 		return (false);
+	}
 	token = create_token(value, type);
 	free(value);
 	if (token == NULL)
+	{
+		errno = ENOMEM;
 		return (false);
+	}
 	new_node = ft_lstnew(token);
 	if (new_node == NULL)
 	{
 		free_token(token);
+		errno = ENOMEM;
 		return (false);
 	}
 	ft_lstadd_back(&lexer->token_list, new_node);
@@ -100,11 +108,15 @@ void	lexer_special(t_lexer *lexer)
 	}
 	token = create_token(ft_substr(lexer->text, lexer->pos, 1 + special), type);
 	if (token == NULL)
+	{
+		errno = ENOMEM;
 		return ;
+	}
 	new_node = ft_lstnew(token);
 	if (new_node == NULL)
 	{
 		free_token(token);
+		errno = ENOMEM;
 		return ;
 	}
 	ft_lstadd_back(&lexer->token_list, new_node);
@@ -229,6 +241,9 @@ t_list	*run_lexer(t_lexer *lexer)
 	if (lexer->state == LEXER_WORD)
 		end_token(lexer);
 	if (lexer->state == LEXER_UNI || lexer->state == LEXER_DUO)
+	{
+		errno = EINVAL;
 		return (NULL);
+	}
 	return (lexer->token_list);
 }
