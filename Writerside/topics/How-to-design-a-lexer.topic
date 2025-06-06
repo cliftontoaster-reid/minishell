@@ -2,33 +2,915 @@
 <!DOCTYPE topic SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
 <topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
-    title="How to design a lexer" id="How-to-design-a-lexer">
+    title="How the Lexer Works" id="How-to-design-a-lexer">
 
-    <p>
-        The lexer is a crucial component of the shell, as it is responsible for breaking
-        down user input into manageable pieces. It is important to design the lexer carefully
-        to ensure that it can handle all possible input cases and produce accurate tokens.
-    </p>
-    <chapter title="Designing the Lexer" id="designing-the-lexer">
+    <tldr>
         <p>
-            The lexer should be designed to handle a variety of input cases, including:
+            The lexer transforms raw shell input into structured tokens through a finite state machine.
+            It processes characters one by one, handling quotes, special operators, and whitespace
+            to produce a stream of tokens that the parser can understand.
+        </p>
+    </tldr>
+
+    <chapter title="What is Lexical Analysis?" id="lexical-analysis-intro">
+        <p>
+            Lexical analysis, or tokenization, is the first phase of shell command processing.
+            Think of it as reading a sentence and identifying individual words, punctuation,
+            and meaning - but for shell commands instead of natural language.
+        </p>
+
+        <p>
+            When you type <code>echo "Hello World" | grep Hello > output.txt</code>, the lexer
+            doesn't see this as one long string. Instead, it breaks it down into meaningful pieces:
+        </p>
+
+        <table>
+            <tr>
+                <td>Input Character Sequence</td>
+                <td>Token Type</td>
+                <td>Token Value</td>
+                <td>Meaning</td>
+            </tr>
+            <tr>
+                <td><code>echo</code></td>
+                <td>TOKEN_WORD</td>
+                <td>"echo"</td>
+                <td>Command to execute</td>
+            </tr>
+            <tr>
+                <td><code>"Hello World"</code></td>
+                <td>TOKEN_WORD</td>
+                <td>"Hello World"</td>
+                <td>Quoted argument</td>
+            </tr>
+            <tr>
+                <td><code>|</code></td>
+                <td>TOKEN_PIPE</td>
+                <td>"|"</td>
+                <td>Pipe operator</td>
+            </tr>
+            <tr>
+                <td><code>grep</code></td>
+                <td>TOKEN_WORD</td>
+                <td>"grep"</td>
+                <td>Next command</td>
+            </tr>
+            <tr>
+                <td><code>Hello</code></td>
+                <td>TOKEN_WORD</td>
+                <td>"Hello"</td>
+                <td>Argument to grep</td>
+            </tr>
+            <tr>
+                <td><code>></code></td>
+                <td>TOKEN_REDIRECT_OUT</td>
+                <td>">"</td>
+                <td>Output redirection</td>
+            </tr>
+            <tr>
+                <td><code>output.txt</code></td>
+                <td>TOKEN_WORD</td>
+                <td>"output.txt"</td>
+                <td>Target file</td>
+            </tr>
+        </table>
+
+        <note>
+            <p>
+                <b>Why is this important?</b> Without lexical analysis, the shell would
+                struggle to distinguish between a command name and its arguments, or between
+                a pipe symbol and the letter in a filename. Tokenization creates clear boundaries
+                and assigns meaning to each piece of input.
+            </p>
+        </note>
+    </chapter>
+
+    <chapter title="Token Types and Recognition" id="token-types">
+        <p>
+            Our Minishell lexer recognizes several distinct types of tokens, each serving
+            a specific purpose in shell command processing:
+        </p>
+
+        <deflist collapsible="true" default-state="expanded">
+            <def title="🔤 TOKEN_WORD" id="token-word">
+                <p>
+                    <b>Purpose:</b> Represents commands, arguments, filenames, and any
+                    text that isn't a special operator.
+                </p>
+                <p><b>Examples:</b></p>
+                <list>
+                    <li><code>echo</code> → Command name</li>
+                    <li><code>file.txt</code> → Filename</li>
+                    <li><code>"quoted string"</code> → Quoted argument (quotes removed)</li>
+                    <li><code>'literal text'</code> → Single-quoted text (quotes removed)</li>
+                    <li><code>$USER</code> → Variable (will be expanded later)</li>
+                </list>
+
+                <note>
+                    <p>
+                        TOKEN_WORD is the "catch-all" type. If input doesn't match any special
+                        operator pattern, it becomes a word token. This includes both simple
+                        words and complex quoted strings.
+                    </p>
+                </note>
+            </def>
+
+            <def title="🔗 TOKEN_PIPE" id="token-pipe">
+                <p>
+                    <b>Symbol:</b> <code>|</code><br/>
+                    <b>Purpose:</b> Connects commands in a pipeline, passing the output
+                    of one command as input to the next.
+                </p>
+                <code-block lang="bash">
+                # Example: count lines in all .c files
+                find . -name "*.c" | wc -l
+                #                  ^
+                #              TOKEN_PIPE
+                </code-block>
+            </def>
+
+            <def title="📥 TOKEN_REDIRECT_IN" id="token-redirect-in">
+                <p>
+                    <b>Symbol:</b> <code>&lt;</code><br/>
+                    <b>Purpose:</b> Redirects input from a file to a command.
+                </p>
+                <code-block lang="bash">
+                # Read input from file.txt
+                sort &lt; file.txt
+                #    ^
+                # TOKEN_REDIRECT_IN
+                </code-block>
+            </def>
+
+            <def title="📤 TOKEN_REDIRECT_OUT" id="token-redirect-out">
+                <p>
+                    <b>Symbol:</b> <code>&gt;</code><br/>
+                    <b>Purpose:</b> Redirects command output to a file (overwrites existing content).
+                </p>
+                <code-block lang="bash">
+                # Write output to file.txt
+                echo "Hello" &gt; file.txt
+                #            ^
+                #      TOKEN_REDIRECT_OUT
+                </code-block>
+            </def>
+
+            <def title="📝 TOKEN_REDIRECT_APPEND" id="token-redirect-append">
+                <p>
+                    <b>Symbol:</b> <code>&gt;&gt;</code><br/>
+                    <b>Purpose:</b> Redirects command output to a file (appends to existing content).
+                </p>
+                <code-block lang="bash">
+                # Append output to log.txt
+                echo "New entry" &gt;&gt; log.txt
+                #                ^
+                #         TOKEN_REDIRECT_APPEND
+                </code-block>
+            </def>
+
+            <def title="📋 TOKEN_REDIRECT_HEREDOC" id="token-redirect-heredoc">
+                <p>
+                    <b>Symbol:</b> <code>&lt;&lt;</code><br/>
+                    <b>Purpose:</b> Starts a here-document, allowing multi-line input
+                    until a delimiter is reached.
+                </p>
+                <code-block lang="bash">
+                # Here-document example
+                cat &lt;&lt; EOF
+                #   ^
+                # TOKEN_REDIRECT_HEREDOC
+                Line 1
+                Line 2
+                EOF
+                </code-block>
+            </def>
+        </deflist>
+    </chapter>
+
+    <chapter title="The Finite State Machine" id="finite-state-machine">
+        <p>
+            The heart of our lexer is a finite state machine (FSM) that processes input
+            character by character. Each state represents a different context for interpreting
+            characters, and transitions between states occur based on the current character
+            and lexer rules.
+        </p>
+
+        <note>
+            <p>
+                <b>Why use a state machine?</b> State machines provide a clean,
+                predictable way to handle complex parsing logic. Each state has specific
+                rules for what characters are valid and how to handle them, making the
+                lexer both robust and maintainable.
+            </p>
+        </note>
+
+        <procedure title="Lexer States" id="lexer-states">
+            <step>
+                <p><b>LEXER_NONE</b> - Initial state, no token being built</p>
+                <p>In this state, the lexer scans for the start of new tokens. It skips
+                whitespace and determines what type of token to begin based on the current character.</p>
+            </step>
+            <step>
+                <p><b>LEXER_WORD</b> - Building a regular word token</p>
+                <p>Accumulates characters that aren't whitespace, quotes, or special operators
+                into a word token. Transitions out when encountering delimiters.</p>
+            </step>
+            <step>
+                <p><b>LEXER_UNI</b> - Inside single quotes</p>
+                <p>Treats all characters literally until the closing single quote.
+                No variable expansion or special character interpretation occurs.</p>
+            </step>
+            <step>
+                <p><b>LEXER_DUO</b> - Inside double quotes</p>
+                <p>Similar to single quotes but allows variable expansion (though this
+                happens in later processing phases, not during lexical analysis).</p>
+            </step>
+        </procedure>
+
+        <note>
+            <p>
+                <b>State Machine Visualization:</b> The lexer transitions between
+                four states (NONE → WORD/UNI/DUO → NONE) based on input characters.
+                Each state has specific rules for character handling and token creation.
+            </p>
+        </note>
+
+        <note>
+            <p>
+                <b>State Persistence:</b> The lexer maintains its current state,
+                position in the input, and the start position of the current token being built.
+                This allows it to handle multi-character tokens and complex quoting scenarios.
+            </p>
+        </note>
+    </chapter>
+
+    <chapter title="Character-by-Character Processing" id="character-processing">
+        <p>
+            Let's trace through the lexer's operation on a concrete example to understand
+            how state transitions and token creation work in practice.
+        </p>
+
+        <procedure title="Example: Processing echo &quot;Hello World&quot; | grep Hello" id="processing-example">
+            <step>
+                <p><b>Initialize:</b> State = LEXER_NONE, Position = 0</p>
+                <code-block lang="text">
+                Input: echo "Hello World" | grep Hello
+                       ^
+                       Position 0, State: LEXER_NONE
+                </code-block>
+            </step>
+            <step>
+                <p><b>Characters 0-3 ('echo'):</b></p>
+                <list>
+                    <li>Char 'e': Not whitespace/quote/special → State = LEXER_WORD, Start = 0</li>
+                    <li>Chars 'c', 'h', 'o': Continue in LEXER_WORD state</li>
+                </list>
+            </step>
+            <step>
+                <p><b>Character 4 (space):</b></p>
+                <list>
+                    <li>Whitespace encountered → End current token</li>
+                    <li>Create TOKEN_WORD with value "echo"</li>
+                    <li>State = LEXER_NONE</li>
+                </list>
+            </step>
+            <step>
+                <p><b>Character 5 ('"'):</b></p>
+                <list>
+                    <li>Double quote → State = LEXER_DUO</li>
+                    <li>Start = 6 (position after opening quote)</li>
+                </list>
+            </step>
+            <step>
+                <p><b>Characters 6-16 ('Hello World'):</b></p>
+                <list>
+                    <li>All characters including space treated literally</li>
+                    <li>Continue in LEXER_DUO state</li>
+                </list>
+            </step>
+            <step>
+                <p><b>Character 17 ('"'):</b></p>
+                <list>
+                    <li>Closing quote → End token with value "Hello World"</li>
+                    <li>Create TOKEN_WORD, State = LEXER_NONE</li>
+                </list>
+            </step>
+            <step>
+                <p><b>Character 19 ('|'):</b></p>
+                <list>
+                    <li>Special character → Create TOKEN_PIPE immediately</li>
+                    <li>No state change needed for single-char operators</li>
+                </list>
+            </step>
+        </procedure>
+
+        <tabs>
+            <tab title="State Transitions">
+                <code-block lang="text">
+                Position: 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20
+                Input:    e  c  h  o     "  H  e  l  l  o     W  o  r  l  d  "     |
+                State:    W  W  W  W  N  D  D  D  D  D  D  D  D  D  D  D  D  N  N  N  N
+
+                Legend: N=LEXER_NONE, W=LEXER_WORD, D=LEXER_DUO
+                </code-block>
+            </tab>
+            <tab title="Token Creation">
+                <code-block lang="text">
+                Position 4: TOKEN_WORD("echo")
+                Position 17: TOKEN_WORD("Hello World")
+                Position 19: TOKEN_PIPE("|")
+                Position 24: TOKEN_WORD("grep")
+                Position 30: TOKEN_WORD("Hello")
+                </code-block>
+            </tab>
+        </tabs>
+
+        <warning>
+            <p>
+                <b>Unclosed Quotes:</b> If the lexer reaches the end of input while
+                in LEXER_UNI or LEXER_DUO state, it indicates an unclosed quote and returns
+                an error (EINVAL). This prevents malformed commands from being processed.
+            </p>
+        </warning>
+    </chapter>
+
+    <chapter title="Special Character Handling" id="special-characters">
+        <p>
+            Special characters require immediate attention and create tokens as soon as
+            they're encountered. The lexer recognizes both single-character and
+            two-character operators.
+        </p>
+
+        <deflist collapsible="true" default-state="expanded">
+            <def title="Single-Character Operators" id="single-char-ops">
+                <p>These create tokens immediately upon detection:</p>
+                <table>
+                    <tr>
+                        <td>Character</td>
+                        <td>Token Type</td>
+                        <td>Action</td>
+                    </tr>
+                    <tr>
+                        <td><code>|</code></td>
+                        <td>TOKEN_PIPE</td>
+                        <td>Create token, advance position by 1</td>
+                    </tr>
+                    <tr>
+                        <td><code>&gt;</code></td>
+                        <td>TOKEN_REDIRECT_OUT</td>
+                        <td>Check next char for '>>', else single redirect</td>
+                    </tr>
+                    <tr>
+                        <td><code>&lt;</code></td>
+                        <td>TOKEN_REDIRECT_IN</td>
+                        <td>Check next char for '&lt;&lt;', else single redirect</td>
+                    </tr>
+                </table>
+            </def>
+
+            <def title="Two-Character Operators" id="two-char-ops">
+                <p>
+                    The lexer uses lookahead to detect two-character operators. When it
+                    encounters '&gt;' or '&lt;', it checks the next character:
+                </p>
+                <code-block lang="c">
+                if (lexer->text[lexer->pos] == '>')
+                {
+                    if (lexer->text[lexer->pos + 1] == '>')
+                    {
+                        type = TOKEN_REDIRECT_APPEND;  // ">>"
+                        special = true;  // Advance by 2 positions
+                    }
+                    else
+                        type = TOKEN_REDIRECT_OUT;  // ">"
+                }
+                </code-block>
+                <p>
+                    The <code>special</code> flag indicates whether to advance by 1 or 2 positions,
+                    ensuring two-character operators are consumed completely.
+                </p>
+            </def>
+        </deflist>
+
+        <tip>
+            <p>
+                <b>Greedy Matching:</b> The lexer always tries to match the longest
+                possible operator first. '>>' is preferred over two separate '>' tokens,
+                which ensures correct parsing of append redirections.
+            </p>
+        </tip>
+    </chapter>
+
+    <chapter title="Quote Processing Deep Dive" id="quote-processing">
+        <p>
+            Quote handling is one of the most complex aspects of shell lexical analysis.
+            Our lexer supports both single quotes (literal) and double quotes (with potential
+            variable expansion in later phases).
+        </p>
+
+        <chapter title="Single Quote Behavior" id="single-quotes">
+            <p>
+                Single quotes preserve everything literally. No special characters, variables,
+                or escape sequences are interpreted within single quotes.
+            </p>
+
+            <code-block lang="bash">
+            # Examples of single quote behavior
+            echo 'Hello $USER'           # Outputs: Hello $USER
+            echo 'pipe | redirect >'     # Outputs: pipe | redirect >
+            echo 'multi
+            line
+            text'                        # Preserves newlines literally
+            </code-block>
+
+            <procedure title="Single Quote Processing" id="single-quote-process">
+                <step>
+                    <p>Encounter opening single quote → State = LEXER_UNI</p>
+                </step>
+                <step>
+                    <p>Set start position to character after opening quote</p>
+                </step>
+                <step>
+                    <p>Consume all characters literally until closing quote</p>
+                </step>
+                <step>
+                    <p>Create TOKEN_WORD with content between quotes</p>
+                </step>
+                <step>
+                    <p>Return to LEXER_NONE state</p>
+                </step>
+            </procedure>
+        </chapter>
+
+        <chapter title="Double Quote Behavior" id="double-quotes">
+            <p>
+                Double quotes allow variable expansion and some special character interpretation,
+                though the actual expansion happens in later processing phases. During lexical
+                analysis, the content is captured as-is.
+            </p>
+
+            <code-block lang="bash">
+            # Examples of double quote behavior
+            echo "Hello $USER"           # $USER will be expanded later
+            echo "Current dir: $(pwd)"   # Command substitution preserved
+            echo "Tab:	Space: "         # Whitespace preserved literally
+            </code-block>
+
+            <note>
+                <p>
+                    <b>Lexer vs. Expander:</b> The lexer's job is to identify quoted
+                    strings, not to perform variable expansion. That's handled by later phases
+                    in the shell pipeline. The lexer simply captures the raw content for
+                    future processing.
+                </p>
+            </note>
+        </chapter>
+
+        <chapter title="Quote Edge Cases" id="quote-edge-cases">
+            <p>
+                Several edge cases require careful handling in quote processing:
+            </p>
+
+            <deflist>
+                <def title="Empty Quotes" id="empty-quotes">
+                    <code-block lang="bash">
+                    echo ""      # Creates TOKEN_WORD with empty string value
+                    echo ''      # Creates TOKEN_WORD with empty string value
+                    </code-block>
+                    <p>Empty quotes are valid and create word tokens with empty string values.</p>
+                </def>
+
+                <def title="Adjacent Quotes" id="adjacent-quotes">
+                    <code-block lang="bash">
+                    echo "Hello"'World'     # Two separate tokens: "Hello" and "World"
+                    echo 'Part1'"Part2"     # Two separate tokens that get joined later
+                    </code-block>
+                    <p>Adjacent quoted strings create separate tokens that are joined in post-processing.</p>
+                </def>
+
+                <def title="Unclosed Quotes" id="unclosed-quotes">
+                    <code-block lang="bash">
+                    echo "unclosed quote    # ERROR: EINVAL returned
+                    echo 'missing end       # ERROR: EINVAL returned
+                    </code-block>
+                    <p>Unclosed quotes result in lexer error and command rejection.</p>
+                </def>
+            </deflist>
+        </chapter>
+    </chapter>
+
+    <chapter title="Word Token Joining" id="word-joining">
+        <p>
+            After initial tokenization, the lexer performs a post-processing step to join
+            adjacent word tokens. This handles cases where quoted strings appear next to
+            regular words or other quoted strings.
+        </p>
+
+        <p>
+            <b>Why join tokens?</b> Consider the input <code>hello"world"test</code>.
+            During lexical analysis, this becomes three separate tokens:
+        </p>
+
+        <list>
+            <li>TOKEN_WORD("hello")</li>
+            <li>TOKEN_WORD("world")</li>
+            <li>TOKEN_WORD("test")</li>
+        </list>
+
+        <p>
+            But semantically, this should be treated as a single argument: <code>helloworldtest</code>.
+            The joining process combines these into one TOKEN_WORD.
+        </p>
+
+        <code-block lang="c">
+        // Simplified joining logic
+        static void try_join(t_list *token)
+        {
+            t_token *current = token->content;
+            t_token *next = token->next->content;
+
+            // Only join adjacent word tokens
+            if (current->type != TOKEN_WORD || next->type != TOKEN_WORD)
+                return;
+
+            // Create new combined token
+            t_token *new_token = create_token(
+                ft_strjoin(current->value, next->value),
+                TOKEN_WORD
+            );
+
+            // Replace current token and remove next
+            token->content = new_token;
+            // ... cleanup and continue joining
+        }
+        </code-block>
+
+        <procedure title="Joining Examples" id="joining-examples">
+            <step>
+                <p><b>Input:</b> <code>file"name".txt</code></p>
+                <p><b>Initial tokens:</b> ["file", "name", ".txt"]</p>
+                <p><b>After joining:</b> ["filename.txt"]</p>
+            </step>
+            <step>
+                <p><b>Input:</b> <code>echo "Hello "'World'</code></p>
+                <p><b>Initial tokens:</b> ["echo", "Hello ", "World"]</p>
+                <p><b>After joining:</b> ["echo", "Hello World"]</p>
+            </step>
+            <step>
+                <p><b>Input:</b> <code>command arg1 | next</code></p>
+                <p><b>Tokens:</b> ["command", "arg1", "|", "next"]</p>
+                <p><b>No joining:</b> Pipe breaks word adjacency</p>
+            </step>
+        </procedure>
+
+        <warning>
+            <p>
+                <b>Joining Rules:</b> Only adjacent TOKEN_WORD tokens are joined.
+                Special operators (pipes, redirections) act as boundaries that prevent
+                joining across them. This ensures that <code>file|command</code> doesn't
+                become a single word token.
+            </p>
+        </warning>
+    </chapter>
+
+    <chapter title="Error Handling and Edge Cases" id="error-handling">
+        <p>
+            Robust lexical analysis requires careful handling of error conditions and
+            edge cases. Our lexer implements several safety mechanisms to ensure
+            reliable operation.
+        </p>
+
+        <deflist collapsible="true" default-state="expanded">
+            <def title="Memory Management" id="memory-management">
+                <p>
+                    The lexer carefully manages memory allocation and cleanup:
+                </p>
+                <list>
+                    <li><b>Token Creation:</b> Each token allocates memory for its value string</li>
+                    <li><b>List Management:</b> Tokens are stored in a linked list with proper cleanup functions</li>
+                    <li><b>Error Recovery:</b> On allocation failure, partial tokens are cleaned up</li>
+                    <li><b>ENOMEM Handling:</b> Memory exhaustion sets errno and returns gracefully</li>
+                </list>
+
+                <code-block lang="c">
+                // Error handling in token creation
+                t_token *token = create_token(value, type);
+                if (token == NULL)
+                {
+                    free(value);          // Clean up partial allocation
+                    errno = ENOMEM;       // Set error code
+                    return (false);       // Indicate failure
+                }
+                </code-block>
+            </def>
+
+            <def title="Input Validation" id="input-validation">
+                <p>
+                    The lexer validates input before processing:
+                </p>
+                <list>
+                    <li><b>Null Checks:</b> Handles NULL lexer or text pointers</li>
+                    <li><b>Empty Input:</b> Returns NULL for empty strings gracefully</li>
+                    <li><b>Quote Matching:</b> Detects and reports unclosed quotes</li>
+                </list>
+
+                <code-block lang="c">
+                t_list *run_lexer(t_lexer *lexer)
+                {
+                    // Input validation
+                    if (lexer == NULL || lexer->text == NULL || lexer->text[0] == '\0')
+                        return (NULL);
+
+                    // ... processing ...
+
+                    // Quote validation at end
+                    if (lexer->state == LEXER_UNI || lexer->state == LEXER_DUO)
+                    {
+                        errno = EINVAL;   // Invalid input
+                        return (NULL);
+                    }
+                }
+                </code-block>
+            </def>
+
+            <def title="State Consistency" id="state-consistency">
+                <p>
+                    The lexer maintains consistent internal state throughout processing:
+                </p>
+                <list>
+                    <li><b>Position Tracking:</b> Current position never exceeds string length</li>
+                    <li><b>Start Position:</b> Token start position properly updated on state changes</li>
+                    <li><b>State Transitions:</b> Only valid state transitions are allowed</li>
+                </list>
+            </def>
+        </deflist>
+
+        <note>
+            <p>
+                <b>Fail-Fast Principle:</b> The lexer is designed to fail quickly and
+                cleanly when encountering invalid input. This prevents downstream components
+                from having to handle malformed token streams and makes debugging easier.
+            </p>
+        </note>
+    </chapter>
+
+    <chapter title="Performance Considerations" id="performance">
+        <p>
+            While correctness is paramount, the lexer is also designed with performance
+            in mind. Several optimizations ensure efficient processing of shell input.
+        </p>
+
+        <deflist>
+            <def title="Single-Pass Processing" id="single-pass">
+                <p>
+                    The lexer processes input in a single pass, character by character,
+                    without backtracking. This provides O(n) time complexity where n
+                    is the input length.
+                </p>
+            </def>
+
+            <def title="Minimal Memory Allocation" id="minimal-allocation">
+                <p>
+                    Memory allocation is minimized through:
+                </p>
+                <list>
+                    <li>Using <code>ft_substr()</code> to extract token values efficiently</li>
+                    <li>Reusing lexer structure across multiple tokenization calls</li>
+                    <li>Avoiding unnecessary string copying during state transitions</li>
+                </list>
+            </def>
+
+            <def title="Efficient Special Character Detection" id="efficient-detection">
+                <p>
+                    Special characters are detected using <code>ft_strchr(SPECIAL_CHARS, char)</code>,
+                    which provides fast O(1) lookup for the small set of special characters.
+                </p>
+            </def>
+        </deflist>
+
+        <tip>
+            <p>
+                <b>Optimization Opportunity:</b> For extremely long command lines,
+                the token joining phase could be optimized by maintaining adjacency information
+                during initial tokenization, eliminating the need for a separate joining pass.
+            </p>
+        </tip>
+    </chapter>
+
+    <chapter title="Integration with the Shell Pipeline" id="shell-integration">
+        <p>
+            The lexer is the first component in the shell's processing pipeline, but it
+            doesn't work in isolation. Understanding how it integrates with other components
+            is crucial for the overall shell architecture.
+        </p>
+
+        <procedure title="Shell Processing Pipeline" id="shell-pipeline">
+            <step>
+                <p><b>Input Collection:</b> Shell reads command line from user</p>
+            </step>
+            <step>
+                <p><b>Lexical Analysis:</b> Lexer converts input to token stream</p>
+            </step>
+            <step>
+                <p><b>Parsing:</b> Parser builds command structure from tokens</p>
+            </step>
+            <step>
+                <p><b>Expansion:</b> Variables and wildcards are expanded</p>
+            </step>
+            <step>
+                <p><b>Execution:</b> Commands are executed with proper I/O setup</p>
+            </step>
+        </procedure>
+
+        <note>
+            <p>
+                <b>Clean Interfaces:</b> The lexer provides a clean interface to
+                the parser through well-defined token types. This separation of concerns
+                makes the shell easier to debug, test, and maintain.
+            </p>
+        </note>
+
+        <chapter title="Token Stream Format" id="token-stream">
+            <p>
+                The lexer outputs a linked list of tokens that the parser can process
+                sequentially. Each token contains:
+            </p>
+
+            <code-block lang="c">
+            typedef struct s_token
+            {
+                char         *value;    // Token content (malloc'd string)
+                t_token_type type;      // Token classification
+            } t_token;
+            </code-block>
+
+            <p>
+                This simple but powerful structure allows the parser to make decisions
+                based on token type while having access to the original text for
+                commands, arguments, and filenames.
+            </p>
+        </chapter>
+    </chapter>
+
+    <chapter title="Testing and Validation" id="testing">
+        <p>
+            Comprehensive testing is essential for a reliable lexer. Our testing strategy
+            covers both normal operation and edge cases.
+        </p>
+
+        <tabs>
+            <tab title="Basic Functionality">
+                <code-block lang="bash">
+                # Simple commands
+                echo hello
+                ls -la
+                cat file.txt
+
+                # Expected tokens: [echo][hello], [ls][-la], [cat][file.txt]
+                </code-block>
+            </tab>
+            <tab title="Quote Handling">
+                <code-block lang="bash">
+                # Various quote scenarios
+                echo "hello world"
+                echo 'literal $USER'
+                echo "mixed 'quotes'"
+                echo ""
+                echo ''
+
+                # Test both quote types and nesting
+                </code-block>
+            </tab>
+            <tab title="Special Operators">
+                <code-block lang="bash">
+                # All operator types
+                echo hello | grep h
+                cat &lt; input.txt
+                echo output &gt; file.txt
+                echo append &gt;&gt; log.txt
+                cat &lt;&lt; EOF
+
+                # Verify correct token types generated
+                </code-block>
+            </tab>
+            <tab title="Edge Cases">
+                <code-block lang="bash">
+                # Complex scenarios
+                echo"no spaces"between'quotes'
+                command|pipe>redirect
+                echo "unclosed quote
+                multiple    spaces     between   words
+
+                # Test error handling and boundary conditions
+                </code-block>
+            </tab>
+        </tabs>
+
+        <warning>
+            <p>
+                <b>Test Early and Often:</b> Lexer bugs can cause subtle issues
+                throughout the shell. Build comprehensive tests before implementing the
+                parser to catch issues early in development.
+            </p>
+        </warning>
+    </chapter>
+
+    <chapter title="Common Pitfalls and Solutions" id="pitfalls">
+        <p>
+            Learning from common mistakes can save significant debugging time. Here are
+            frequent issues encountered when implementing shell lexers:
+        </p>
+
+        <deflist collapsible="true" default-state="expanded">
+            <def title="Incorrect Quote Handling" id="quote-pitfalls">
+                <p><b>Problem:</b> Treating quotes as part of the token value.</p>
+                <p><b>Solution:</b> Set token start position after opening quote,
+                end before closing quote. Quotes are delimiters, not content.</p>
+
+                <code-block lang="text">
+                ❌ Wrong: "hello" → TOKEN_WORD("\"hello\"")
+                ✅ Right: "hello" → TOKEN_WORD("hello")
+                </code-block>
+            </def>
+
+            <def title="Missing Word Joining" id="joining-pitfalls">
+                <p><b>Problem:</b> Adjacent quoted strings treated as separate arguments.</p>
+                <p><b>Solution:</b> Implement post-processing to join adjacent word tokens.</p>
+
+                <code-block lang="text">
+                ❌ Wrong: file"name" → ["file", "name"] (2 arguments)
+                ✅ Right: file"name" → ["filename"] (1 argument)
+                </code-block>
+            </def>
+
+            <def title="Operator Precedence Issues" id="operator-pitfalls">
+                <p><b>Problem:</b> Not recognizing two-character operators like '>>'.</p>
+                <p><b>Solution:</b> Use lookahead to match longest possible operator first.</p>
+
+                <code-block lang="text">
+                ❌ Wrong: >> → [">"][">"] (two redirections)
+                ✅ Right: >> → [">>"] (one append redirection)
+                </code-block>
+            </def>
+
+            <def title="Memory Leaks" id="memory-pitfalls">
+                <p><b>Problem:</b> Forgetting to free token values and list nodes.</p>
+                <p><b>Solution:</b> Implement proper cleanup functions and use them consistently.</p>
+
+                <code-block lang="c">
+                // Proper cleanup
+                void free_token(t_token *token)
+                {
+                    if (token)
+                    {
+                        free(token->value);    // Free the string
+                        free(token);           // Free the structure
+                    }
+                }
+                </code-block>
+            </def>
+        </deflist>
+    </chapter>
+
+    <chapter title="Conclusion: The Foundation of Shell Processing" id="conclusion">
+        <p>
+            The lexer might seem like a simple component - after all, it just breaks text
+            into pieces. But as we've seen, it's the critical foundation that enables
+            everything else in the shell to work correctly.
+        </p>
+
+        <p>
+            <b>Key Takeaways:</b>
         </p>
         <list>
-            <li>
-                Simple tokens, such as a letter or a number.
-            </li>
-            <li>
-                Grouped tokens such as a string inside quotes. Single quotes using the content literally,
-                and double quotes evaluating variables.
-            </li>
-            <li>
-                Special characters, such as pipes or redirection operators.
-            </li>
+            <li><b>State machines provide clarity:</b> The FSM approach makes complex parsing logic manageable and debuggable</li>
+            <li><b>Details matter:</b> Quote handling, operator recognition, and edge cases require careful attention</li>
+            <li><b>Clean interfaces enable composition:</b> Well-defined token types create clear boundaries between shell components</li>
+            <li><b>Error handling is crucial:</b> Robust error detection prevents issues from propagating to later stages</li>
         </list>
+
         <p>
-            No escape sequences though. As these are not required in the requirements of the project.
-            The idea is then to make so that the string is parsed by splitting the string by whitespace,
-            unless they are in quotes, as well as by special characters.
+            With a solid understanding of lexical analysis, you're ready to tackle the next
+            challenge: building a parser that can take your token stream and create meaningful
+            command structures for execution.
         </p>
+
+        <note>
+            <p>
+                <b>Next Steps:</b> Now that you understand how the lexer transforms
+                raw input into structured tokens, explore how the parser uses these tokens
+                to build executable command trees. The journey from text to execution continues!
+            </p>
+        </note>
     </chapter>
+
+    <seealso>
+        <category ref="related">
+            <a href="About-Minishell.topic"/>
+        </category>
+        <category ref="external">
+            <a href="https://en.wikipedia.org/wiki/Lexical_analysis">Lexical Analysis on Wikipedia</a>
+            <a href="https://craftinginterpreters.com/scanning.html">Crafting Interpreters: Scanning</a>
+        </category>
+    </seealso>
 </topic>

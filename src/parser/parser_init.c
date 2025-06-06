@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 14:31:44 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/06 14:50:06 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/06 17:22:30 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 /// @param data The data associated with the command.
 /// @return true if the command data is valid for the given type,
 ///         false otherwise.
-bool	validate(t_command_type type, t_command_data data)
+static bool	validate(t_command_type type, t_command_data data)
 {
 	if (type == COMMAND_COMMAND && data.command.name == NULL)
 		return (false);

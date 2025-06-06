@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 14:38:32 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/06 14:41:08 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/06 17:22:57 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,10 @@ t_parser			*parser_init(t_list *token_list);
 /// @brief Free the parser
 /// @param parser The parser to free
 void				parser_free(t_parser *parser);
+
+/// @brief Free a command
+/// @param data The command to free
+void				free_command(void *data);
 
 /// @brief Parse the tokens
 /// @param parser The parser to use
