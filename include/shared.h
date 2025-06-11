@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:24:32 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/11 17:28:14 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/11 17:36:45 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void		b_unsetenv(const char *key, void (*del)(void *), t_list **envp);
 
 t_list		*b_fromenvp(char *const *envp);
 
-typedef struct t_cmd
+typedef struct s_cmd
 {
 	char	**args;
 	int		argc;
@@ -65,6 +65,6 @@ typedef struct t_cmd
 	char	*redirect_out;
 	char	*redirect_append;
 	char	*redirect_heredoc;
-}
+}			t_cmd;
 
 #endif
