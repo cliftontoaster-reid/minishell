@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:24:32 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/06 14:16:57 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/11 12:00:18 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # include <stdbool.h>
 # include <stdint.h>
 
-extern const int	g_status_code;
+extern int			g_status_code;
 
 /// @brief The structure to hold the environment variables
 /// @note This structure is used to create a linked list
@@ -87,9 +87,16 @@ typedef struct s_command
 	char			**args;
 }					t_command;
 
+// Forward declaration
+struct s_builtin;
+
+typedef int			*(*t_cmd_func)(struct s_builtin *ctx);
+
 typedef struct s_builtin
 {
-	int				(*cmd)(struct s_builtin *ctx);
+	// The function pointer to the command
+	t_cmd_func		cmd;
+	// The environement variables
 	t_list			*envp;
 	// pipe input
 	int				fd_in;
@@ -101,6 +108,11 @@ typedef struct s_builtin
 	char			**args;
 }					t_builtin;
 
+/// @brief Returns the command function associated with the string
+/// @param cmd The command string
+/// @return The function pointer to the command, or NULL if not found
+t_cmd_func			b_get_command_func(const char *cmd);
+
 typedef union u_command_data
 {
 	// A command to be executed
@@ -108,11 +120,11 @@ typedef union u_command_data
 	// A builtin command (e.g., cd, exit)
 	t_builtin		builtin;
 	// A pipe component
-	char			*pipe;
+	bool			pipe;
 	// A redirection component
 	char			*redirect;
 	// A component of an AND or OR operation `BONUS_ONLY`
-	void			*and_or;
+	bool			and_or;
 }					t_command_data;
 
 typedef struct s_cmd_token
