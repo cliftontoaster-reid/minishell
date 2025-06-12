@@ -6,12 +6,13 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 12:01:29 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/06 14:12:17 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/12 12:36:34 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shared.h"
 #include <criterion/criterion.h>
+#include <errno.h>
 
 // Helper function to find a specific environment variable in the list
 static t_env	*find_env_var(t_list *env_list, const char *key)

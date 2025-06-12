@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 14:38:32 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/11 18:26:20 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/12 14:12:02 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ typedef enum e_parsing_error
 	PARSING_ERROR_MALLOC = 1,
 	/// @brief Missing target for a special token
 	PARSING_MISSING_SPECIAL_TARGET = 2,
+	/// @brief Double special directive
+	PARSING_DOUBLE_SPECIAL_DIRECTIVE = 3,
 }					t_parsing_error;
 
 typedef enum e_parser_state
