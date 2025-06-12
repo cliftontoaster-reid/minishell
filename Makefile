@@ -7,9 +7,28 @@ TEST_OBJD= $(OBJ_DIR)/test
 NAME     = minishell
 NTEST    = minishell_test
 
-SRCS     = $(shell find $(SRC_DIR) -type f -name '*.c' | shuf)
+SRCS     = \
+  $(SRC_DIR)/main.c \
+  $(SRC_DIR)/lexer/create_token.c \
+  $(SRC_DIR)/lexer/free_token.c \
+  $(SRC_DIR)/lexer/create_lexer.c \
+  $(SRC_DIR)/lexer/free_lexer.c \
+  $(SRC_DIR)/lexer/run_lexer.c \
+  $(SRC_DIR)/lexer/join_words.c \
+  $(SRC_DIR)/utils/b_varexists.c \
+  $(SRC_DIR)/utils/b_getenv.c \
+  $(SRC_DIR)/utils/b_setenv.c \
+  $(SRC_DIR)/utils/b_fromenvp.c \
+  $(SRC_DIR)/utils/b_unsetenv.c \
+  $(SRC_DIR)/utils/b_get_command_func.c \
+  $(SRC_DIR)/parser/parser_init.c \
+  $(SRC_DIR)/parser/parser_free.c \
+  $(SRC_DIR)/parser/parser_parse.c \
+
 # add the source files from SRCS to the test files excluding 'src/main.c'
-TESTS = $(shell find $(TEST_DIR) -type f -name '*.c')
+TESTS = \
+  $(TEST_DIR)/test_lexer.c \
+	$(TEST_DIR)/test_utils.c \
 
 OBJS     = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRCS))
 TESTOBJS = $(patsubst $(TEST_DIR)/%.c,$(TEST_OBJD)/%.o,$(TESTS)) $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(filter-out $(SRC_DIR)/main.c,$(SRCS)))
