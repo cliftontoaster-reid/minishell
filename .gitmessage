@@ -1,0 +1,21 @@
+# Conventional Commits Template
+# 
+# Format: type(scope): imperative title under 50 chars
+#
+# • Body content explaining the **what** and **why** (not how)
+# • Use Markdown syntax: **bold**, `code`, _italic_, bullet points
+# • Include affected components when relevant
+# • Reference issues/PRs at bottom
+#
+# Types: feat|fix|docs|style|refactor|test|chore|perf|build|ci|revert
+# Add ! for breaking changes (e.g., feat!:)
+#
+# Example:
+# feat(parser): add command parsing with error handling
+#
+# • Implement parser state machine for **lexical analysis**
+# • Add support for `pipe`, `redirect_in/out/append/heredoc` tokens
+# • Include comprehensive error handling for syntax validation
+# • Parser handles command arguments and special token sequences
+#
+# Fixes #123

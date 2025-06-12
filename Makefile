@@ -15,12 +15,13 @@ SRCS     = \
   $(SRC_DIR)/lexer/free_lexer.c \
   $(SRC_DIR)/lexer/run_lexer.c \
   $(SRC_DIR)/lexer/join_words.c \
+		\
   $(SRC_DIR)/utils/b_varexists.c \
   $(SRC_DIR)/utils/b_getenv.c \
   $(SRC_DIR)/utils/b_setenv.c \
   $(SRC_DIR)/utils/b_fromenvp.c \
   $(SRC_DIR)/utils/b_unsetenv.c \
-  $(SRC_DIR)/utils/b_get_command_func.c \
+    \
   $(SRC_DIR)/parser/parser_init.c \
   $(SRC_DIR)/parser/parser_free.c \
   $(SRC_DIR)/parser/parser_parse.c \

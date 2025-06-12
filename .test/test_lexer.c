@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 17:08:16 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/05/20 12:54:14 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/12 14:59:39 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -685,6 +685,7 @@ Test(join_words, lyric_I_am_the_storm)
 		"lyric1 end");
 	ft_lstclear(&token_list, free_tok);
 }
+
 Test(join_words, lyric_Provoking)
 {
 	t_lexer	lexer;
@@ -703,6 +704,7 @@ Test(join_words, lyric_Provoking)
 		"lyric2 single");
 	ft_lstclear(&token_list, free_tok);
 }
+
 Test(join_words, lyric_Black_clouds_in_isolation)
 {
 	t_lexer	lexer;
@@ -722,6 +724,7 @@ Test(join_words, lyric_Black_clouds_in_isolation)
 		"lyric3 last");
 	ft_lstclear(&token_list, free_tok);
 }
+
 Test(join_words, lyric_I_am_reclaimer_of_my_name)
 {
 	t_lexer	lexer;
@@ -740,6 +743,7 @@ Test(join_words, lyric_I_am_reclaimer_of_my_name)
 	token_test(get_n_token(token_list, 11), TOKEN_WORD, "name", "lyric4 end");
 	ft_lstclear(&token_list, free_tok);
 }
+
 Test(join_words, lyric_Born_in_flames)
 {
 	t_lexer	lexer;
@@ -758,6 +762,7 @@ Test(join_words, lyric_Born_in_flames)
 	token_test(get_n_token(token_list, 5), TOKEN_WORD, "flames", "lyric5 last");
 	ft_lstclear(&token_list, free_tok);
 }
+
 Test(join_words, lyric_I_have_been_blessed)
 {
 	t_lexer	lexer;
@@ -776,6 +781,7 @@ Test(join_words, lyric_I_have_been_blessed)
 	token_test(get_n_token(token_list, 7), TOKEN_WORD, "blessed", "lyric6 end");
 	ft_lstclear(&token_list, free_tok);
 }
+
 Test(join_words, lyric_My_family_crest_is_a_demon_of_death)
 {
 	t_lexer	lexer;
@@ -794,6 +800,7 @@ Test(join_words, lyric_My_family_crest_is_a_demon_of_death)
 	token_test(get_n_token(token_list, 15), TOKEN_WORD, "death", "lyric7 end");
 	ft_lstclear(&token_list, free_tok);
 }
+
 Test(join_words, lyric_Forsakened_I_am_awakened)
 {
 	t_lexer	lexer;
@@ -814,6 +821,7 @@ Test(join_words, lyric_Forsakened_I_am_awakened)
 		"lyric8 end");
 	ft_lstclear(&token_list, free_tok);
 }
+
 Test(join_words, lyric_A_phoenixs_ash_in_dark_divine)
 {
 	t_lexer	lexer;
@@ -832,6 +840,7 @@ Test(join_words, lyric_A_phoenixs_ash_in_dark_divine)
 	token_test(get_n_token(token_list, 13), TOKEN_WORD, "divine", "lyric9 end");
 	ft_lstclear(&token_list, free_tok);
 }
+
 Test(join_words, lyric_Descending_misery)
 {
 	t_lexer	lexer;
@@ -851,6 +860,7 @@ Test(join_words, lyric_Descending_misery)
 	token_test(get_n_token(token_list, 3), TOKEN_WORD, "misery", "lyric10 end");
 	ft_lstclear(&token_list, free_tok);
 }
+
 Test(join_words, lyric_Destiny_chasing_time)
 {
 	t_lexer	lexer;
