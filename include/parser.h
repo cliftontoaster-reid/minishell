@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 14:38:32 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/12 15:56:23 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/12 16:01:27 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ t_parsing_error		parser_parse(t_parser *parser);
 /// @param n The index of the element to get.
 /// @param size The total size of the list.
 /// @return A pointer to the content of the nth element,
-	or NULL if not found or if arguments are invalid.
+///          or NULL if not found or if arguments are invalid.
 void				*ft_lstget(t_list *lst, size_t n, size_t size);
 
 /// @brief Handles the initial state of the parser or when no specific command/special token is being processed.
@@ -104,18 +104,18 @@ void				parser_handle_none(t_parser *parser);
 void				parser_handle_command(t_parser *parser);
 
 /// @brief Handles various special tokens (pipe,
-	redirections) based on the `last_token_type`.
+///         redirections) based on the `last_token_type`.
 /// It calls the appropriate specific handler for the encountered special token.
 /// Sets parser error if an unexpected token sequence is found or if a required target for a special token is missing.
 /// @param parser The parser instance.
 void				parser_handle_special(t_parser *parser);
 
 /// @brief Executes a single step in the parsing process based on the current parser state.
-/// It calls the appropriate handler function (parser_handle_none,
-	parser_handle_command, or parser_handle_special).
+///  It calls the appropriate handler function (parser_handle_none,
+///  parser_handle_command, or parser_handle_special).
 /// @param parser The parser instance.
 /// @return A parsing error code, PARSING_NO_ERROR if the step was successful,
-	or an error code if an issue occurred.
+///          or an error code if an issue occurred.
 t_parsing_error		parser_step(t_parser *parser);
 
 /// @brief Turns the AST into a list of commands
