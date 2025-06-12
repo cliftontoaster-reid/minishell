@@ -21,15 +21,25 @@ SRCS     = \
   $(SRC_DIR)/utils/b_setenv.c \
   $(SRC_DIR)/utils/b_fromenvp.c \
   $(SRC_DIR)/utils/b_unsetenv.c \
-    \
+	\
   $(SRC_DIR)/parser/parser_init.c \
   $(SRC_DIR)/parser/parser_free.c \
   $(SRC_DIR)/parser/parser_parse.c \
 
-# add the source files from SRCS to the test files excluding 'src/main.c'
+ # add the source files from SRCS to the test files excluding 'src/main.c'
 TESTS = \
-  $(TEST_DIR)/test_lexer.c \
-	$(TEST_DIR)/test_utils.c \
+  $(TEST_DIR)/test_lexer_basic.c \
+  $(TEST_DIR)/test_lexer_redirections.c \
+  $(TEST_DIR)/test_lexer_quotes.c \
+  $(TEST_DIR)/test_lexer_complex.c \
+  $(TEST_DIR)/test_join_words.c \
+  $(TEST_DIR)/test_lexer_utils.c \
+  $(TEST_DIR)/test_b_fromenvp.c \
+  $(TEST_DIR)/test_b_getenv.c \
+  $(TEST_DIR)/test_b_setenv.c \
+  $(TEST_DIR)/test_b_unsetenv.c \
+  $(TEST_DIR)/test_b_varexists.c \
+  $(TEST_DIR)/test_utils.c \
 
 OBJS     = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRCS))
 TESTOBJS = $(patsubst $(TEST_DIR)/%.c,$(TEST_OBJD)/%.o,$(TESTS)) $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(filter-out $(SRC_DIR)/main.c,$(SRCS)))
