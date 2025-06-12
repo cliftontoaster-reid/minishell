@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 14:38:32 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/06 17:22:57 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/11 18:26:20 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,40 +35,33 @@ typedef enum e_parsing_error
 	PARSING_NO_ERROR = 0,
 	/// @brief Error while allocating memory
 	PARSING_ERROR_MALLOC = 1,
-	/// @brief Missing target for a redirect
-	PARSING_MISSING_REDIRECT_IN = 2,
-	/// @brief Missing target for a redirect
-	PARSING_MISSING_REDIRECT_OUT = 3,
-	/// @brief Missing target for a redirect
-	PARSING_MISSING_REDIRECT_APPEND = 4,
-	/// @brief Missing target for a redirect
-	PARSING_MISSING_REDIRECT_HEREDOC = 5,
-	/// @brief Missing target for a pipe
-	PARSING_MISSING_PIPE_TARGET = 6,
+	/// @brief Missing target for a special token
+	PARSING_MISSING_SPECIAL_TARGET = 2,
 }					t_parsing_error;
 
 typedef enum e_parser_state
 {
 	PARSER_NONE = 0,
 	PARSER_COMMAND,
-	PARSER_ARG,
-	PARSER_REDIRECT_IN,
-	PARSER_REDIRECT_OUT,
-	PARSER_REDIRECT_APPEND,
-	PARSER_REDIRECT_HEREDOC,
+	PARSER_SPECIAL,
 }					t_parser_state;
 
 typedef struct s_parser
 {
 	t_list			*command_list;
-	t_command		*command;
+	t_cmd			*command;
+	t_list			*argument_list;
 
 	t_list			*token_list;
 	t_token			*current_token;
+	t_token_type	last_token_type;
+
+	size_t			current_index;
+	size_t			token_count;
 
 	t_parser_state	state;
-	size_t			pos;
-	size_t			len;
+
+	t_parsing_error	error;
 }					t_parser;
 
 /// @brief Initialize the parser
@@ -92,4 +85,4 @@ t_parsing_error		parser_parse(t_parser *parser);
 /// @brief Turns the AST into a list of commands
 /// @param parser The parser to use
 /// @return A list of commands
-t_cmd_token			*parser_to_list(t_parser *parser);
+t_cmd				*parser_to_list(t_parser *parser);
