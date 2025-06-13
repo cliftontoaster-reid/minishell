@@ -40,6 +40,7 @@ TESTS = \
   $(TEST_DIR)/test_b_unsetenv.c \
   $(TEST_DIR)/test_b_varexists.c \
   $(TEST_DIR)/test_parser_basic.c \
+  $(TEST_DIR)/test_parser_pipe.c \
   $(TEST_DIR)/test_utils.c \
 
 OBJS     = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRCS))

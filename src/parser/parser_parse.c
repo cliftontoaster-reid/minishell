@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 10:25:58 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/13 03:51:33 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/13 15:30:34 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,11 @@ static void	parser_special_pipe(t_parser *parser)
 		return ;
 	}
 	next_type = next_token->type;
-	if (type != TOKEN_NONE && next_type != TOKEN_WORD)
+	// Check if both current and next tokens are special (pipe, redirect in,
+	//	or pipex)
+	if ((type == TOKEN_PIPE || type == TOKEN_REDIRECT_IN || type == TOKEN_PIPE)
+		&& (next_type == TOKEN_PIPE || next_type == TOKEN_REDIRECT_IN
+			|| next_type == TOKEN_PIPE))
 	{
 		errno = EINVAL;
 		parser->error = PARSING_DOUBLE_SPECIAL_DIRECTIVE;
@@ -162,6 +166,7 @@ static void	parser_special_pipe(t_parser *parser)
 		return ;
 	parser->command->is_pipe = true;
 	end_command(parser);
+	parser->state = PARSER_NONE;
 }
 
 /// @brief Retrieves the token that should be used as the target for a redirection.
@@ -234,11 +239,11 @@ static void	parser_special_redirect_out(t_parser *parser)
 		return ;
 	}
 	if (parser->command == NULL)
-		///       will be set accordingly by that function.
-		if (errno == ENOMEM)
-			return ;
+		parser->command = cmd_init();
+	if (errno == ENOMEM)
+		return ;
 	parser->command->redirect_out = ft_strdup(token->value);
-	if (parser->command->redirect_in == NULL)
+	if (parser->command->redirect_out == NULL)
 	{
 		errno = ENOMEM;
 		parser->error = PARSING_ERROR_MALLOC;
