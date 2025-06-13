@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:24:32 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/11 17:36:45 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/12 15:30:35 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ typedef struct s_cmd
 	char	**args;
 	int		argc;
 	bool	is_pipe;
+	int		fd_infile;
+	int		fd_outfile;
 	char	*redirect_in;
 	char	*redirect_out;
 	char	*redirect_append;
