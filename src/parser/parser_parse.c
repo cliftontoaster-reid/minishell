@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 10:25:58 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/12 15:54:43 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/13 03:51:33 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "parser.h"
 #include "shared.h"
 #include <errno.h>
+#include <stdio.h>
 
 // It should loop over all tokens in the lexer,
 // -  when ecountering a word, it should take it as command name, and then
@@ -43,6 +44,49 @@ void	*ft_lstget(t_list *lst, size_t n, size_t size)
 	return (lst ? lst->content : NULL);
 }
 
+void	end_command(t_parser *parser)
+{
+	int		size;
+	int		idx;
+	t_list	*node;
+
+	if (parser->argument_list != NULL)
+	{
+		// Build args array from argument_list
+		size = ft_lstsize(parser->argument_list);
+		if (parser->command == NULL)
+			parser->command = cmd_init();
+		parser->command->args = ft_calloc(size + 1, sizeof(char *));
+		if (parser->command->args == NULL)
+		{
+			errno = ENOMEM;
+			parser->error = PARSING_ERROR_MALLOC;
+			return ;
+		}
+		// Copy arguments
+		idx = 0;
+		node = parser->argument_list;
+		while (node)
+		{
+			parser->command->args[idx] = ft_strdup((char *)node->content);
+			if (parser->command->args[idx] == NULL)
+			{
+				errno = ENOMEM;
+				parser->error = PARSING_ERROR_MALLOC;
+				return ;
+			}
+			idx++;
+			node = node->next;
+		}
+		parser->command->args[idx] = NULL;
+		parser->command->argc = size;
+		ft_lstclear(&parser->argument_list, free);
+	}
+	ft_lstadd_back(&parser->command_list, ft_lstnew(parser->command));
+	parser->command = NULL;
+	parser->argument_list = NULL;
+}
+
 /// @brief Handles the initial state of the parser or when no specific command/special token is being processed.
 /// It determines if the current token is a command or a special token and transitions the parser state accordingly.
 /// @param parser The parser instance.
@@ -51,16 +95,18 @@ void	parser_handle_none(t_parser *parser)
 	t_token_type	type;
 
 	type = parser->current_token->type;
-	if (type != TOKEN_NONE)
+	if (type == TOKEN_WORD)
 	{
-		if (type == TOKEN_WORD)
-		{
-			parser->state = PARSER_COMMAND;
-			ft_lstadd_back(&parser->command_list,
-				ft_lstnew(ft_strdup(parser->current_token->value)));
-		}
+		parser->state = PARSER_COMMAND;
+		// Initialize a new command structure
+		parser->command = cmd_init();
+		if (errno == ENOMEM)
+			return ;
+		// Add the command name to the argument list
+		ft_lstadd_back(&parser->argument_list,
+			ft_lstnew(ft_strdup(parser->current_token->value)));
 	}
-	else
+	else if (type != TOKEN_NONE)
 		parser->state = PARSER_SPECIAL;
 	parser->current_index++;
 }
@@ -74,13 +120,12 @@ void	parser_handle_command(t_parser *parser)
 	t_token_type	type;
 
 	type = parser->current_token->type;
-	if (type == TOKEN_NONE || type == TOKEN_WORD)
+	if (type == TOKEN_WORD)
 	{
-		if (type == TOKEN_WORD)
-			ft_lstadd_back(&parser->argument_list,
-				ft_lstnew(ft_strdup(parser->current_token->value)));
+		ft_lstadd_back(&parser->argument_list,
+			ft_lstnew(ft_strdup(parser->current_token->value)));
 	}
-	else
+	else if (type != TOKEN_NONE)
 		parser->state = PARSER_SPECIAL;
 	parser->current_index++;
 }
@@ -116,6 +161,7 @@ static void	parser_special_pipe(t_parser *parser)
 	if (errno == ENOMEM)
 		return ;
 	parser->command->is_pipe = true;
+	end_command(parser);
 }
 
 /// @brief Retrieves the token that should be used as the target for a redirection.
@@ -159,7 +205,9 @@ static void	parser_special_redirect_in(t_parser *parser)
 
 	token = get_redirect_token(parser);
 	if (!token)
+	{
 		return ;
+	}
 	if (parser->command == NULL)
 		parser->command = cmd_init();
 	if (errno == ENOMEM)
@@ -182,7 +230,9 @@ static void	parser_special_redirect_out(t_parser *parser)
 
 	token = get_redirect_token(parser);
 	if (!token)
+	{
 		return ;
+	}
 	if (parser->command == NULL)
 		///       will be set accordingly by that function.
 		if (errno == ENOMEM)
@@ -205,7 +255,9 @@ static void	parser_special_redirect_append(t_parser *parser)
 
 	token = get_redirect_token(parser);
 	if (!token)
+	{
 		return ;
+	}
 	if (parser->command == NULL)
 		parser->command = cmd_init();
 	if (errno == ENOMEM)
@@ -228,7 +280,9 @@ static void	parser_special_redirect_heredoc(t_parser *parser)
 
 	token = get_redirect_token(parser);
 	if (!token)
+	{
 		return ;
+	}
 	if (parser->command == NULL)
 		parser->command = cmd_init();
 	if (errno == ENOMEM)
@@ -324,18 +378,16 @@ t_parsing_error	parser_parse(t_parser *parser)
 {
 	t_parsing_error	err;
 
-	if (!parser || !parser->current_token || !parser->token_list)
+	if (!parser || !parser->token_list)
 	{
 		errno = EINVAL;
 		return (PARSING_ERROR_MALLOC);
 	}
 	parser->state = PARSER_NONE;
 	err = PARSING_NO_ERROR;
-	// Loop over tokens and parse them
+	parser->current_index = 0;
 	while (parser->current_index < parser->token_count)
 	{
-		parser_step(parser);
-		// Move to the next token
 		parser->current_token = ft_lstget(parser->token_list,
 				parser->current_index, parser->token_count);
 		if (!parser->current_token)
@@ -343,9 +395,12 @@ t_parsing_error	parser_parse(t_parser *parser)
 			errno = EINVAL;
 			return (PARSING_ERROR_MALLOC);
 		}
+		parser_step(parser);
 		if (parser->error != PARSING_NO_ERROR)
 			return (parser->error);
 		parser->last_token_type = parser->current_token->type;
 	}
+	if (parser->command != NULL || parser->argument_list != NULL)
+		end_command(parser);
 	return (err);
 }

@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 14:31:44 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/12 15:21:48 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/12 17:28:36 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,5 +53,13 @@ t_parser	*parser_init(t_list *token_list)
 	}
 	parser->token_list = token_list;
 	parser->token_count = ft_lstsize(token_list);
+	parser->argument_list = NULL;
+	parser->command_list = NULL;
+	parser->command = NULL;
+	parser->current_token = NULL;
+	parser->last_token_type = TOKEN_NONE;
+	parser->current_index = 0;
+	parser->state = PARSER_NONE;
+	parser->error = PARSING_NO_ERROR;
 	return (parser);
 }
