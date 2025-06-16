@@ -87,8 +87,10 @@ void	end_command(t_parser *parser)
 	parser->argument_list = NULL;
 }
 
-/// @brief Handles the initial state of the parser or when no specific command/special token is being processed.
-/// It determines if the current token is a command or a special token and transitions the parser state accordingly.
+/// @brief Handles the initial state of the parser or when no specific
+/// command/special token is being processed. It determines if the current token
+/// is a command or a special token and transitions the parser state
+/// accordingly.
 /// @param parser The parser instance.
 void	parser_handle_none(t_parser *parser)
 {
@@ -111,9 +113,9 @@ void	parser_handle_none(t_parser *parser)
 	parser->current_index++;
 }
 
-/// @brief Handles the state when the parser is processing a command and its arguments.
-/// It appends word tokens to the argument list. If a non-word token is encountered,
-/// it transitions the parser state to handle special tokens.
+/// @brief Handles the state when the parser is processing a command and its
+/// arguments. It appends word tokens to the argument list. If a non-word token
+/// is encountered, it transitions the parser state to handle special tokens.
 /// @param parser The parser instance.
 void	parser_handle_command(t_parser *parser)
 {
@@ -169,10 +171,10 @@ static void	parser_special_pipe(t_parser *parser)
 	parser->state = PARSER_NONE;
 }
 
-/// @brief Retrieves the token that should be used as the target for a redirection.
-/// This is typically the token immediately following a redirection operator.
-/// It handles cases where the next token is a word or if there's a TOKEN_NONE in between.
-/// Sets parser error if a valid target is not found.
+/// @brief Retrieves the token that should be used as the target for a
+/// redirection. This is typically the token immediately following a redirection
+/// operator. It handles cases where the next token is a word or if there's a
+/// TOKEN_NONE in between. Sets parser error if a valid target is not found.
 /// @param parser The parser instance.
 /// @return A pointer to the redirection target token,
 ///          or NULL if an error occurs or no valid token is found.
@@ -200,9 +202,10 @@ static inline t_token	*get_redirect_token(t_parser *parser)
 	return (token);
 }
 
-/// @brief Handles the input redirection token ('<') when in the PARSER_SPECIAL state.
-/// It retrieves the target filename for the redirection and stores it in the command structure.
-/// Sets parser error on issues like missing target or memory allocation failure.
+/// @brief Handles the input redirection token ('<') when in the PARSER_SPECIAL
+/// state. It retrieves the target filename for the redirection and stores it in
+/// the command structure. Sets parser error on issues like missing target or
+/// memory allocation failure.
 /// @param parser The parser instance.
 static void	parser_special_redirect_in(t_parser *parser)
 {
@@ -225,9 +228,10 @@ static void	parser_special_redirect_in(t_parser *parser)
 	}
 }
 
-/// @brief Handles the output redirection token ('>') when in the PARSER_SPECIAL state.
-/// It retrieves the target filename for the redirection and stores it in the command structure.
-/// Sets parser error on issues like missing target or memory allocation failure.
+/// @brief Handles the output redirection token ('>') when in the PARSER_SPECIAL
+/// state. It retrieves the target filename for the redirection and stores it in
+/// the command structure. Sets parser error on issues like missing target or
+/// memory allocation failure.
 /// @param parser The parser instance.
 static void	parser_special_redirect_out(t_parser *parser)
 {
@@ -250,9 +254,10 @@ static void	parser_special_redirect_out(t_parser *parser)
 	}
 }
 
-/// @brief Handles the append output redirection token ('>>') when in the PARSER_SPECIAL state.
-/// It retrieves the target filename for the redirection and stores it in the command structure.
-/// Sets parser error on issues like missing target or memory allocation failure.
+/// @brief Handles the append output redirection token ('>>') when in the
+/// PARSER_SPECIAL state. It retrieves the target filename for the redirection
+/// and stores it in the command structure. Sets parser error on issues like
+/// missing target or memory allocation failure.
 /// @param parser The parser instance.
 static void	parser_special_redirect_append(t_parser *parser)
 {
@@ -275,9 +280,10 @@ static void	parser_special_redirect_append(t_parser *parser)
 	}
 }
 
-/// @brief Handles the here-document redirection token ('<<') when in the PARSER_SPECIAL state.
-/// It retrieves the delimiter for the here-document and stores it in the command structure.
-/// Sets parser error on issues like missing delimiter or memory allocation failure.
+/// @brief Handles the here-document redirection token ('<<') when in the
+/// PARSER_SPECIAL state. It retrieves the delimiter for the here-document and
+/// stores it in the command structure. Sets parser error on issues like missing
+/// delimiter or memory allocation failure.
 /// @param parser The parser instance.
 static void	parser_special_redirect_heredoc(t_parser *parser)
 {
@@ -303,7 +309,8 @@ static void	parser_special_redirect_heredoc(t_parser *parser)
 /// @brief Handles various special tokens (pipe,
 ///         redirections) based on the `last_token_type`.
 /// It calls the appropriate specific handler for the encountered special token.
-/// Sets parser error if an unexpected token sequence is found or if a required target for a special token is missing.
+/// Sets parser error if an unexpected token sequence is found or if a required
+/// target for a special token is missing.
 /// @param parser The parser instance.
 void	parser_handle_special(t_parser *parser)
 {
@@ -341,8 +348,8 @@ void	parser_handle_special(t_parser *parser)
 	parser->current_index++;
 }
 
-/// @brief Executes a single step in the parsing process based on the current parser state.
-/// It calls the appropriate handler function (parser_handle_none,
+/// @brief Executes a single step in the parsing process based on the current
+/// parser state. It calls the appropriate handler function (parser_handle_none,
 ///  parser_handle_command, or parser_handle_special).
 /// @param parser The parser instance.
 /// @return A parsing error code, PARSING_NO_ERROR if the step was successful,
@@ -372,11 +379,13 @@ t_parsing_error	parser_step(t_parser *parser)
 	return (parser->error);
 }
 
-/// @brief Main parsing function that iterates through the token list and processes them.
-/// It initializes the parser state and repeatedly calls `parser_step` to build the command structure.
-/// It advances through the tokens and updates the parser's current and last token types.
+/// @brief Main parsing function that iterates through the token list and
+/// processes them. It initializes the parser state and repeatedly calls
+/// `parser_step` to build the command structure. It advances through the tokens
+/// and updates the parser's current and last token types.
 /// @param parser The parser instance,
-///                which contains the token list and other parsing state information.
+///                which contains the token list and other parsing state
+///                information.
 /// @return A parsing error code, PARSING_NO_ERROR if parsing is successful,
 ///          or an error code if an issue occurred.
 t_parsing_error	parser_parse(t_parser *parser)
