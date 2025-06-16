@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 16:56:10 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/13 15:31:08 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/14 08:03:27 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,7 +159,7 @@ Test(parser, pipe_with_redirection)
 	t_parsing_error	error;
 
 	lexer = ft_calloc(1, sizeof(t_lexer));
-	lexer->text = "cat < input.txt | > sort output.txt";
+	lexer->text = "cat < input.txt | output.txt";
 	lexer->pos = 0;
 	lexer->state = LEXER_NONE;
 	lexer->start = 0;
