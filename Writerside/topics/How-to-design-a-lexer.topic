@@ -308,19 +308,19 @@
             <tab title="State Transitions">
                 <code-block lang="text">
                     Position: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
-                    Input: e c h o " H e l l o W o r l d " |
-                    State: W W W W N D D D D D D D D D D D D N N N N
+                    Input:    e c h o " H e l l o W  o  r  l  d  "  |
+                    State:    W W W W N D D D D D D  D  D  D  D  D  D  N  N  N  N
 
                     Legend: N=LEXER_NONE, W=LEXER_WORD, D=LEXER_DUO
                 </code-block>
             </tab>
             <tab title="Token Creation">
                 <code-block lang="text">
-                    Position 4: TOKEN_WORD("echo")
-                    Position 17: TOKEN_WORD("Hello World")
-                    Position 19: TOKEN_PIPE("|")
-                    Position 24: TOKEN_WORD("grep")
-                    Position 30: TOKEN_WORD("Hello")
+                    Position 4:  TOKEN_WORD ("echo")
+                    Position 17: TOKEN_WORD ("Hello World")
+                    Position 19: TOKEN_PIPE ("|")
+                    Position 24: TOKEN_WORD ("grep")
+                    Position 30: TOKEN_WORD ("Hello")
                 </code-block>
             </tab>
         </tabs>
@@ -512,9 +512,9 @@
         </p>
 
         <list>
-            <li>TOKEN_WORD("hello")</li>
-            <li>TOKEN_WORD("world")</li>
-            <li>TOKEN_WORD("test")</li>
+            <li><code>TOKEN_WORD ("hello")</code></li>
+            <li><code>TOKEN_WORD ("world")</code></li>
+            <li><code>TOKEN_WORD ("test")</code></li>
         </list>
 
         <p>
@@ -553,12 +553,12 @@
             </step>
             <step>
                 <p><b>Input:</b> <code>echo "Hello "'World'</code></p>
-                <p><b>Initial tokens:</b> ["echo", "Hello ", "World"]</p>
-                <p><b>After joining:</b> ["echo", "Hello World"]</p>
+                <p><b>Initial tokens:</b> <code>["echo", "Hello ", "World"]</code></p>
+                <p><b>After joining:</b> <code>["echo", "Hello World"]</code></p>
             </step>
             <step>
                 <p><b>Input:</b> <code>command arg1 | next</code></p>
-                <p><b>Tokens:</b> ["command", "arg1", "|", "next"]</p>
+                <p><b>Tokens:</b> <code>["command", "arg1", "|", "next"]</code></p>
                 <p><b>No joining:</b> Pipe breaks word adjacency</p>
             </step>
         </procedure>
