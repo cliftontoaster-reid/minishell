@@ -1,34 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.h                                            :+:      :+:    :+:   */
+/*   linereader_free.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/12 15:31:30 by jfranc            #+#    #+#             */
-/*   Updated: 2025/06/18 12:58:36 by lfiorell@st      ###   ########.fr       */
+/*   Created: 2025/06/18 13:00:27 by lfiorell@st       #+#    #+#             */
+/*   Updated: 2025/06/18 13:03:11 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef UTILS_H
-# define UTILS_H
+#include "utils.h"
+#include <errno.h>
+#include <stdlib.h>
 
-typedef struct s_iteration
+void	linereader_free(t_linereader *reader)
 {
-	int		i;
-	int		j;
-	int		k;
-}			t_iteration;
-
-typedef struct s_linereader
-{
-	char	*line;
-	int		fd;
-}			t_linereader;
-
-char		*ft_strjoin_free(char *s1, char *s2);
-
-char		*ft_readline(t_linereader *reader);
-void		linereader_free(t_linereader *reader);
-
-#endif
+	if (reader == NULL)
+		return ;
+	if (reader->line)
+		free(reader->line);
+	free(reader);
+	errno = 0;
+}

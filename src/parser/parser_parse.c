@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 10:25:58 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/13 15:30:34 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/18 13:06:14 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,9 @@ void	*ft_lstget(t_list *lst, size_t n, size_t size)
 		lst = lst->next;
 		i++;
 	}
-	return (lst ? lst->content : NULL);
+	if (lst == NULL)
+		return (NULL);
+	return (lst->content);
 }
 
 void	end_command(t_parser *parser)

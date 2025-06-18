@@ -1,34 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.h                                            :+:      :+:    :+:   */
+/*   reader_init.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/12 15:31:30 by jfranc            #+#    #+#             */
-/*   Updated: 2025/06/18 12:58:36 by lfiorell@st      ###   ########.fr       */
+/*   Created: 2025/06/16 19:42:35 by lfiorell@st       #+#    #+#             */
+/*   Updated: 2025/06/17 11:23:17 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef UTILS_H
-# define UTILS_H
+#include "reader.h"
 
-typedef struct s_iteration
+t_reader	*reader_init(char *const *envp)
 {
-	int		i;
-	int		j;
-	int		k;
-}			t_iteration;
+	t_reader	*reader;
 
-typedef struct s_linereader
-{
-	char	*line;
-	int		fd;
-}			t_linereader;
-
-char		*ft_strjoin_free(char *s1, char *s2);
-
-char		*ft_readline(t_linereader *reader);
-void		linereader_free(t_linereader *reader);
-
-#endif
+	reader = ft_calloc(1, sizeof(t_reader));
+	if (reader == NULL)
+	{
+		errno = ENOMEM;
+		return (NULL);
+	}
+	reader->env = b_fromenvp(envp);
+	if (reader->env == NULL)
+	{
+		free(reader);
+		errno = ENOMEM;
+		return (NULL);
+	}
+	return (reader);
+}

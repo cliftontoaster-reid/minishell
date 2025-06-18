@@ -21,6 +21,9 @@ SRCS     = \
   $(SRC_DIR)/utils/b_setenv.c \
   $(SRC_DIR)/utils/b_fromenvp.c \
   $(SRC_DIR)/utils/b_unsetenv.c \
+  $(SRC_DIR)/utils/ft_readline.c \
+  $(SRC_DIR)/utils/ft_strjoin_free.c \
+  $(SRC_DIR)/utils/linereader_free.c \
 	\
   $(SRC_DIR)/parser/parser_init.c \
   $(SRC_DIR)/parser/parser_free.c \
@@ -42,6 +45,8 @@ TESTS = \
   $(TEST_DIR)/test_parser_basic.c \
   $(TEST_DIR)/test_parser_pipe.c \
   $(TEST_DIR)/test_utils.c \
+  $(TEST_DIR)/test_utils_string.c \
+  $(TEST_DIR)/test_utils_readline.c \
 
 OBJS     = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRCS))
 TESTOBJS = $(patsubst $(TEST_DIR)/%.c,$(TEST_OBJD)/%.o,$(TESTS)) $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(filter-out $(SRC_DIR)/main.c,$(SRCS)))

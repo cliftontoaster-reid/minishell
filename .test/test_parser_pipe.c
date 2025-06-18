@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 16:56:10 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/14 08:03:27 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/18 12:15:15 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,23 @@
 #include "test_utils.h"
 #include <criterion/criterion.h>
 #include <stdio.h>
+
+char	*get_error_name(t_parsing_error error)
+{
+	switch (error)
+	{
+	case PARSING_NO_ERROR:
+		return ("PARSING_NO_ERROR");
+	case PARSING_ERROR_MALLOC:
+		return ("PARSING_ERROR_MALLOC");
+	case PARSING_MISSING_SPECIAL_TARGET:
+		return ("PARSING_MISSING_SPECIAL_TARGET");
+	case PARSING_DOUBLE_SPECIAL_DIRECTIVE:
+		return ("PARSING_DOUBLE_SPECIAL_DIRECTIVE");
+	default:
+		return ("UNKNOWN_ERROR");
+	}
+}
 
 Test(parser, pipe_grep)
 {
@@ -168,8 +185,8 @@ Test(parser, pipe_with_redirection)
 	parser = parser_init(tokens);
 	cr_assert_not_null(parser, "Parser should not be NULL");
 	error = parser_parse(parser);
-	cr_assert_eq(error, PARSING_ERROR_MALLOC,
-		"Parsing should fail with double special directive error");
+	cr_assert_eq(error, 0, "Parsing should not fail with error %s",
+		get_error_name(error));
 	// Clean up
 	parser_free(parser);
 	lexer->token_list = NULL;
