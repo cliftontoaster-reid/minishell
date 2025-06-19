@@ -9,22 +9,30 @@ NTEST    = minishell_test
 
 SRCS     = \
   $(SRC_DIR)/main.c \
+  \
   $(SRC_DIR)/lexer/create_token.c \
   $(SRC_DIR)/lexer/free_token.c \
   $(SRC_DIR)/lexer/create_lexer.c \
   $(SRC_DIR)/lexer/free_lexer.c \
   $(SRC_DIR)/lexer/run_lexer.c \
   $(SRC_DIR)/lexer/join_words.c \
-		\
+  \
   $(SRC_DIR)/utils/b_varexists.c \
   $(SRC_DIR)/utils/b_getenv.c \
   $(SRC_DIR)/utils/b_setenv.c \
   $(SRC_DIR)/utils/b_fromenvp.c \
   $(SRC_DIR)/utils/b_unsetenv.c \
-	\
+  $(SRC_DIR)/utils/ft_strjoin_free.c \
+  $(SRC_DIR)/utils/ft_readline.c \
+  $(SRC_DIR)/utils/linereader_free.c \
+  \
   $(SRC_DIR)/parser/parser_init.c \
   $(SRC_DIR)/parser/parser_free.c \
   $(SRC_DIR)/parser/parser_parse.c \
+  \
+  $(SRC_DIR)/reader/reader_free.c \
+  $(SRC_DIR)/reader/reader_init.c \
+  $(SRC_DIR)/reader/handle_read.c \
 
  # add the source files from SRCS to the test files excluding 'src/main.c'
 TESTS = \
@@ -42,6 +50,8 @@ TESTS = \
   $(TEST_DIR)/test_parser_basic.c \
   $(TEST_DIR)/test_parser_pipe.c \
   $(TEST_DIR)/test_utils.c \
+  $(TEST_DIR)/test_utils_string.c \
+  $(TEST_DIR)/test_utils_readline.c \
 
 OBJS     = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRCS))
 TESTOBJS = $(patsubst $(TEST_DIR)/%.c,$(TEST_OBJD)/%.o,$(TESTS)) $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(filter-out $(SRC_DIR)/main.c,$(SRCS)))

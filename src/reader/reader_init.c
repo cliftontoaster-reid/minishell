@@ -1,39 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   create_lexer.c                                     :+:      :+:    :+:   */
+/*   reader_init.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/14 15:31:08 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/18 15:21:43 by lfiorell@st      ###   ########.fr       */
+/*   Created: 2025/06/16 19:42:35 by lfiorell@st       #+#    #+#             */
+/*   Updated: 2025/06/17 11:23:17 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "errno.h"
-#include "lexer.h"
+#include "reader.h"
 
-t_lexer	*create_lexer(char *text)
+t_reader	*reader_init(char *const *envp)
 {
-	t_lexer	*lexer;
+	t_reader	*reader;
 
-	lexer = malloc(sizeof(t_lexer));
-	if (!lexer)
+	reader = ft_calloc(1, sizeof(t_reader));
+	if (reader == NULL)
 	{
 		errno = ENOMEM;
 		return (NULL);
 	}
-	lexer->text = ft_strdup(text);
-	if (!lexer->text)
+	reader->env = b_fromenvp(envp);
+	if (reader->env == NULL)
 	{
-		free(lexer);
+		free(reader);
 		errno = ENOMEM;
 		return (NULL);
 	}
-	lexer->pos = 0;
-	lexer->current_char = lexer->text[0];
-	lexer->state = LEXER_NONE;
-	lexer->start = 0;
-	lexer->token_list = NULL;
-	return (lexer);
+	return (reader);
 }

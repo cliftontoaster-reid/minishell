@@ -3,7 +3,7 @@ name: Deploy Writerside Documentation
 on:
   # Trigger the workflow on push to main branch
   push:
-    branches: [main, master]
+    branches: [main, toaster]
     paths:
       - Writerside/**
       - .github/workflows/deploy-docs.yml

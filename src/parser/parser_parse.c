@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 10:25:58 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/13 15:30:34 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/19 12:00:42 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,9 @@ void	*ft_lstget(t_list *lst, size_t n, size_t size)
 		lst = lst->next;
 		i++;
 	}
-	return (lst ? lst->content : NULL);
+	if (lst == NULL)
+		return (NULL);
+	return (lst->content);
 }
 
 void	end_command(t_parser *parser)
@@ -100,8 +102,8 @@ void	parser_handle_none(t_parser *parser)
 	if (type == TOKEN_WORD)
 	{
 		parser->state = PARSER_COMMAND;
-		// Initialize a new command structure
-		parser->command = cmd_init();
+		if (parser->command == NULL)
+			parser->command = cmd_init();
 		if (errno == ENOMEM)
 			return ;
 		// Add the command name to the argument list
@@ -346,6 +348,7 @@ void	parser_handle_special(t_parser *parser)
 		return ;
 	}
 	parser->current_index++;
+	parser->state = PARSER_NONE;
 }
 
 /// @brief Executes a single step in the parsing process based on the current
