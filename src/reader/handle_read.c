@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 10:58:53 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/19 11:09:15 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/19 15:35:44 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,19 @@ bool	try_parse(t_reader *reader)
 	return (true);
 }
 
+bool	str_is_whitespace(const char *str)
+{
+	if (str == NULL)
+		return (false);
+	while (*str)
+	{
+		if (!ft_ciswhite(*str))
+			return (false);
+		str++;
+	}
+	return (true);
+}
+
 void	handle_read(t_reader *reader, const char *input)
 {
 	if (reader == NULL || input == NULL)
@@ -92,6 +105,13 @@ void	handle_read(t_reader *reader, const char *input)
 	if (!try_read(reader, input))
 	{
 		errno = ENOMEM;
+		return ;
+	}
+	// if it only contains whitespace, we can skip lexing and parsing
+	if (str_is_whitespace(reader->cached))
+	{
+		free(reader->cached);
+		reader->cached = NULL;
 		return ;
 	}
 	if (!try_lex(reader))
@@ -109,7 +129,8 @@ void	handle_read(t_reader *reader, const char *input)
 		reader->lexer = NULL;
 		if (reader->tokens)
 		{
-//			ft_lstclear(&reader->tokens, (void (*)(void *))free_token);
+			//			ft_lstclear(&reader->tokens,
+			//			(void (*)(void *))free_token);
 			reader->tokens = NULL;
 		}
 		errno = EINVAL;
