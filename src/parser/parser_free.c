@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 14:35:34 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/12 14:42:42 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/18 18:26:06 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,6 @@ void	parser_free(t_parser *parser)
 		return ;
 	if (parser->command_list != NULL)
 		ft_lstclear(&parser->command_list, free_command);
-	if (parser->token_list != NULL)
-		ft_lstclear(&parser->token_list, (void (*)(void *))free_token);
 	if (parser->command != NULL)
 		free_command(parser->command);
 	free(parser);

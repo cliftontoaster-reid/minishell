@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 15:31:08 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/06 14:50:58 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/18 15:21:43 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,5 +33,7 @@ t_lexer	*create_lexer(char *text)
 	lexer->pos = 0;
 	lexer->current_char = lexer->text[0];
 	lexer->state = LEXER_NONE;
+	lexer->start = 0;
+	lexer->token_list = NULL;
 	return (lexer);
 }

@@ -28,6 +28,10 @@ SRCS     = \
   $(SRC_DIR)/parser/parser_init.c \
   $(SRC_DIR)/parser/parser_free.c \
   $(SRC_DIR)/parser/parser_parse.c \
+  \
+  $(SRC_DIR)/reader/reader_init.c \
+  $(SRC_DIR)/reader/reader_free.c \
+  $(SRC_DIR)/reader/handle_read.c \
 
  # add the source files from SRCS to the test files excluding 'src/main.c'
 TESTS = \

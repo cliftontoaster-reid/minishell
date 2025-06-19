@@ -6,13 +6,16 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 14:38:32 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/12 16:01:27 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/18 18:23:41 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexer.h"
-#include "libft.h"
-#include "shared.h"
+#ifndef PARSER_H
+# define PARSER_H
+
+# include "lexer.h"
+# include "libft.h"
+# include "shared.h"
 
 /// - bit 0 : command is a builtin
 ///
@@ -128,3 +131,5 @@ t_cmd				*parser_to_list(t_parser *parser);
 /// @return Pointer to the initialized t_cmd structure,
 ///          or NULL on allocation failure (errno set to ENOMEM).
 t_cmd				*cmd_init(void);
+
+#endif

@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 11:59:04 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/18 13:07:23 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/18 13:54:31 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ char	*ft_readline(t_linereader *reader)
 
 	if (!reader || reader->fd < 0)
 		return (NULL);
-	while (!ft_strchr(saved, '\n'))
+	while (!saved || !ft_strchr(saved, '\n'))
 	{
 		saved = read_and_append(reader->fd, saved);
 		if (!saved)
