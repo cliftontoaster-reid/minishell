@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:49:10 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/18 18:32:13 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/20 15:29:08 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,14 +89,13 @@ void	print_parser(t_parser *parser)
 	}
 }
 
-int		g_status_code = 0;
-
 int	main(int argc, char **argv, char **envp)
 {
 	t_list			*env_list;
 	t_reader		*reader_ptr;
 	char			*cached_input;
 	t_linereader	reader;
+			t_cmd *commands;
 
 	ft_bzero(&reader, sizeof(t_linereader));
 	env_list = b_fromenvp(envp);
@@ -130,7 +129,6 @@ int	main(int argc, char **argv, char **envp)
 		{
 			printf("%sParser State:%s\n", BOLD, RESET);
 			print_parser(reader_ptr->parser);
-			t_cmd *commands;
 			commands = parser_to_list(reader_ptr->parser);
 			ft_pipex(commands, reader_ptr->env);
 		}

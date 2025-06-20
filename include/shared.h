@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:24:32 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/12 15:30:35 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/06/20 15:29:08 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ char		*b_getenv(const char *key, t_list *envp);
 /// @param value The value to set
 /// @note The caller is responsible for freeing the value string
 ///       if it was dynamically allocated
-void		b_setenv(const char *key, const char *value, t_list *envp);
+void		b_setenv(const char *key, const char *value, t_list **envp);
 
 /// @brief Unset the environment variable
 /// @param key The key of the environment variable

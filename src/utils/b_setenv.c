@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 11:00:00 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/06 15:00:12 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/20 15:29:08 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,14 +94,14 @@ static void	add_new_env_var(const char *key, const char *value, t_list **envp)
 	ft_lstadd_back(envp, new_node);
 }
 
-void	b_setenv(const char *key, const char *value, t_list *envp)
+void	b_setenv(const char *key, const char *value, t_list **envp)
 {
 	t_list	*current;
 	t_env	*env_entry;
 
 	if (!key || !value || !envp)
 		return ;
-	current = envp;
+	current = *envp;
 	while (current)
 	{
 		env_entry = (t_env *)current->content;
@@ -112,5 +112,5 @@ void	b_setenv(const char *key, const char *value, t_list *envp)
 		}
 		current = current->next;
 	}
-	add_new_env_var(key, value, &envp);
+	add_new_env_var(key, value, envp);
 }
