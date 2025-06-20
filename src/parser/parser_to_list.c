@@ -32,7 +32,7 @@ t_cmd	*parser_to_list(t_parser *parser)
 		errno = EINVAL;
 		return (NULL);
 	}
-	commands = ft_calloc(len, sizeof(t_cmd));
+	commands = ft_calloc(len + 1, sizeof(t_cmd));
 	if (commands == NULL)
 	{
 		errno = ENOMEM;

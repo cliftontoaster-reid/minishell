@@ -130,6 +130,9 @@ int	main(int argc, char **argv, char **envp)
 		{
 			printf("%sParser State:%s\n", BOLD, RESET);
 			print_parser(reader_ptr->parser);
+			t_cmd *commands;
+			commands = parser_to_list(reader_ptr->parser);
+			ft_pipex(commands, reader_ptr->env);
 		}
 		free_lexer(reader_ptr->lexer);
 		parser_free(reader_ptr->parser);

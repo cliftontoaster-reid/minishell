@@ -69,4 +69,7 @@ typedef struct s_cmd
 	char	*redirect_heredoc;
 }			t_cmd;
 
+//pipex/ft_pipex.c
+void	ft_pipex(t_cmd *cmd, t_list *tenvp);
+
 #endif

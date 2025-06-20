@@ -34,6 +34,8 @@ SRCS     = \
   $(SRC_DIR)/reader/reader_free.c \
   $(SRC_DIR)/reader/reader_init.c \
   $(SRC_DIR)/reader/handle_read.c \
+  \
+  $(SRC_DIR)/pipex/ft_pipex.c \
 
  # add the source files from SRCS to the test files excluding 'src/main.c'
 TESTS = \
