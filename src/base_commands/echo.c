@@ -3,24 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfranc <jfranc@student.42nice.fr>          +#+  +:+       +#+        */
+/*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 15:24:35 by jfranc            #+#    #+#             */
-/*   Updated: 2025/06/18 09:56:48 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/06/20 14:49:31 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <string.h>
+#include "libft.h"
 #include <stdio.h>
+#include <string.h>
+#include <unistd.h>
 
 static void	ft_echo_screen(int argc, char **argv, int newline, int iter)
 {
-	while (iter<argc)
+	while (iter < argc)
 	{
-		write(1, argv[iter], strlen(argv[iter])); //---------- strlen TODO
+		write(1, argv[iter], ft_strlen(argv[iter])); //---------- strlen TODO
 		iter++;
-		if (iter<argc)
+		if (iter < argc)
 			write(1, " ", 1);
 		else if (newline)
 			write(1, "\n", 1);
@@ -29,13 +30,13 @@ static void	ft_echo_screen(int argc, char **argv, int newline, int iter)
 
 void	ft_echo(int argc, char **argv) /*, t_list *tenvp)*/
 {
-	int		iter;
-	int		iter_s;
-	char	newline;
+	int iter;
+	int iter_s;
+	char newline;
 
 	newline = 1;
 	iter = 1;
-	while (iter<argc)
+	while (iter < argc)
 	{
 		iter_s = 2;
 		if (!strncmp(argv[iter], "-n", 2)) //------------------- strncmp TODO

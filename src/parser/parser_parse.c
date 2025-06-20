@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 10:25:58 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/19 12:00:42 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/20 14:32:01 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,10 @@
 #include "parser.h"
 #include "shared.h"
 #include <errno.h>
+#include <fcntl.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 // It should loop over all tokens in the lexer,
 // -  when ecountering a word, it should take it as command name, and then
@@ -212,19 +215,29 @@ static inline t_token	*get_redirect_token(t_parser *parser)
 static void	parser_special_redirect_in(t_parser *parser)
 {
 	t_token	*token;
+	int		fd;
 
 	token = get_redirect_token(parser);
 	if (!token)
 	{
 		return ;
 	}
+	fd = open(token->value, O_RDONLY);
+	if (fd < 0)
+	{
+		errno = EINVAL;
+		parser->error = PARSING_MISSING_SPECIAL_TARGET;
+		return ;
+	}
 	if (parser->command == NULL)
 		parser->command = cmd_init();
+	parser->command->fd_infile = fd;
 	if (errno == ENOMEM)
 		return ;
 	parser->command->redirect_in = ft_strdup(token->value);
 	if (parser->command->redirect_in == NULL)
 	{
+		close(fd);
 		errno = ENOMEM;
 		parser->error = PARSING_ERROR_MALLOC;
 	}
@@ -238,19 +251,29 @@ static void	parser_special_redirect_in(t_parser *parser)
 static void	parser_special_redirect_out(t_parser *parser)
 {
 	t_token	*token;
+	int		fd;
 
 	token = get_redirect_token(parser);
 	if (!token)
 	{
 		return ;
 	}
+	fd = open(token->value, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (parser->command == NULL)
 		parser->command = cmd_init();
+	if (fd < 0)
+	{
+		errno = EINVAL;
+		parser->error = PARSING_MISSING_SPECIAL_TARGET;
+		return ;
+	}
+	parser->command->fd_outfile = fd;
 	if (errno == ENOMEM)
 		return ;
 	parser->command->redirect_out = ft_strdup(token->value);
 	if (parser->command->redirect_out == NULL)
 	{
+		close(fd);
 		errno = ENOMEM;
 		parser->error = PARSING_ERROR_MALLOC;
 	}
@@ -264,19 +287,29 @@ static void	parser_special_redirect_out(t_parser *parser)
 static void	parser_special_redirect_append(t_parser *parser)
 {
 	t_token	*token;
+	int		fd;
 
 	token = get_redirect_token(parser);
 	if (!token)
 	{
 		return ;
 	}
+	fd = open(token->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	if (fd < 0)
+	{
+		errno = EINVAL;
+		parser->error = PARSING_MISSING_SPECIAL_TARGET;
+		return ;
+	}
 	if (parser->command == NULL)
 		parser->command = cmd_init();
 	if (errno == ENOMEM)
 		return ;
+	parser->command->fd_outfile = fd;
 	parser->command->redirect_append = ft_strdup(token->value);
 	if (parser->command->redirect_in == NULL)
 	{
+		close(fd);
 		errno = ENOMEM;
 		parser->error = PARSING_ERROR_MALLOC;
 	}

@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 11:00:00 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/06 14:59:09 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/20 14:47:15 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ char	*b_getenv(const char *key, t_list *envp)
 		if (env_entry && env_entry->key && str_equal(env_entry->key, key))
 		{
 			if (env_entry->value)
-				return (ft_strdup(env_entry->value));
+				return (env_entry->value);
 			return (NULL);
 		}
 		current = current->next;

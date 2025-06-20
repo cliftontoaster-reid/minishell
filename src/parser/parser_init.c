@@ -6,12 +6,13 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 14:31:44 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/12 17:28:36 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/20 14:24:13 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 #include <errno.h>
+#include <unistd.h>
 
 /// @brief Allocate and initialize a command structure.
 /// @details Sets default values for arguments, redirections, and pipe flag.
@@ -29,6 +30,8 @@ t_cmd	*cmd_init(void)
 	}
 	cmd->args = NULL;
 	cmd->argc = -1;
+	cmd->fd_infile = STDIN_FILENO;
+	cmd->fd_outfile = STDOUT_FILENO;
 	cmd->is_pipe = false;
 	cmd->redirect_in = NULL;
 	cmd->redirect_out = NULL;

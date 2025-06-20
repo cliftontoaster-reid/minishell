@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 14:38:32 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/18 18:23:41 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/20 14:09:34 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@
 ///
 /// - bit 7 : is local
 
+/// @brief Defines the possible parsing errors that can occur.
 typedef enum e_parsing_error
 {
 	PARSING_NO_ERROR = 0,
@@ -44,28 +45,44 @@ typedef enum e_parsing_error
 	PARSING_DOUBLE_SPECIAL_DIRECTIVE = 3,
 }					t_parsing_error;
 
+/// @brief Represents the current state of the parser.
 typedef enum e_parser_state
 {
+	/// @brief The parser is in an initial or undefined state.
 	PARSER_NONE = 0,
+	/// @brief The parser is currently processing a command.
 	PARSER_COMMAND,
+	/// @brief The parser is currently processing a special token (e.g., pipe,
+	///         redirection).
 	PARSER_SPECIAL,
 }					t_parser_state;
 
+/// @brief Represents the parser's state and data structures.
 typedef struct s_parser
 {
+	/// @brief A linked list of commands that have been parsed.
 	t_list			*command_list;
+	/// @brief The command currently being built.
 	t_cmd			*command;
+	/// @brief A linked list of arguments for the current command.
 	t_list			*argument_list;
 
+	/// @brief The original list of tokens from the lexer.
 	t_list			*token_list;
+	/// @brief The token currently being processed.
 	t_token			*current_token;
+	/// @brief The type of the last token that was processed.
 	t_token_type	last_token_type;
 
+	/// @brief The index of the current token in the token list.
 	size_t			current_index;
+	/// @brief The total number of tokens to be parsed.
 	size_t			token_count;
 
+	/// @brief The current state of the parser.
 	t_parser_state	state;
 
+	/// @brief The last error that occurred during parsing, if any.
 	t_parsing_error	error;
 }					t_parser;
 
