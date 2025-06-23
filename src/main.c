@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:49:10 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/23 11:09:08 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/23 11:14:42 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,9 +146,13 @@ int	main(int argc, char **argv, char **envp)
 		free(cached_input);
 	if (reader_ptr->lexer)
 		free_lexer(reader_ptr->lexer);
+	if (reader_ptr->parser)
+		parser_free(reader_ptr->parser);
 	if (reader_ptr->tokens)
 		ft_lstclear(&reader_ptr->tokens, (void (*)(void *))free_token);
 	if (reader_ptr->env)
 		ft_lstclear(&reader_ptr->env, free);
+	if (reader_ptr)
+		free(reader_ptr);
 	return (g_status_code);
 }
