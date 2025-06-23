@@ -1336,6 +1336,28 @@
       "-I./target/criterion-2.4.2/include",
       "-c",
       "-o",
+      "target/globals.o",
+      "src/globals.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/globals.c",
+    "output": "/home/creid/Documents/42/minishell/target/globals.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/clang",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-O3",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-I./target/criterion-2.4.2/include",
+      "-c",
+      "-o",
       "target/lexer/create_token.o",
       "src/lexer/create_token.c"
     ],
@@ -1644,6 +1666,28 @@
       "-I./target/criterion-2.4.2/include",
       "-c",
       "-o",
+      "target/parser/p_strerror.o",
+      "src/parser/p_strerror.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/parser/p_strerror.c",
+    "output": "/home/creid/Documents/42/minishell/target/parser/p_strerror.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/clang",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-O3",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-I./target/criterion-2.4.2/include",
+      "-c",
+      "-o",
       "target/parser/parser_init.o",
       "src/parser/parser_init.c"
     ],
@@ -1710,6 +1754,28 @@
       "-I./target/criterion-2.4.2/include",
       "-c",
       "-o",
+      "target/parser/parser_to_list.o",
+      "src/parser/parser_to_list.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/parser/parser_to_list.c",
+    "output": "/home/creid/Documents/42/minishell/target/parser/parser_to_list.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/clang",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-O3",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-I./target/criterion-2.4.2/include",
+      "-c",
+      "-o",
       "target/reader/reader_free.o",
       "src/reader/reader_free.c"
     ],
@@ -1760,5 +1826,27 @@
     "directory": "/home/creid/Documents/42/minishell",
     "file": "/home/creid/Documents/42/minishell/src/reader/handle_read.c",
     "output": "/home/creid/Documents/42/minishell/target/reader/handle_read.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/clang",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-O3",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-I./target/criterion-2.4.2/include",
+      "-c",
+      "-o",
+      "target/pipex/ft_pipex.o",
+      "src/pipex/ft_pipex.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/pipex/ft_pipex.c",
+    "output": "/home/creid/Documents/42/minishell/target/pipex/ft_pipex.o"
   }
 ]
