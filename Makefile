@@ -130,8 +130,10 @@ re: fclean all
 
 qre: clean all
 
-bundle: clean all
-	@git stash -u || true
+bundle:
+	@${MAKE} fclean
+	@echo "Creating bundle for $(NAME)..."
+	@${MAKE} all
 	@mkdir -p $(OBJ_DIR)/bundle
 	@cp $(NAME) $(OBJ_DIR)/bundle/
 	@cp LICENCE $(OBJ_DIR)/bundle/
@@ -147,6 +149,5 @@ bundle: clean all
 	@echo "Creating tar.lzma archive..."
 	@tar --lzma -cf $(OBJ_DIR)/$(NAME).tar.lzma -C $(OBJ_DIR)/bundle .
 	@echo "Archives created in $(OBJ_DIR)/bundle/"
-	@git stash pop || true
 
 .PHONY: all clean fclean re bundle

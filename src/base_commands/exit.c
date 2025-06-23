@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 13:37:28 by jfranc            #+#    #+#             */
-/*   Updated: 2025/06/23 16:07:21 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/23 16:11:23 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ void	ft_exit(char *s, t_reader *reader)
 			parser_free(reader->parser);
 		free(reader);
 	}
-	exit(atoi(s)); //--------------------------	TODO atoi !!!
+	exit(exit_code);
 	while (1)
 		write(1, "loser ", 6);
 }
