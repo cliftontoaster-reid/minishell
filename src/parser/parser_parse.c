@@ -6,7 +6,19 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 10:25:58 by lfiorell@st       #+#    #+#             */
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 /*   Updated: 2025/06/23 16:01:36 by lfiorell@st      ###   ########.fr       */
+=======
+/*   Updated: 2025/06/16 16:57:09 by lfiorell@st      ###   ########.fr       */
+>>>>>>> Stashed changes
+=======
+/*   Updated: 2025/06/16 16:57:09 by lfiorell@st      ###   ########.fr       */
+>>>>>>> Stashed changes
+=======
+/*   Updated: 2025/06/16 16:57:09 by lfiorell@st      ###   ########.fr       */
+>>>>>>> Stashed changes
 /*                                                                            */
 /* ************************************************************************** */
 
