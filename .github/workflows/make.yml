@@ -8,9 +8,19 @@ on:
     branches:
       - main
       - toaster
+    paths:
+      - src/**
+      - Makefile
+      - include/**
+      - .github/workflows/make.yml
   pull_request:
     branches:
       - main
+    paths:
+      - src/**
+      - Makefile
+      - include/**
+      - .github/workflows/make.yml
 
 jobs:
   build:
@@ -36,9 +46,11 @@ jobs:
 
       - name: Build project
         run: make all
+        timeout-minutes: 10
 
       - name: Run tests
         run: make run_test
+        timeout-minutes: 10
         env:
           CRIT_DEV: 1
 
@@ -63,3 +75,4 @@ jobs:
         run: |
           python3 -m norminette --use-gitignore
         continue-on-error: true
+        timeout-minutes: 2
