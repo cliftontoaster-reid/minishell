@@ -130,4 +130,23 @@ re: fclean all
 
 qre: clean all
 
-.PHONY: all clean fclean re
+bundle: clean all
+	@git stash -u || true
+	@mkdir -p $(OBJ_DIR)/bundle
+	@cp $(NAME) $(OBJ_DIR)/bundle/
+	@cp LICENCE $(OBJ_DIR)/bundle/
+	@cp README.md $(OBJ_DIR)/bundle/
+	@cp -r licenses $(OBJ_DIR)/bundle/
+	@mkdir -p $(OBJ_DIR)/bundle/meta
+	@cp .github/gift.opus $(OBJ_DIR)/bundle/meta/
+	@rm -f $(OBJ_DIR)/$(NAME).tar.gz $(OBJ_DIR)/$(NAME).tar.xz $(OBJ_DIR)/$(NAME).tar.lzma
+	@echo "Creating tar.gz archive..."
+	@tar -czf $(OBJ_DIR)/$(NAME).tar.gz -C $(OBJ_DIR)/bundle .
+	@echo "Creating tar.xz archive..."
+	@tar -cJf $(OBJ_DIR)/$(NAME).tar.xz -C $(OBJ_DIR)/bundle .
+	@echo "Creating tar.lzma archive..."
+	@tar --lzma -cf $(OBJ_DIR)/$(NAME).tar.lzma -C $(OBJ_DIR)/bundle .
+	@echo "Archives created in $(OBJ_DIR)/bundle/"
+	@git stash pop || true
+
+.PHONY: all clean fclean re bundle
