@@ -33,8 +33,7 @@ lint:
         - c-source
       commands:
         - name: norminette
-          run: |
-            bash -c 'output=$(python3 -m norminette "${target}"); echo "$output"; if echo "$output" | grep -q "ERROR"; then exit 1; else exit 0; fi'
+          run: python3 -m norminette ${target}
           output: pass_fail
           success_codes: [0, 1]
           prepare_run: python3 -m pip install norminette --user --upgrade
