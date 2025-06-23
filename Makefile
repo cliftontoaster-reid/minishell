@@ -27,6 +27,7 @@ SRCS     = \
   $(SRC_DIR)/utils/ft_readline.c \
   $(SRC_DIR)/utils/linereader_free.c \
   \
+  $(SRC_DIR)/parser/p_strerror.c \
   $(SRC_DIR)/parser/parser_init.c \
   $(SRC_DIR)/parser/parser_free.c \
   $(SRC_DIR)/parser/parser_parse.c \
