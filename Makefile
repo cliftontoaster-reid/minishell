@@ -9,6 +9,7 @@ NTEST    = minishell_test
 
 SRCS     = \
   $(SRC_DIR)/main.c \
+  $(SRC_DIR)/globals.c \
   \
   $(SRC_DIR)/lexer/create_token.c \
   $(SRC_DIR)/lexer/free_token.c \
@@ -26,6 +27,7 @@ SRCS     = \
   $(SRC_DIR)/utils/ft_readline.c \
   $(SRC_DIR)/utils/linereader_free.c \
   \
+  $(SRC_DIR)/parser/p_strerror.c \
   $(SRC_DIR)/parser/parser_init.c \
   $(SRC_DIR)/parser/parser_free.c \
   $(SRC_DIR)/parser/parser_parse.c \

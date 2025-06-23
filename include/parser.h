@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 14:38:32 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/20 14:09:34 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/23 10:50:32 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,5 +148,7 @@ t_cmd				*parser_to_list(t_parser *parser);
 /// @return Pointer to the initialized t_cmd structure,
 ///          or NULL on allocation failure (errno set to ENOMEM).
 t_cmd				*cmd_init(void);
+
+char				*p_strerror(t_parsing_error error);
 
 #endif
