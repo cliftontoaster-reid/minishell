@@ -6,23 +6,10 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 10:25:58 by lfiorell@st       #+#    #+#             */
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-/*   Updated: 2025/06/23 16:01:36 by lfiorell@st      ###   ########.fr       */
-=======
-/*   Updated: 2025/06/16 16:57:09 by lfiorell@st      ###   ########.fr       */
->>>>>>> Stashed changes
-=======
-/*   Updated: 2025/06/16 16:57:09 by lfiorell@st      ###   ########.fr       */
->>>>>>> Stashed changes
-=======
-/*   Updated: 2025/06/16 16:57:09 by lfiorell@st      ###   ########.fr       */
->>>>>>> Stashed changes
+/*   Updated: 2025/06/24 16:40:25 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexer.h"
 #include "parser.h"
 #include "shared.h"
 #include <errno.h>
@@ -46,7 +33,7 @@ void	*ft_lstget(t_list *lst, size_t n, size_t size)
 {
 	size_t	i;
 
-	if (!lst || n < 0)
+	if (!lst)
 		return (NULL);
 	if (n >= size)
 		return (NULL);

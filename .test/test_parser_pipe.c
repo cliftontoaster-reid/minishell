@@ -6,23 +6,10 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 16:56:10 by lfiorell@st       #+#    #+#             */
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-/*   Updated: 2025/06/23 16:01:58 by lfiorell@st      ###   ########.fr       */
-=======
-/*   Updated: 2025/06/16 18:22:58 by lfiorell@st      ###   ########.fr       */
->>>>>>> Stashed changes
-=======
-/*   Updated: 2025/06/16 18:22:58 by lfiorell@st      ###   ########.fr       */
->>>>>>> Stashed changes
-=======
-/*   Updated: 2025/06/16 18:22:58 by lfiorell@st      ###   ########.fr       */
->>>>>>> Stashed changes
+/*   Updated: 2025/06/24 10:28:52 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexer.h"
 #include "libft.h"
 #include "parser.h"
 #include "test_utils.h"

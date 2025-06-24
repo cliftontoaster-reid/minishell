@@ -1,7 +1,7 @@
 [
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -27,7 +27,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -53,7 +53,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -79,7 +79,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -105,7 +105,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -131,7 +131,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -157,7 +157,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -183,7 +183,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -209,7 +209,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -235,7 +235,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -261,7 +261,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -287,7 +287,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -313,7 +313,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -339,7 +339,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -365,7 +365,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -391,7 +391,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -417,7 +417,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -443,7 +443,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -469,7 +469,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -495,7 +495,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -521,7 +521,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -547,7 +547,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -573,7 +573,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -599,7 +599,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -625,7 +625,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -651,7 +651,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -677,7 +677,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -703,7 +703,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -729,7 +729,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -755,7 +755,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -781,7 +781,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -807,7 +807,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -833,7 +833,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -859,7 +859,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -885,7 +885,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -911,7 +911,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -937,7 +937,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -963,7 +963,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -989,7 +989,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -1015,7 +1015,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -1041,7 +1041,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -1067,7 +1067,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -1093,7 +1093,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -1119,7 +1119,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -1145,7 +1145,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -1171,7 +1171,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -1197,7 +1197,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -1223,7 +1223,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -1249,7 +1249,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -1275,7 +1275,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -1301,7 +1301,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -1323,7 +1323,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -1345,7 +1345,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -1367,7 +1367,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -1389,7 +1389,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -1411,7 +1411,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -1433,7 +1433,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -1455,7 +1455,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -1477,7 +1477,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -1499,7 +1499,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -1521,7 +1521,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -1543,7 +1543,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -1565,7 +1565,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -1587,7 +1587,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -1609,7 +1609,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -1631,7 +1631,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -1653,7 +1653,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -1675,7 +1675,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -1697,7 +1697,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -1719,7 +1719,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -1741,7 +1741,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -1763,7 +1763,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -1785,7 +1785,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -1807,7 +1807,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -1829,7 +1829,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/clang",
+      "/usr/lib64/ccache/cc",
       "-Wall",
       "-Wextra",
       "-Werror",
