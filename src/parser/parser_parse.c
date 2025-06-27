@@ -6,11 +6,10 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 10:25:58 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/20 14:32:01 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/24 16:40:25 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexer.h"
 #include "parser.h"
 #include "shared.h"
 #include <errno.h>
@@ -34,7 +33,7 @@ void	*ft_lstget(t_list *lst, size_t n, size_t size)
 {
 	size_t	i;
 
-	if (!lst || n < 0)
+	if (!lst)
 		return (NULL);
 	if (n >= size)
 		return (NULL);
@@ -143,34 +142,8 @@ void	parser_handle_command(t_parser *parser)
 /// @param parser The parser instance.
 static void	parser_special_pipe(t_parser *parser)
 {
-	t_token_type	type;
-	t_token_type	next_type;
-	t_token			*next_token;
-
-	type = parser->current_token->type;
-	next_token = (t_token *)ft_lstget(parser->token_list, parser->current_index
-			+ 1, parser->token_count);
-	if (!next_token)
-	{
-		errno = EINVAL;
-		parser->error = PARSING_ERROR_MALLOC;
-		return ;
-	}
-	next_type = next_token->type;
-	// Check if both current and next tokens are special (pipe, redirect in,
-	//	or pipex)
-	if ((type == TOKEN_PIPE || type == TOKEN_REDIRECT_IN || type == TOKEN_PIPE)
-		&& (next_type == TOKEN_PIPE || next_type == TOKEN_REDIRECT_IN
-			|| next_type == TOKEN_PIPE))
-	{
-		errno = EINVAL;
-		parser->error = PARSING_DOUBLE_SPECIAL_DIRECTIVE;
-		return ;
-	}
 	if (parser->command == NULL)
 		parser->command = cmd_init();
-	if (errno == ENOMEM)
-		return ;
 	parser->command->is_pipe = true;
 	end_command(parser);
 	parser->state = PARSER_NONE;
