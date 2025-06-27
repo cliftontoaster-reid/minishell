@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:24:32 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/20 15:29:08 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/27 18:57:24 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,10 @@ typedef struct s_env
 bool		b_varexists(const char *key, t_list *envp);
 
 /// @brief Get the value of the environment variable
-/// @param key The key of the environment variable
-/// @return The value of the environment variable, or NULL if not set
-/// @note The caller is responsible for freeing the returned string
-char		*b_getenv(const char *key, t_list *envp);
+/// @param key The key of the environment variable (if NULL, returns all)
+/// @return Array of strings: single value if key found, all env vars if NULL
+/// @note The caller is responsible for freeing the returned array and strings
+char		**b_getenv(const char *key, t_list *envp);
 
 /// @brief Set the value of the environment variable
 /// @param key The key of the environment variable
@@ -69,7 +69,7 @@ typedef struct s_cmd
 	char	*redirect_heredoc;
 }			t_cmd;
 
-//pipex/ft_pipex.c
-void	ft_pipex(t_cmd *cmd, t_list *tenvp);
+// pipex/ft_pipex.c
+void		ft_pipex(t_cmd *cmd, t_list *tenvp);
 
 #endif
