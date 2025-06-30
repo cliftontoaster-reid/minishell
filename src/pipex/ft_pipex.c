@@ -6,7 +6,7 @@
 /*   By: jfranc <jfranc@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:03:33 by jfranc            #+#    #+#             */
-/*   Updated: 2025/06/30 12:04:13 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/06/30 18:08:43 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 
 static void	fd_child(t_cmd *cmd, t_list *tenvp, int cmd_idx)
 {
+	t_iteration	iter;
+
 	cmd[cmd_idx].pid = fork();
 	if (cmd[cmd_idx].pid == -1)
 	{
@@ -26,19 +28,23 @@ static void	fd_child(t_cmd *cmd, t_list *tenvp, int cmd_idx)
 	{
 		if (!cmd->cmdpathlist[cmd_idx])
 			return ; // TODO handle exit failure
-		dup2(cmd[cmd_idx].fd_infile, STDIN_FILENO);
-		dup2(cmd[cmd_idx].fd_outfile, STDOUT_FILENO);
-		close(cmd[cmd_idx].fd_infile);
-		close(cmd->fd[0]);
-		close(cmd->fd[1]);
+		if (cmd_idx == 0)
+			dup2(cmd->fd_infile, STDIN_FILENO);
+		else
+			dup2(cmd->pipes[cmd_idx-1][0], STDIN_FILENO);
+		if (cmd_idx == cmd->cmdnbr - 1)
+			dup2(cmd->fd_outfile, STDOUT_FILENO);
+		else
+			dup2(cmd->pipes[cmd_idx][1], STDOUT_FILENO);
+		iter.i = 0;
+		while (iter.i < cmd->cmdnbr - 1)
+		{
+			close(cmd->pipes[iter.i][0]);
+			close(cmd->pipes[iter.i][1]);
+			iter.i++;
+		}
 		execve(cmd->cmdpathlist[cmd_idx], cmd[cmd_idx].args, b_getenv(NULL, tenvp));
-		/*
-		   TODO handle exit failure
-		free(data->cmd_in);
-		free(data->cmd_out);
-		ft_free_split(data->tmp);
-		ft_error_exit("execve cmd_in");
-		*/
+		// TODO handle exit failure
 	}
 }
 
@@ -48,22 +54,28 @@ static void	fd_pipex_execute(t_cmd *cmd, t_list *tenvp)
 {
 	t_iteration iter;
 
-	iter.i = 0;
-	if (pipe(cmd->fd) == -1)
+	cmd->pipes = malloc(sizeof(int *) * (cmd->cmdnbr - 1));
+	if (!cmd->pipes)
 		return ; // TODO handle exit failure
-	while (iter.i < cmd->cmdnbr)
+	iter.i = 0;
+	while (iter.i < cmd->cmdnbr - 1)
 	{
-		fd_child(cmd, tenvp, iter.i);
-		iter.i++;
+		cmd->pipes[iter.i] = malloc(sizeof(int) * 2);
+		if (pipe(cmd->pipes[iter.i++]) == -1)
+			return ; // TODO handle exit failure
 	}
-	close(cmd->fd[0]);
-	close(cmd->fd[1]);
 	iter.i = 0;
 	while (iter.i < cmd->cmdnbr)
+		fd_child(cmd, tenvp, iter.i++);
+	iter.i = 0;
+	while (iter.i < cmd->cmdnbr - 1) 
 	{
-		waitpid(cmd[iter.i].pid, NULL, 0);
-		iter.i++;
+		close(cmd->pipes[iter.i][0]);
+		close(cmd->pipes[iter.i++][1]);
 	}
+	iter.i = 0;
+	while (iter.i < cmd->cmdnbr)
+		waitpid(cmd[iter.i++].pid, NULL, 0);
 }
 
 //WARNING cmdpathlist does a malloc and contains mallocs
