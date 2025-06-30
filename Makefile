@@ -36,7 +36,11 @@ SRCS     = \
   $(SRC_DIR)/reader/handle_read.c \
   \
   $(SRC_DIR)/pipex/ft_pipex.c \
-
+  $(SRC_DIR)/pipex/cmd_path.c \
+  $(SRC_DIR)/pipex/ft_errors.c \
+  # TODO added $(SRC_DIR)/pipex/ft_errors.c \ TODO
+  
+  
  # add the source files from SRCS to the test files excluding 'src/main.c'
 TESTS = \
   $(TEST_DIR)/test_lexer_basic.c \
