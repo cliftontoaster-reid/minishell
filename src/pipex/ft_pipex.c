@@ -3,56 +3,85 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pipex.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
+/*   By: jfranc <jfranc@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/19 15:11:51 by jfranc            #+#    #+#             */
-/*   Updated: 2025/06/27 18:57:39 by lfiorell@st      ###   ########.fr       */
+/*   Created: 2025/06/25 11:03:33 by jfranc            #+#    #+#             */
+/*   Updated: 2025/06/30 12:04:13 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shared.h"
 #include "utils.h"
-#include <stdio.h> //TODO
+#include "pipex.h"
 
-static void	print_env_pwd(t_list *tenvp)
+static void	fd_child(t_cmd *cmd, t_list *tenvp, int cmd_idx)
 {
-	char	**pwd_value;
-	int		i;
-
-	pwd_value = b_getenv("PWD", tenvp);
-	if (pwd_value && pwd_value[0])
-		printf("tenvp pwd = %s\n", pwd_value[0]);
-	if (pwd_value)
+	cmd[cmd_idx].pid = fork();
+	if (cmd[cmd_idx].pid == -1)
 	{
-		i = 0;
-		while (pwd_value[i])
-			free(pwd_value[i++]);
-		free(pwd_value);
+		printf("error fork of pid %d", cmd_idx);
+		return ; // TODO handle exit failure
+	}
+	if (cmd[cmd_idx].pid == 0)
+	{
+		if (!cmd->cmdpathlist[cmd_idx])
+			return ; // TODO handle exit failure
+		dup2(cmd[cmd_idx].fd_infile, STDIN_FILENO);
+		dup2(cmd[cmd_idx].fd_outfile, STDOUT_FILENO);
+		close(cmd[cmd_idx].fd_infile);
+		close(cmd->fd[0]);
+		close(cmd->fd[1]);
+		execve(cmd->cmdpathlist[cmd_idx], cmd[cmd_idx].args, b_getenv(NULL, tenvp));
+		/*
+		   TODO handle exit failure
+		free(data->cmd_in);
+		free(data->cmd_out);
+		ft_free_split(data->tmp);
+		ft_error_exit("execve cmd_in");
+		*/
 	}
 }
 
-static void	handle_exit_command(t_cmd *cmd)
+//iter.i, in fd_child indicates the command nbr
+//waitpdid->(cmd[iter.i].pid, ...) is to make my life easy
+static void	fd_pipex_execute(t_cmd *cmd, t_list *tenvp)
 {
-	int	exit_code;
+	t_iteration iter;
 
-	printf("Exiting...\n");
-	if (cmd->args[1])
+	iter.i = 0;
+	if (pipe(cmd->fd) == -1)
+		return ; // TODO handle exit failure
+	while (iter.i < cmd->cmdnbr)
 	{
-		exit_code = atoi(cmd->args[1]);
-		printf("Exit code: %d\n", exit_code);
-		g_status_code = exit_code;
+		fd_child(cmd, tenvp, iter.i);
+		iter.i++;
 	}
-	else
+	close(cmd->fd[0]);
+	close(cmd->fd[1]);
+	iter.i = 0;
+	while (iter.i < cmd->cmdnbr)
 	{
-		printf("No exit code provided, defaulting to 0.\n");
-		g_status_code = 0;
+		waitpid(cmd[iter.i].pid, NULL, 0);
+		iter.i++;
 	}
-	exit(g_status_code);
 }
 
-static void	print_cmd_info(t_cmd *cmd)
+//WARNING cmdpathlist does a malloc and contains mallocs
+void	ft_pipex(t_cmd *cmd, t_list *tenvp)
+{
+	cmd->error = 0;
+	ft_cmdpathlist(cmd, tenvp);
+	if (cmd->error == 1)
+		return ; // TODO exit failure free
+	fd_pipex_execute(cmd, tenvp);
+	g_status_code = 0; // TODO exit success free
+}
+
+/*
+void	ft_pipex(t_cmd *cmd, t_list *tenvp)
 {
 	t_iteration	iter;
+	//int			exit_code;
 
 	iter.i = 0;
 	while (cmd->args[iter.i])
@@ -81,12 +110,32 @@ void	ft_pipex(t_cmd *cmd, t_list *tenvp)
 	printf("\n\n\n");
 	while (cmd && cmd->args)
 	{
-		print_cmd_info(cmd);
+		iter.i = 0;
+		while (cmd->args[iter.i])
+		{
+			printf("cmd->arg[%d] = %s\n", iter.i, cmd->args[iter.i]);
+			iter.i++;
+		}
+		if (cmd->argc)
+			printf("cmd->argc = %d\n", cmd->argc);
+		if (cmd->fd_infile >= 0)
+			printf("cmd->fd_infile = %d\n", cmd->fd_infile);
+		if (cmd->fd_outfile)
+			printf("cmd->fd_outfile = %d\n", cmd->fd_outfile);
+		if (cmd->redirect_in)
+			printf("cmd->redirect_in = %s\n", cmd->redirect_in);
+		if (cmd->redirect_out)
+			printf("cmd->redirect_out = %s\n", cmd->redirect_out);
+		if (cmd->redirect_append)
+			printf("cmd->redirect_append = %s\n", cmd->redirect_append);
+		if (cmd->redirect_heredoc)
+			printf("cmd->redirect_heredoc = %s\n", cmd->redirect_heredoc);
 		if (tenvp)
-			print_env_pwd(tenvp);
-		if (ft_strncmp(cmd->args[0], "exit", 5) == 0)
-			handle_exit_command(cmd);
+			printf("tenvp pwd = %s\n", b_getenv("PATH", tenvp));
+		printf("bool is : %d\n", cmd->is_pipe);
+		printf("\n");
 		cmd += 1;
 	}
-	printf("\n\n\n");
+	printf("\n\n");
 }
+*/
