@@ -6,7 +6,7 @@
 /*   By: jfranc <jfranc@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:03:33 by jfranc            #+#    #+#             */
-/*   Updated: 2025/06/27 20:54:57 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/06/30 12:04:13 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ void	ft_pipex(t_cmd *cmd, t_list *tenvp)
 	ft_cmdpathlist(cmd, tenvp);
 	if (cmd->error == 1)
 		return ; // TODO exit failure free
+	fd_pipex_execute(cmd, tenvp);
 	g_status_code = 0; // TODO exit success free
 }
 
