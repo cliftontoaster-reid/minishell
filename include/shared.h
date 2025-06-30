@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:24:32 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/27 18:27:25 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/06/30 17:05:10 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,15 +59,16 @@ t_list		*b_fromenvp(char *const *envp);
 typedef struct s_cmd
 {
 	bool	is_pipe;
-	bool	error; //--------------------------------- TODO added change for merge
+	bool	error;
 	int		pid;
 	int		argc;
-	int		cmdnbr; //-------------------------------- TODO added change for merge
-	int		fd_infile;                                
-	int		fd_outfile;                               
-	int     fd[2]; //--------------------------------- TODO added change for merge
+	int		cmdnbr;
+	int		fd_infile;    
+	int		fd_outfile;   
+	int		**pipes; //-------------------TODO
+	int     fd[2];
 	char	**args;
-	char	**cmdpathlist; // ------------------------ TODO added change for merge
+	char	**cmdpathlist;
 	char	*redirect_in;                             
 	char	*redirect_out;                            
 	char	*redirect_append;                         
@@ -78,10 +79,10 @@ typedef struct s_cmd
 void	ft_pipex(t_cmd *cmd, t_list *tenvp);          
                                                       
 //pipex/cmd_path.c                                    
-void	ft_free_split(char **split); //--------------- TODO added change for merge
+void	ft_free_split(char **split);
                                                       
 //pipex/ft_error.c                                    
-void	ft_cmdpathlist(t_cmd *cmd, t_list *tenvp); //- TODO added change for merge
+void	ft_cmdpathlist(t_cmd *cmd, t_list *tenvp);
 
 // pipex/ft_pipex.c
 void		ft_pipex(t_cmd *cmd, t_list *tenvp);
