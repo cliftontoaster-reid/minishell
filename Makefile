@@ -32,6 +32,14 @@ SRCS     = \
   $(SRC_DIR)/parser/parser_free.c \
   $(SRC_DIR)/parser/parser_parse.c \
   $(SRC_DIR)/parser/parser_to_list.c \
+	\
+  $(SRC_DIR)/base_commands/cd.c \
+  $(SRC_DIR)/base_commands/echo.c \
+  $(SRC_DIR)/base_commands/env.c \
+  $(SRC_DIR)/base_commands/pwd.c \
+  $(SRC_DIR)/base_commands/exit.c \
+  $(SRC_DIR)/base_commands/export.c \
+  $(SRC_DIR)/base_commands/unset.c \
   \
   $(SRC_DIR)/reader/reader_free.c \
   $(SRC_DIR)/reader/reader_init.c \

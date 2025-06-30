@@ -83,6 +83,30 @@ void	ft_pipex(t_cmd *cmd, t_list *tenvp)
 	t_iteration	iter;
 	//int			exit_code;
 
+	iter.i = 0;
+	while (cmd->args[iter.i])
+	{
+		printf("cmd->arg %d = %s\n", iter.i, cmd->args[iter.i]);
+		iter.i++;
+	}
+	if (cmd->argc)
+		printf("cmd->argc = %d\n", cmd->argc);
+	if (cmd->fd_infile)
+		printf("cmd->fd_infile = %d\n", cmd->fd_infile);
+	if (cmd->fd_outfile)
+		printf("cmd->fd_outfile = %d\n", cmd->fd_outfile);
+	if (cmd->redirect_in)
+		printf("cmd->redirect_in = %s\n", cmd->redirect_in);
+	if (cmd->redirect_out)
+		printf("cmd->redirect_out = %s\n", cmd->redirect_out);
+	if (cmd->redirect_append)
+		printf("cmd->redirect_append = %s\n", cmd->redirect_append);
+	if (cmd->redirect_heredoc)
+		printf("cmd->redirect_heredoc = %s\n", cmd->redirect_heredoc);
+}
+
+void	ft_pipex(t_cmd *cmd, t_list *tenvp)
+{
 	printf("\n\n\n");
 	while (cmd && cmd->args)
 	{
