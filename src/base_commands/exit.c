@@ -6,35 +6,88 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 13:37:28 by jfranc            #+#    #+#             */
-/*   Updated: 2025/06/20 14:50:11 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/23 16:11:23 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include "reader.h"
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
-void	ft_exit(char *s)
+int	lst_list(char **lst)
 {
-	int	iteri;
+	int	i;
 
-	iteri = 0;
-	while (s[iteri])
-		if (!ft_isdigit(s[iteri++])) //------------	TODO isdigit !!!
-			*s = '2';
-	exit(atoi(s)); //--------------------------	TODO atoi !!!
-	while (1)
-		write(1, "loser ", 6);
+	if (!lst)
+		return (0);
+	i = 0;
+	while (lst[i])
+		i++;
+	return (i);
 }
 
-int	main(int argc, char **argv)
+bool	isstring_noomber(char *s)
 {
-	if (argc == 1)
-		ft_exit("0");
-	if (argc == 2)
-		ft_exit(argv[1]);
-	write(1, "exit: too many arguments\n", 25);
-	return (1);
+	if (!s || !*s)
+		return (false);
+	while (*s)
+	{
+		if (!ft_isdigit(*s))
+			return (false);
+		s++;
+	}
+	return (true);
+}
+
+void	ft_exit(char *s, t_reader *reader)
+{
+	int	exit_code;
+
+	if (!s || !*s)
+	{
+		return ;
+	}
+	if (lst_list(s) > 2)
+	{
+		ft_putstr_fd("exit: too many arguments\n", 2);
+		return ;
+	}
+	// Check if the string is a valid number
+	if (s[1] && !isstring_noomber(s[1]))
+	{
+		ft_putstr_fd("exit: numeric argument required\n", 2);
+		return ;
+	}
+	exit_code = 0;
+	if (s[1])
+	{
+		exit_code = ft_atoi(s[1]);
+		if (exit_code < 0 || exit_code > 255)
+		{
+			ft_putstr_fd("exit: exit code out of range (0-255)\n", 2);
+			exit_code = 255; // Set to a default exit code
+		}
+	}
+	// Free the reader resources
+	if (reader)
+	{
+		if (reader->cached)
+			free(reader->cached);
+		if (reader->lexer)
+			free_lexer(reader->lexer);
+		if (reader->tokens)
+		{
+			ft_lstclear(&reader->tokens, (void (*)(void *))free_token);
+			reader->tokens = NULL;
+		}
+		if (reader->parser)
+			parser_free(reader->parser);
+		free(reader);
+	}
+	exit(exit_code);
+	while (1)
+		write(1, "loser ", 6);
 }

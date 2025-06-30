@@ -1,0 +1,14 @@
+{
+  "recommendations": [
+    "keyhr.42-c-format",
+    "dokca.42-ft-count-line",
+    "kube.42header",
+    "ms-vscode.cpptools-extension-pack",
+    "ms-vscode.makefile-tools"
+  ],
+  "unwantedRecommendations": [
+    "zenor.makefile-creator",
+    "neo-ltex.ltex",
+    "ltex-plus.vscode-ltex-plus"
+  ]
+}

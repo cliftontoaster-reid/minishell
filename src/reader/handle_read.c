@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 10:58:53 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/19 15:35:44 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/23 18:02:33 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ bool	try_lex(t_reader *reader)
 
 bool	try_parse(t_reader *reader)
 {
+	t_parsing_error	error;
+
 	if (reader == NULL || reader->tokens == NULL)
 	{
 		errno = EINVAL;
@@ -72,11 +74,13 @@ bool	try_parse(t_reader *reader)
 		errno = ENOMEM;
 		return (false);
 	}
-	if (parser_parse(reader->parser) != PARSING_NO_ERROR)
+	error = parser_parse(reader->parser);
+	if (error != PARSING_NO_ERROR)
 	{
 		parser_free(reader->parser);
 		reader->parser = NULL;
 		errno = EINVAL;
+		printf("Parsing error: %s\n", p_strerror(error));
 		return (false);
 	}
 	return (true);
@@ -107,7 +111,6 @@ void	handle_read(t_reader *reader, const char *input)
 		errno = ENOMEM;
 		return ;
 	}
-	// if it only contains whitespace, we can skip lexing and parsing
 	if (str_is_whitespace(reader->cached))
 	{
 		free(reader->cached);
@@ -128,20 +131,11 @@ void	handle_read(t_reader *reader, const char *input)
 		free_lexer(reader->lexer);
 		reader->lexer = NULL;
 		if (reader->tokens)
-		{
-			//			ft_lstclear(&reader->tokens,
-			//			(void (*)(void *))free_token);
 			reader->tokens = NULL;
-		}
 		errno = EINVAL;
 		return ;
 	}
 	// if no error, we free the cached input
 	free(reader->cached);
 	reader->cached = NULL;
-	// At this point, reader->parser is ready to be used
-	// You can add further processing or output here if needed
-	// For example, you might want to print the parsed commands or tokens
-	// print_parser(reader->parser);
-	// print_tokens(reader->tokens);
 }

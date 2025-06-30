@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:49:10 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/18 18:32:13 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/23 11:14:42 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#define PROMPT "nanoshell> "
+#define PROMPT "picoshell> "
 #define BOLD "\033[1m"
 #define RESET "\033[0m"
 
@@ -89,14 +89,13 @@ void	print_parser(t_parser *parser)
 	}
 }
 
-int		g_status_code = 0;
-
 int	main(int argc, char **argv, char **envp)
 {
 	t_list			*env_list;
 	t_reader		*reader_ptr;
 	char			*cached_input;
 	t_linereader	reader;
+	t_cmd			*commands;
 
 	ft_bzero(&reader, sizeof(t_linereader));
 	env_list = b_fromenvp(envp);
@@ -130,12 +129,16 @@ int	main(int argc, char **argv, char **envp)
 		{
 			printf("%sParser State:%s\n", BOLD, RESET);
 			print_parser(reader_ptr->parser);
-			t_cmd *commands;
 			commands = parser_to_list(reader_ptr->parser);
 			ft_pipex(commands, reader_ptr->env);
+			parser_free(reader_ptr->parser);
+			reader_ptr->parser = NULL;
 		}
-		free_lexer(reader_ptr->lexer);
-		parser_free(reader_ptr->parser);
+		if (reader_ptr->lexer)
+		{
+			free_lexer(reader_ptr->lexer);
+			reader_ptr->lexer = NULL;
+		}
 		reader_ptr->tokens = NULL;
 	}
 	// free reader resources
@@ -143,9 +146,13 @@ int	main(int argc, char **argv, char **envp)
 		free(cached_input);
 	if (reader_ptr->lexer)
 		free_lexer(reader_ptr->lexer);
+	if (reader_ptr->parser)
+		parser_free(reader_ptr->parser);
 	if (reader_ptr->tokens)
 		ft_lstclear(&reader_ptr->tokens, (void (*)(void *))free_token);
 	if (reader_ptr->env)
 		ft_lstclear(&reader_ptr->env, free);
+	if (reader_ptr)
+		free(reader_ptr);
 	return (g_status_code);
 }

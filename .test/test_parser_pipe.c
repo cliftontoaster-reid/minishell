@@ -6,11 +6,10 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 16:56:10 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/20 14:32:22 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/06/24 10:28:52 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexer.h"
 #include "libft.h"
 #include "parser.h"
 #include "test_utils.h"

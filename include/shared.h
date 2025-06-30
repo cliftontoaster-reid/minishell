@@ -36,17 +36,17 @@ typedef struct s_env
 bool		b_varexists(const char *key, t_list *envp);
 
 /// @brief Get the value of the environment variable
-/// @param key The key of the environment variable
-/// @return The value of the environment variable, or NULL if not set
-/// @note The caller is responsible for freeing the returned string
-char		*b_getenv(const char *key, t_list *envp);
+/// @param key The key of the environment variable (if NULL, returns all)
+/// @return Array of strings: single value if key found, all env vars if NULL
+/// @note The caller is responsible for freeing the returned array and strings
+char		**b_getenv(const char *key, t_list *envp);
 
 /// @brief Set the value of the environment variable
 /// @param key The key of the environment variable
 /// @param value The value to set
 /// @note The caller is responsible for freeing the value string
 ///       if it was dynamically allocated
-void		b_setenv(const char *key, const char *value, t_list *envp);
+void		b_setenv(const char *key, const char *value, t_list **envp);
 
 /// @brief Unset the environment variable
 /// @param key The key of the environment variable
@@ -82,5 +82,8 @@ void	ft_free_split(char **split); //--------------- TODO added change for merge
                                                       
 //pipex/ft_error.c                                    
 void	ft_cmdpathlist(t_cmd *cmd, t_list *tenvp); //- TODO added change for merge
+
+// pipex/ft_pipex.c
+void		ft_pipex(t_cmd *cmd, t_list *tenvp);
 
 #endif
