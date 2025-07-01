@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:24:32 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/30 17:05:10 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/07/01 15:50:58 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,6 @@ void	ft_cmdpathlist(t_cmd *cmd, t_list *tenvp);
 int		ft_nbrofcmds(t_cmd *cmd);
 
 // base_commands/exit.c
-void	ft_exit(char *s, t_reader *reader);
+void	ft_exit(char **s, t_reader *reader);
 
 #endif

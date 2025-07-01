@@ -6,7 +6,7 @@
 /*   By: jfranc <jfranc@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:03:33 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/01 14:01:47 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/07/01 15:53:32 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void	ft_pipex(t_cmd *cmd, t_list *tenvp)
 	cmd->error = 0;
 	cmd->cmdnbr = ft_nbrofcmds(cmd);
 	if (!ft_strncmp(cmd->args[0], "exit", 4) && cmd->cmdnbr == 1)
-		ft_exit("0", NULL);
+		ft_exit(cmd->args, NULL);
 	ft_cmdpathlist(cmd, tenvp);
 	if (cmd->error == 1)
 		return ; // TODO exit failure free
