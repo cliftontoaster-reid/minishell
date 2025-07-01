@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 15:00:00 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/20 15:29:08 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/01 16:17:39 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ Test(b_setenv, set_new_variable)
 {
 	char	*envp[] = {"USER=testuser", NULL};
 	t_list	*env_list;
-	char	*result;
+	char	**result;
 
 	env_list = b_fromenvp(envp);
 	cr_assert_not_null(env_list);
@@ -25,11 +25,15 @@ Test(b_setenv, set_new_variable)
 	cr_assert_eq(ft_lstsize(env_list), 2);
 	result = b_getenv("HOME", env_list);
 	cr_assert_not_null(result);
-	cr_assert_str_eq(result, "/home/testuser");
+	cr_assert_not_null(result[0]);
+	cr_assert_str_eq(result[0], "/home/testuser");
+	free(result[0]);
 	free(result);
 	result = b_getenv("USER", env_list);
 	cr_assert_not_null(result);
-	cr_assert_str_eq(result, "testuser");
+	cr_assert_not_null(result[0]);
+	cr_assert_str_eq(result[0], "testuser");
+	free(result[0]);
 	free(result);
 	ft_lstclear(&env_list, free_env_data);
 }
@@ -38,7 +42,7 @@ Test(b_setenv, update_existing_variable)
 {
 	char	*envp[] = {"USER=olduser", "HOME=/old/home", NULL};
 	t_list	*env_list;
-	char	*result;
+	char	**result;
 
 	env_list = b_fromenvp(envp);
 	cr_assert_not_null(env_list);
@@ -47,11 +51,15 @@ Test(b_setenv, update_existing_variable)
 	cr_assert_eq(ft_lstsize(env_list), 2); // Should not add a new entry
 	result = b_getenv("USER", env_list);
 	cr_assert_not_null(result);
-	cr_assert_str_eq(result, "newuser");
+	cr_assert_not_null(result[0]);
+	cr_assert_str_eq(result[0], "newuser");
+	free(result[0]);
 	free(result);
 	result = b_getenv("HOME", env_list);
 	cr_assert_not_null(result);
-	cr_assert_str_eq(result, "/old/home");
+	cr_assert_not_null(result[0]);
+	cr_assert_str_eq(result[0], "/old/home");
+	free(result[0]);
 	free(result);
 	ft_lstclear(&env_list, free_env_data);
 }
@@ -60,7 +68,7 @@ Test(b_setenv, set_empty_value)
 {
 	char	*envp[] = {"USER=testuser", NULL};
 	t_list	*env_list;
-	char	*result;
+	char	**result;
 
 	env_list = b_fromenvp(envp);
 	cr_assert_not_null(env_list);
@@ -68,7 +76,9 @@ Test(b_setenv, set_empty_value)
 	cr_assert_eq(ft_lstsize(env_list), 2);
 	result = b_getenv("EMPTY_VAR", env_list);
 	cr_assert_not_null(result);
-	cr_assert_str_eq(result, "");
+	cr_assert_not_null(result[0]);
+	cr_assert_str_eq(result[0], "");
+	free(result[0]);
 	free(result);
 	ft_lstclear(&env_list, free_env_data);
 }
@@ -77,7 +87,7 @@ Test(b_setenv, null_inputs)
 {
 	char	*envp[] = {"USER=testuser", NULL};
 	t_list	*env_list;
-	char	*result;
+	char	**result;
 
 	env_list = b_fromenvp(envp);
 	cr_assert_not_null(env_list);
@@ -93,7 +103,9 @@ Test(b_setenv, null_inputs)
 	// Verify original data is unchanged
 	result = b_getenv("USER", env_list);
 	cr_assert_not_null(result);
-	cr_assert_str_eq(result, "testuser");
+	cr_assert_not_null(result[0]);
+	cr_assert_str_eq(result[0], "testuser");
+	free(result[0]);
 	free(result);
 	ft_lstclear(&env_list, free_env_data);
 }
@@ -102,7 +114,7 @@ Test(b_setenv, case_sensitivity)
 {
 	char	*envp[] = {"USER=testuser", NULL};
 	t_list	*env_list;
-	char	*result;
+	char	**result;
 
 	env_list = b_fromenvp(envp);
 	cr_assert_not_null(env_list);
@@ -111,15 +123,21 @@ Test(b_setenv, case_sensitivity)
 	cr_assert_eq(ft_lstsize(env_list), 3); // USER, user, User
 	result = b_getenv("USER", env_list);
 	cr_assert_not_null(result);
-	cr_assert_str_eq(result, "testuser");
+	cr_assert_not_null(result[0]);
+	cr_assert_str_eq(result[0], "testuser");
+	free(result[0]);
 	free(result);
 	result = b_getenv("user", env_list);
 	cr_assert_not_null(result);
-	cr_assert_str_eq(result, "lowercase");
+	cr_assert_not_null(result[0]);
+	cr_assert_str_eq(result[0], "lowercase");
+	free(result[0]);
 	free(result);
 	result = b_getenv("User", env_list);
 	cr_assert_not_null(result);
-	cr_assert_str_eq(result, "mixedcase");
+	cr_assert_not_null(result[0]);
+	cr_assert_str_eq(result[0], "mixedcase");
+	free(result[0]);
 	free(result);
 	ft_lstclear(&env_list, free_env_data);
 }
@@ -128,7 +146,7 @@ Test(b_setenv, complex_values)
 {
 	char	*envp[] = {"USER=testuser", NULL};
 	t_list	*env_list;
-	char	*result;
+	char	**result;
 
 	env_list = b_fromenvp(envp);
 	cr_assert_not_null(env_list);
@@ -137,15 +155,21 @@ Test(b_setenv, complex_values)
 	b_setenv("SPECIAL", "!@#$%^&*()[]{}|\\:;\"'<>,.?/", &env_list);
 	result = b_getenv("URL", env_list);
 	cr_assert_not_null(result);
-	cr_assert_str_eq(result, "http://example.com/path?param=value");
+	cr_assert_not_null(result[0]);
+	cr_assert_str_eq(result[0], "http://example.com/path?param=value");
+	free(result[0]);
 	free(result);
 	result = b_getenv("PATH", env_list);
 	cr_assert_not_null(result);
-	cr_assert_str_eq(result, "/usr/local/bin:/usr/bin:/bin");
+	cr_assert_not_null(result[0]);
+	cr_assert_str_eq(result[0], "/usr/local/bin:/usr/bin:/bin");
+	free(result[0]);
 	free(result);
 	result = b_getenv("SPECIAL", env_list);
 	cr_assert_not_null(result);
-	cr_assert_str_eq(result, "!@#$%^&*()[]{}|\\:;\"'<>,.?/");
+	cr_assert_not_null(result[0]);
+	cr_assert_str_eq(result[0], "!@#$%^&*()[]{}|\\:;\"'<>,.?/");
+	free(result[0]);
 	free(result);
 	ft_lstclear(&env_list, free_env_data);
 }
@@ -154,19 +178,23 @@ Test(b_setenv, update_to_empty_value)
 {
 	char	*envp[] = {"TEST=original_value", NULL};
 	t_list	*env_list;
-	char	*result;
+	char	**result;
 
 	env_list = b_fromenvp(envp);
 	cr_assert_not_null(env_list);
 	result = b_getenv("TEST", env_list);
 	cr_assert_not_null(result);
-	cr_assert_str_eq(result, "original_value");
+	cr_assert_not_null(result[0]);
+	cr_assert_str_eq(result[0], "original_value");
+	free(result[0]);
 	free(result);
 	b_setenv("TEST", "", &env_list);
 	cr_assert_eq(ft_lstsize(env_list), 1); // Should not add new entry
 	result = b_getenv("TEST", env_list);
 	cr_assert_not_null(result);
-	cr_assert_str_eq(result, "");
+	cr_assert_not_null(result[0]);
+	cr_assert_str_eq(result[0], "");
+	free(result[0]);
 	free(result);
 	ft_lstclear(&env_list, free_env_data);
 }
@@ -175,21 +203,30 @@ Test(b_setenv, multiple_updates)
 {
 	char	*envp[] = {"COUNTER=0", NULL};
 	t_list	*env_list;
-	char	*result;
+	char	**result;
 
 	env_list = b_fromenvp(envp);
 	cr_assert_not_null(env_list);
 	b_setenv("COUNTER", "1", &env_list);
 	result = b_getenv("COUNTER", env_list);
-	cr_assert_str_eq(result, "1");
+	cr_assert_not_null(result);
+	cr_assert_not_null(result[0]);
+	cr_assert_str_eq(result[0], "1");
+	free(result[0]);
 	free(result);
 	b_setenv("COUNTER", "2", &env_list);
 	result = b_getenv("COUNTER", env_list);
-	cr_assert_str_eq(result, "2");
+	cr_assert_not_null(result);
+	cr_assert_not_null(result[0]);
+	cr_assert_str_eq(result[0], "2");
+	free(result[0]);
 	free(result);
 	b_setenv("COUNTER", "final", &env_list);
 	result = b_getenv("COUNTER", env_list);
-	cr_assert_str_eq(result, "final");
+	cr_assert_not_null(result);
+	cr_assert_not_null(result[0]);
+	cr_assert_str_eq(result[0], "final");
+	free(result[0]);
 	free(result);
 	cr_assert_eq(ft_lstsize(env_list), 1); // Should still be only one entry
 	ft_lstclear(&env_list, free_env_data);
@@ -199,17 +236,23 @@ Test(b_setenv, single_character_key_and_value)
 {
 	char	*envp[] = {"A=1", NULL};
 	t_list	*env_list;
-	char	*result;
+	char	**result;
 
 	env_list = b_fromenvp(envp);
 	cr_assert_not_null(env_list);
 	b_setenv("B", "2", &env_list);
 	b_setenv("A", "X", &env_list); // Update existing
 	result = b_getenv("A", env_list);
-	cr_assert_str_eq(result, "X");
+	cr_assert_not_null(result);
+	cr_assert_not_null(result[0]);
+	cr_assert_str_eq(result[0], "X");
+	free(result[0]);
 	free(result);
 	result = b_getenv("B", env_list);
-	cr_assert_str_eq(result, "2");
+	cr_assert_not_null(result);
+	cr_assert_not_null(result[0]);
+	cr_assert_str_eq(result[0], "2");
+	free(result[0]);
 	free(result);
 	cr_assert_eq(ft_lstsize(env_list), 2);
 	ft_lstclear(&env_list, free_env_data);
@@ -218,7 +261,7 @@ Test(b_setenv, single_character_key_and_value)
 Test(b_setenv, empty_list_behavior)
 {
 	t_list	*env_list;
-	char	*result;
+	char	**result;
 	char	*envp[] = {"INITIAL=value", NULL};
 
 	env_list = NULL;
@@ -231,7 +274,9 @@ Test(b_setenv, empty_list_behavior)
 	cr_assert_eq(ft_lstsize(env_list), 2);
 	result = b_getenv("NEW_VAR", env_list);
 	cr_assert_not_null(result);
-	cr_assert_str_eq(result, "new_value");
+	cr_assert_not_null(result[0]);
+	cr_assert_str_eq(result[0], "new_value");
+	free(result[0]);
 	free(result);
 	ft_lstclear(&env_list, free_env_data);
 }
