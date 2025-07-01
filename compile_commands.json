@@ -1776,6 +1776,160 @@
       "-I./target/criterion-2.4.2/include",
       "-c",
       "-o",
+      "target/base_commands/cd.o",
+      "src/base_commands/cd.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/base_commands/cd.c",
+    "output": "/home/creid/Documents/42/minishell/target/base_commands/cd.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-O3",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-I./target/criterion-2.4.2/include",
+      "-c",
+      "-o",
+      "target/base_commands/echo.o",
+      "src/base_commands/echo.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/base_commands/echo.c",
+    "output": "/home/creid/Documents/42/minishell/target/base_commands/echo.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-O3",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-I./target/criterion-2.4.2/include",
+      "-c",
+      "-o",
+      "target/base_commands/env.o",
+      "src/base_commands/env.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/base_commands/env.c",
+    "output": "/home/creid/Documents/42/minishell/target/base_commands/env.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-O3",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-I./target/criterion-2.4.2/include",
+      "-c",
+      "-o",
+      "target/base_commands/pwd.o",
+      "src/base_commands/pwd.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/base_commands/pwd.c",
+    "output": "/home/creid/Documents/42/minishell/target/base_commands/pwd.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-O3",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-I./target/criterion-2.4.2/include",
+      "-c",
+      "-o",
+      "target/base_commands/exit.o",
+      "src/base_commands/exit.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/base_commands/exit.c",
+    "output": "/home/creid/Documents/42/minishell/target/base_commands/exit.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-O3",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-I./target/criterion-2.4.2/include",
+      "-c",
+      "-o",
+      "target/base_commands/export.o",
+      "src/base_commands/export.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/base_commands/export.c",
+    "output": "/home/creid/Documents/42/minishell/target/base_commands/export.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-O3",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-I./target/criterion-2.4.2/include",
+      "-c",
+      "-o",
+      "target/base_commands/unset.o",
+      "src/base_commands/unset.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/base_commands/unset.c",
+    "output": "/home/creid/Documents/42/minishell/target/base_commands/unset.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-O3",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-I./target/criterion-2.4.2/include",
+      "-c",
+      "-o",
       "target/reader/reader_free.o",
       "src/reader/reader_free.c"
     ],
@@ -1848,5 +2002,49 @@
     "directory": "/home/creid/Documents/42/minishell",
     "file": "/home/creid/Documents/42/minishell/src/pipex/ft_pipex.c",
     "output": "/home/creid/Documents/42/minishell/target/pipex/ft_pipex.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-O3",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-I./target/criterion-2.4.2/include",
+      "-c",
+      "-o",
+      "target/pipex/cmd_path.o",
+      "src/pipex/cmd_path.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/pipex/cmd_path.c",
+    "output": "/home/creid/Documents/42/minishell/target/pipex/cmd_path.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-O3",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-I./target/criterion-2.4.2/include",
+      "-c",
+      "-o",
+      "target/pipex/ft_errors.o",
+      "src/pipex/ft_errors.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/pipex/ft_errors.c",
+    "output": "/home/creid/Documents/42/minishell/target/pipex/ft_errors.o"
   }
 ]
