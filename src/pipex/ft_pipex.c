@@ -6,7 +6,7 @@
 /*   By: jfranc <jfranc@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:03:33 by jfranc            #+#    #+#             */
-/*   Updated: 2025/06/30 18:08:43 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/07/01 14:01:47 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static void	fd_child(t_cmd *cmd, t_list *tenvp, int cmd_idx)
 }
 
 //iter.i, in fd_child indicates the command nbr
-//waitpdid->(cmd[iter.i].pid, ...) is to make my life easy
+//waitpdid->(cmd[iter.i].pid, ...) and fd_child(cmd, tenvp, iter.i++) teamwork
 static void	fd_pipex_execute(t_cmd *cmd, t_list *tenvp)
 {
 	t_iteration iter;
@@ -75,13 +75,17 @@ static void	fd_pipex_execute(t_cmd *cmd, t_list *tenvp)
 	}
 	iter.i = 0;
 	while (iter.i < cmd->cmdnbr)
-		waitpid(cmd[iter.i++].pid, NULL, 0);
+		if (waitpid(cmd[iter.i++].pid, NULL, 0) == -1)
+			return ; // TODO handle exit failure
 }
 
 //WARNING cmdpathlist does a malloc and contains mallocs
 void	ft_pipex(t_cmd *cmd, t_list *tenvp)
 {
 	cmd->error = 0;
+	cmd->cmdnbr = ft_nbrofcmds(cmd);
+	if (!ft_strncmp(cmd->args[0], "exit", 4) && cmd->cmdnbr == 1)
+		ft_exit("0", NULL);
 	ft_cmdpathlist(cmd, tenvp);
 	if (cmd->error == 1)
 		return ; // TODO exit failure free

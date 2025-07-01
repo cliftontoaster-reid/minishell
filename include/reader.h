@@ -20,6 +20,9 @@
 # include <errno.h>
 # include <stdio.h>
 
+typedef struct s_parser t_parser;
+
+
 typedef struct s_reader
 {
 	char		*cached;

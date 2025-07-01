@@ -6,7 +6,7 @@
 /*   By: jfranc <jfranc@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 18:51:56 by jfranc            #+#    #+#             */
-/*   Updated: 2025/06/25 11:06:31 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/07/01 13:36:41 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +16,10 @@
 
 //static void   exit_failure_free_all(TODO)
 
-static int  ft_nbrofcmds(t_cmd *cmd)
-{
-	int nbr;
-
-	nbr = 0;
-	while (cmd[nbr].args)
-		nbr++;
-	return (nbr);
-}
-
 void ft_cmdpathlist(t_cmd *cmd, t_list *tenvp)
 {   
 	t_iteration iter;
 
-	cmd->cmdnbr = ft_nbrofcmds(cmd);
 	cmd->cmdpathlist = malloc(sizeof(char *) * cmd->cmdnbr);
 	if (!cmd->cmdpathlist)
 	{

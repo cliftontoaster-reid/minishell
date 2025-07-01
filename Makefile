@@ -48,6 +48,7 @@ SRCS     = \
   $(SRC_DIR)/pipex/ft_pipex.c \
   $(SRC_DIR)/pipex/cmd_path.c \
   $(SRC_DIR)/pipex/ft_errors.c \
+  $(SRC_DIR)/pipex/ft_utils.c \
   # TODO added $(SRC_DIR)/pipex/ft_errors.c \ TODO
   
   
