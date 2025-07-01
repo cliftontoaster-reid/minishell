@@ -17,6 +17,9 @@
 # include "libft.h"
 # include "shared.h"
 
+typedef struct s_cmd t_cmd;
+typedef struct s_reader t_reader;
+
 /// - bit 0 : command is a builtin
 ///
 /// - bit 1 : has input redirection

@@ -6,16 +6,20 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:24:32 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/30 17:05:10 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/07/01 15:50:58 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SHARED_H
 # define SHARED_H
 
+# include "reader.h"
+# include "parser.h"
 # include "libft.h"
 # include <stdbool.h>
 # include <stdint.h>
+
+typedef struct s_reader t_reader;
 
 extern int	g_status_code;
 
@@ -63,20 +67,20 @@ typedef struct s_cmd
 	int		pid;
 	int		argc;
 	int		cmdnbr;
-	int		fd_infile;    
-	int		fd_outfile;   
+	int		fd_infile;
+	int		fd_outfile;
 	int		**pipes; //-------------------TODO
 	int     fd[2];
 	char	**args;
 	char	**cmdpathlist;
-	char	*redirect_in;                             
-	char	*redirect_out;                            
-	char	*redirect_append;                         
-	char	*redirect_heredoc;                        
+	char	*redirect_in;
+	char	*redirect_out;
+	char	*redirect_append;
+	char	*redirect_heredoc;
 }			t_cmd;                                    
                                                       
 //pipex/ft_pipex.c                                    
-void	ft_pipex(t_cmd *cmd, t_list *tenvp);          
+void	ft_pipex(t_cmd *cmd, t_list *tenvp);
                                                       
 //pipex/cmd_path.c                                    
 void	ft_free_split(char **split);
@@ -84,7 +88,10 @@ void	ft_free_split(char **split);
 //pipex/ft_error.c                                    
 void	ft_cmdpathlist(t_cmd *cmd, t_list *tenvp);
 
-// pipex/ft_pipex.c
-void		ft_pipex(t_cmd *cmd, t_list *tenvp);
+// pipex/ft_utils.c
+int		ft_nbrofcmds(t_cmd *cmd);
+
+// base_commands/exit.c
+void	ft_exit(char **s, t_reader *reader);
 
 #endif

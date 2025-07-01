@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 13:37:28 by jfranc            #+#    #+#             */
-/*   Updated: 2025/06/30 14:30:15 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/01 15:57:31 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ bool	isstring_noomber(char *s)
 	return (true);
 }
 
-void	ft_exit(char *s, t_reader *reader)
+void	ft_exit(char **s, t_reader *reader)
 {
 	int	exit_code;
 
@@ -50,13 +50,13 @@ void	ft_exit(char *s, t_reader *reader)
 	{
 		return ;
 	}
-	if (lst_list(&s) > 2)
+	if (lst_list(s) > 2)
 	{
 		ft_putstr_fd("exit: too many arguments\n", 2);
 		return ;
 	}
 	// Check if the string is a valid number
-	if (s[1] && !isstring_noomber(&s[1]))
+	if (s[1] && !isstring_noomber(s[1]))
 	{
 		ft_putstr_fd("exit: numeric argument required\n", 2);
 		return ;
@@ -64,7 +64,7 @@ void	ft_exit(char *s, t_reader *reader)
 	exit_code = 0;
 	if (s[1])
 	{
-		exit_code = ft_atoi(&s[1]);
+		exit_code = ft_atoi(s[1]);
 		if (exit_code < 0 || exit_code > 255)
 		{
 			ft_putstr_fd("exit: exit code out of range (0-255)\n", 2);
@@ -87,7 +87,6 @@ void	ft_exit(char *s, t_reader *reader)
 			parser_free(reader->parser);
 		free(reader);
 	}
+	write (1, "exit\n", 5);
 	exit(exit_code);
-	while (1)
-		write(1, "loser ", 6);
 }
