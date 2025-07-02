@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 11:41:49 by creid             #+#    #+#             */
-/*   Updated: 2025/07/02 12:55:45 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/02 13:14:32 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,54 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#define BUFFER_SIZE 256
+
+static char	get_random_alpha_buffered(unsigned char *buffer, int *pos,
+		int *remaining, int fd)
+{
+	unsigned char	rand_byte;
+	int				idx;
+
+	if (*remaining <= 0)
+	{
+		*remaining = read(fd, buffer, BUFFER_SIZE);
+		*pos = 0;
+		if (*remaining <= 0)
+			return ('a');
+	}
+	rand_byte = buffer[*pos];
+	(*pos)++;
+	(*remaining)--;
+	/* Only alphabetic: 0-25 (A-Z), 26-51 (a-z) */
+	idx = rand_byte % 52;
+	if (idx < 26)
+		return ('A' + idx);
+	else
+		return ('a' + (idx - 26));
+}
+
 char	*ft_readstr(int fd, int len)
 {
-	char	*str;
-	ssize_t	bytes_read;
+	char			*str;
+	unsigned char	buffer[BUFFER_SIZE];
+	int				i;
+	int				buffer_pos;
+	int				buffer_remaining;
 
 	if (len <= 0)
 		return (NULL);
 	str = malloc(sizeof(char) * (len + 1));
 	if (!str)
 		return (NULL);
-	bytes_read = read(fd, str, len);
-	if (bytes_read < 0)
+	buffer_pos = 0;
+	buffer_remaining = 0;
+	i = 0;
+	while (i < len)
 	{
-		free(str);
-		return (NULL);
+		str[i] = get_random_alpha_buffered(buffer, &buffer_pos,
+				&buffer_remaining, fd);
+		i++;
 	}
-	str[bytes_read] = '\0';
+	str[len] = '\0';
 	return (str);
 }

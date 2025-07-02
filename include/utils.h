@@ -6,12 +6,14 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 15:31:30 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/02 12:55:47 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/02 13:24:53 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef UTILS_H
 # define UTILS_H
+
+# include <stdbool.h>
 
 typedef struct s_iteration
 {
@@ -43,5 +45,13 @@ unsigned long		ft_readulong(int fd);
 unsigned long long	ft_readullong(int fd);
 
 char				*ft_readstr(int fd, int len);
+
+typedef struct s_file
+{
+	char			*path;
+	int				fd;
+}					t_file;
+
+t_file				*ft_opentmp(int rand_fd, bool auto_unlink);
 
 #endif
