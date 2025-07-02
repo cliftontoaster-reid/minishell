@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 11:41:49 by creid             #+#    #+#             */
-/*   Updated: 2025/07/02 13:14:32 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/02 14:40:19 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ static char	get_random_alpha_buffered(unsigned char *buffer, int *pos,
 	rand_byte = buffer[*pos];
 	(*pos)++;
 	(*remaining)--;
-	/* Only alphabetic: 0-25 (A-Z), 26-51 (a-z) */
 	idx = rand_byte % 52;
 	if (idx < 26)
 		return ('A' + idx);
