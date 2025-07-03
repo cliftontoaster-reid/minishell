@@ -19,13 +19,23 @@ SRCS     = \
   $(SRC_DIR)/lexer/join_words.c \
   \
   $(SRC_DIR)/utils/b_varexists.c \
-  $(SRC_DIR)/utils/b_getenv.c \
-  $(SRC_DIR)/utils/b_setenv.c \
   $(SRC_DIR)/utils/b_fromenvp.c \
   $(SRC_DIR)/utils/b_unsetenv.c \
-  $(SRC_DIR)/utils/ft_strjoin_free.c \
+  $(SRC_DIR)/utils/b_getenv.c \
+  $(SRC_DIR)/utils/b_setenv.c \
   $(SRC_DIR)/utils/ft_readline.c \
+  $(SRC_DIR)/utils/ft_strjoin_free.c \
   $(SRC_DIR)/utils/linereader_free.c \
+  $(SRC_DIR)/utils/ft_openrand.c \
+  $(SRC_DIR)/utils/ft_openurand.c \
+  $(SRC_DIR)/utils/ft_readint.c \
+  $(SRC_DIR)/utils/ft_readlong.c \
+  $(SRC_DIR)/utils/ft_readlonglong.c \
+  $(SRC_DIR)/utils/ft_readuint.c \
+  $(SRC_DIR)/utils/ft_readulong.c \
+  $(SRC_DIR)/utils/ft_readullong.c \
+  $(SRC_DIR)/utils/ft_readstr.c \
+  $(SRC_DIR)/utils/ft_opentmp.c \
   \
   $(SRC_DIR)/parser/p_strerror.c \
   $(SRC_DIR)/parser/parser_init.c \
