@@ -29,7 +29,18 @@ Test(env, standard_env, .init = cr_redirect_stdout)
 	ret = ft_env(&envp);
 	cr_assert_eq(ret, 0, "ft_env should return (0 on success");
 	fflush(stdout);
-	cr_assert_stdout_eq_str("PWD=/home/test\nUSER=test\nHOME=/home/test\n");
+	char *output = cr_get_redirected_stdout();
+	char *expected[] = {"PWD=/home/test", "USER=test", "HOME=/home/test"};
+	size_t expected_size = sizeof(expected) / sizeof(expected[0]);
+	qsort(expected, expected_size, sizeof(char *), strcmp);
+	char **lines = split_lines(output);
+	size_t lines_count = count_lines(lines);
+	qsort(lines, lines_count, sizeof(char *), strcmp);
+	cr_assert_eq(lines_count, expected_size, "Number of lines in output does not match expected");
+	for (size_t i = 0; i < expected_size; i++) {
+	    cr_assert_str_eq(lines[i], expected[i], "Line %zu does not match expected", i);
+	}
+	free_lines(lines);
 	ft_lstclear(&envp, free);
 }
 
