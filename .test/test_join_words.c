@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 15:00:00 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/03 15:24:01 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/03 16:23:53 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,5 +181,73 @@ Test(join_words, command_extreme)
 		ft_lstsize(token_list));
 	token_test(get_n_token(token_list, 0), TOKEN_WORD, "ls", "word 1");
 	//
+	ft_lstclear(&token_list, free_tok);
+}
+
+Test(join_words, adjacent_different_quotes)
+{
+	t_lexer	lexer;
+	t_list	*token_list;
+
+	lexer.text = "'hello'\"world\"";
+	lexer.pos = 0;
+	lexer.state = LEXER_NONE;
+	lexer.start = 0;
+	lexer.token_list = NULL;
+	token_list = run_lexer(&lexer);
+	join_words(&lexer);
+	cr_assert_eq(ft_lstsize(token_list), 1, "Expected 1 token, got %d",
+		ft_lstsize(token_list));
+	token_test(get_n_token(token_list, 0), TOKEN_WORD, "helloworld", "word 1");
+	ft_lstclear(&token_list, free_tok);
+}
+
+Test(join_words, complex_command)
+{
+	t_lexer	lexer;
+	t_list	*token_list;
+
+	lexer.text = "echo 'hello'\"world\" > file | wc -l";
+	lexer.pos = 0;
+	lexer.state = LEXER_NONE;
+	lexer.start = 0;
+	lexer.token_list = NULL;
+	token_list = run_lexer(&lexer);
+	join_words(&lexer);
+	cr_assert_eq(ft_lstsize(token_list), 13, "Expected 13 tokens, got %d",
+		ft_lstsize(token_list));
+	token_test(get_n_token(token_list, 0), TOKEN_WORD, "echo", "command");
+	token_test(get_n_token(token_list, 1), TOKEN_NONE, " ", "whitespace");
+	token_test(get_n_token(token_list, 2), TOKEN_WORD, "helloworld",
+		"joined word");
+	token_test(get_n_token(token_list, 3), TOKEN_NONE, " ", "whitespace");
+	token_test(get_n_token(token_list, 4), TOKEN_REDIRECT_OUT, ">",
+		"redirection");
+	token_test(get_n_token(token_list, 5), TOKEN_NONE, " ", "whitespace");
+	token_test(get_n_token(token_list, 6), TOKEN_WORD, "file", "file");
+	token_test(get_n_token(token_list, 7), TOKEN_NONE, " ", "whitespace");
+	token_test(get_n_token(token_list, 8), TOKEN_PIPE, "|", "pipe");
+	token_test(get_n_token(token_list, 9), TOKEN_NONE, " ", "whitespace");
+	token_test(get_n_token(token_list, 10), TOKEN_WORD, "wc", "wc");
+	token_test(get_n_token(token_list, 11), TOKEN_NONE, " ", "whitespace");
+	token_test(get_n_token(token_list, 12), TOKEN_WORD, "-l", "line count");
+	ft_lstclear(&token_list, free_tok);
+}
+
+Test(join_words, empty_quotes)
+{
+	t_lexer lexer;
+	t_list *token_list;
+
+	lexer.text = "''\"\"";
+	lexer.pos = 0;
+	lexer.state = LEXER_NONE;
+	lexer.start = 0;
+	lexer.token_list = NULL;
+	token_list = run_lexer(&lexer);
+	join_words(&lexer);
+	cr_assert_eq(ft_lstsize(token_list), 1, "Expected 1 token, got %d",
+		ft_lstsize(token_list));
+	token_test(get_n_token(token_list, 0), TOKEN_WORD, "", "empty word");
 	ft_lstclear(&token_list, free_tok);
 }

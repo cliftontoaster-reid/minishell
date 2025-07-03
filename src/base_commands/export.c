@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 17:55:52 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/30 14:30:28 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/03 16:11:25 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ static void	print_exported_vars(t_list *envp)
 	char	**env_vars;
 	int		i;
 
+	if (!envp)
+		return ;
 	env_vars = b_getenv(NULL, envp);
 	if (!env_vars)
 		return ;
@@ -87,7 +89,8 @@ int	ft_export(char **argv, t_list **envp)
 		return (1);
 	if (!argv[1])
 	{
-		print_exported_vars(*envp);
+		if (envp && *envp)
+			print_exported_vars(*envp);
 		return (0);
 	}
 	exit_status = 0;

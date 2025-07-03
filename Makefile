@@ -80,6 +80,12 @@ TESTS = \
   $(TEST_DIR)/test_utils.c \
   $(TEST_DIR)/test_utils_string.c \
   $(TEST_DIR)/test_utils_readline.c \
+  $(TEST_DIR)/test_cd.c \
+  $(TEST_DIR)/test_env.c \
+  $(TEST_DIR)/test_pwd.c \
+  $(TEST_DIR)/test_unset.c \
+  $(TEST_DIR)/test_export.c \
+  $(TEST_DIR)/test_exit.c \
 
 OBJS     = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRCS))
 TESTOBJS = $(patsubst $(TEST_DIR)/%.c,$(TEST_OBJD)/%.o,$(TESTS)) $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(filter-out $(SRC_DIR)/main.c,$(SRCS)))
@@ -135,8 +141,14 @@ $(NTEST): $(CRIT_PC) $(_LIB_FT) $(TESTOBJS)
 	@$(TEST_CC) $(LDFLAGS) -o $@ $(TESTOBJS) $(_LIB_FT)
 
 $(_LIB_FT):
-	@if [ ! -d $(LFT_DIR) ]; then git clone https://github.com/cliftontoaster-reid/libft $(LFT_DIR); fi
-	$(MAKE) -C $(LFT_DIR) OBJ_DIR=$(abspath $(OBJ_DIR))/libft/build CC="$(CC)"
+	@if [ ! -d $(LFT_DIR) ]; then \
+		if command -v rad >/dev/null 2>&1; then \
+			rad clone rad:z2r3ahNug1N33eWu4iD7NiuphqUL3 $(LFT_DIR); \
+		else \
+			git clone https://github.com/cliftontoaster-reid/libft $(LFT_DIR); \
+		fi; \
+	fi
+	@$(MAKE) -C $(LFT_DIR) OBJ_DIR=$(abspath $(OBJ_DIR))/libft/build CC="$(CC)"
 
 $(CRIT_PC):
 	@mkdir -p $(OBJ_DIR)
@@ -213,5 +225,20 @@ bundle:
 	else \
 		echo "Skipping signing (no git signing key configured or gpg not available)"; \
 	fi
+
+$(HOME)/.local/bin/trunk:
+	@echo "Installing trunk..."
+	@mkdir -p $(HOME)/.local/bin
+	@curl -L https://trunk.io/releases/trunk -o $(HOME)/.local/bin/trunk
+	@chmod +x $(HOME)/.local/bin/trunk
+	@echo "Trunk installed successfully."
+	@echo "Installing trunk tools..."
+	@$(HOME)/.local/bin/trunk install
+	@echo "Trunk tools installed successfully."
+
+check: $(HOME)/.local/bin/trunk
+	@echo "Running trunk check..."
+	@$(HOME)/.local/bin/trunk check --all
+	@echo "Trunk check completed."
 
 .PHONY: all clean fclean re bundle
