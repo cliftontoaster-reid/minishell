@@ -6,7 +6,7 @@
 /*   By: jfranc <jfranc@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:03:33 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/01 15:53:32 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/07/03 13:42:49 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ static void	fd_child(t_cmd *cmd, t_list *tenvp, int cmd_idx)
 	{
 		if (!cmd->cmdpathlist[cmd_idx])
 			return ; // TODO handle exit failure
+		/*
 		if (cmd_idx == 0)
 			dup2(cmd->fd_infile, STDIN_FILENO);
 		else
@@ -36,6 +37,20 @@ static void	fd_child(t_cmd *cmd, t_list *tenvp, int cmd_idx)
 			dup2(cmd->fd_outfile, STDOUT_FILENO);
 		else
 			dup2(cmd->pipes[cmd_idx][1], STDOUT_FILENO);
+		*/
+		/**/
+		// Set up stdin
+		if (cmd[cmd_idx].fd_infile != STDIN_FILENO)
+			dup2(cmd[cmd_idx].fd_infile, STDIN_FILENO);
+		else if (cmd_idx > 0)
+			dup2(cmd->pipes[cmd_idx - 1][0], STDIN_FILENO);
+
+		// Set up stdout
+		if (cmd[cmd_idx].fd_outfile != STDOUT_FILENO)
+			dup2(cmd[cmd_idx].fd_outfile, STDOUT_FILENO);
+		else if (cmd_idx < cmd->cmdnbr - 1)
+			dup2(cmd->pipes[cmd_idx][1], STDOUT_FILENO);
+		/**/
 		iter.i = 0;
 		while (iter.i < cmd->cmdnbr - 1)
 		{
@@ -43,6 +58,7 @@ static void	fd_child(t_cmd *cmd, t_list *tenvp, int cmd_idx)
 			close(cmd->pipes[iter.i][1]);
 			iter.i++;
 		}
+		/**/
 		execve(cmd->cmdpathlist[cmd_idx], cmd[cmd_idx].args, b_getenv(NULL, tenvp));
 		// TODO handle exit failure
 	}
