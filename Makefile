@@ -226,19 +226,19 @@ bundle:
 		echo "Skipping signing (no git signing key configured or gpg not available)"; \
 	fi
 
-~/.local/bin/trunk:
+$(HOME)/.local/bin/trunk:
 	@echo "Installing trunk..."
-	@mkdir -p ~/.local/bin
-	@curl -L https://trunk.io/releases/trunk -o ~/.local/bin/trunk
-	@chmod +x ~/.local/bin/trunk
+	@mkdir -p $(HOME)/.local/bin
+	@curl -L https://trunk.io/releases/trunk -o $(HOME)/.local/bin/trunk
+	@chmod +x $(HOME)/.local/bin/trunk
 	@echo "Trunk installed successfully."
 	@echo "Installing trunk tools..."
-	@~/.local/bin/trunk install
+	@$(HOME)/.local/bin/trunk install
 	@echo "Trunk tools installed successfully."
 
-check: ~/.local/bin/trunk
+check: $(HOME)/.local/bin/trunk
 	@echo "Running trunk check..."
-	@~/.local/bin/trunk check --all
+	@$(HOME)/.local/bin/trunk check --all
 	@echo "Trunk check completed."
 
 .PHONY: all clean fclean re bundle
