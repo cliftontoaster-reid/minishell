@@ -17,7 +17,9 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-#define PATH_MAX 4096
+#ifndef PATH_MAX
+	#define PATH_MAX 4096
+#endif
 
 // Forward declaration for ft_cd if it's not in a header included by test_utils.h
 void		ft_cd(char **argv, t_list **envp);
