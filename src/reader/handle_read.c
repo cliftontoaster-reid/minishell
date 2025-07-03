@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 10:58:53 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/23 18:02:33 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/03 15:26:07 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ bool	try_lex(t_reader *reader)
 		errno = EINVAL;
 		return (false);
 	}
+	join_words(reader->lexer);
 	return (true);
 }
 

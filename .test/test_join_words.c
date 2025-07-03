@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 15:00:00 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/03 11:41:05 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/03 15:24:01 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,5 +162,24 @@ Test(join_words, lyric_Provoking)
 		ft_lstsize(token_list));
 	token_test(get_n_token(token_list, 0), TOKEN_WORD, "Provoking",
 		"lyric2 single");
+	ft_lstclear(&token_list, free_tok);
+}
+
+Test(join_words, command_extreme)
+{
+	t_lexer	lexer;
+	t_list	*token_list;
+
+	lexer.text = "\"l\"'s'\n";
+	lexer.pos = 0;
+	lexer.state = LEXER_NONE;
+	lexer.start = 0;
+	lexer.token_list = NULL;
+	token_list = run_lexer(&lexer);
+	join_words(&lexer);
+	cr_assert_eq(ft_lstsize(token_list), 1, "Expected 1 token, got %d",
+		ft_lstsize(token_list));
+	token_test(get_n_token(token_list, 0), TOKEN_WORD, "ls", "word 1");
+	//
 	ft_lstclear(&token_list, free_tok);
 }
