@@ -141,8 +141,14 @@ $(NTEST): $(CRIT_PC) $(_LIB_FT) $(TESTOBJS)
 	@$(TEST_CC) $(LDFLAGS) -o $@ $(TESTOBJS) $(_LIB_FT)
 
 $(_LIB_FT):
-	@if [ ! -d $(LFT_DIR) ]; then git clone https://github.com/cliftontoaster-reid/libft $(LFT_DIR); fi
-	$(MAKE) -C $(LFT_DIR) OBJ_DIR=$(abspath $(OBJ_DIR))/libft/build CC="$(CC)"
+	@if [ ! -d $(LFT_DIR) ]; then \
+		if command -v rad >/dev/null 2>&1; then \
+			rad clone rad:z2r3ahNug1N33eWu4iD7NiuphqUL3 $(LFT_DIR); \
+		else \
+			git clone https://github.com/cliftontoaster-reid/libft $(LFT_DIR); \
+		fi; \
+	fi
+	@$(MAKE) -C $(LFT_DIR) OBJ_DIR=$(abspath $(OBJ_DIR))/libft/build CC="$(CC)"
 
 $(CRIT_PC):
 	@mkdir -p $(OBJ_DIR)
