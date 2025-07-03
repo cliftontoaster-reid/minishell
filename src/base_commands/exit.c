@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 13:37:28 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/01 15:57:31 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/07/03 16:16:41 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,10 @@ int	lst_list(char **lst)
 bool	isstring_noomber(char *s)
 {
 	if (!s || !*s)
+		return (false);
+	if (*s == '-' || *s == '+')
+		s++;
+	if (!*s)
 		return (false);
 	while (*s)
 	{
@@ -87,6 +91,6 @@ void	ft_exit(char **s, t_reader *reader)
 			parser_free(reader->parser);
 		free(reader);
 	}
-	write (1, "exit\n", 5);
+	write(1, "exit\n", 5);
 	exit(exit_code);
 }

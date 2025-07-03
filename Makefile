@@ -80,6 +80,12 @@ TESTS = \
   $(TEST_DIR)/test_utils.c \
   $(TEST_DIR)/test_utils_string.c \
   $(TEST_DIR)/test_utils_readline.c \
+  $(TEST_DIR)/test_cd.c \
+  $(TEST_DIR)/test_env.c \
+  $(TEST_DIR)/test_pwd.c \
+  $(TEST_DIR)/test_unset.c \
+  $(TEST_DIR)/test_export.c \
+  $(TEST_DIR)/test_exit.c \
 
 OBJS     = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRCS))
 TESTOBJS = $(patsubst $(TEST_DIR)/%.c,$(TEST_OBJD)/%.o,$(TESTS)) $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(filter-out $(SRC_DIR)/main.c,$(SRCS)))
