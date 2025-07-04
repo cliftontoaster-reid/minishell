@@ -36,6 +36,7 @@ SRCS     = \
   $(SRC_DIR)/utils/ft_readullong.c \
   $(SRC_DIR)/utils/ft_readstr.c \
   $(SRC_DIR)/utils/ft_opentmp.c \
+	$(SRC_DIR)/utils/print_prompt.c \
   \
   $(SRC_DIR)/parser/p_strerror.c \
   $(SRC_DIR)/parser/parser_init.c \
@@ -95,9 +96,10 @@ _LIB_FT	 = $(LFT_DIR)libft.a
 CRIT_DIR = $(OBJ_DIR)/criterion-2.4.2
 CRIT_INC = $(CRIT_DIR)/include
 CRIT_PC  = $(CRIT_DIR)/lib/pkgconfig/criterion.pc
-CFLAGS   = -Wall -Wextra -Werror -g3 -std=c17 -I$(INC_DIR) -pipe -MMD -MP -I$(LFT_DIR) -I$(CRIT_INC)
+CFLAGS   = -Wall -Wextra -Werror -g3 -std=c17 -I$(INC_DIR) -pipe -MMD -MP -I$(LFT_DIR)
 LDFLAGS  = -O3 -g3 -std=c17 -pipe
-LDFLAGS += -L$(CRIT_DIR)/lib -Wl,-rpath=$(CRIT_DIR)/lib -lcriterion
+TEST_CFLAGS = -I$(CRIT_INC)
+TEST_LDFLAGS = -L$(CRIT_DIR)/lib -Wl,-rpath=$(CRIT_DIR)/lib -lcriterion
 
 
 # Compiler preference: clang > gcc for main binary
@@ -123,8 +125,8 @@ endif
 
 all: $(NAME)
 
-$(NAME): $(CRIT_PC) $(_LIB_FT) $(OBJS)
-	@echo "$(CC) $(LDFLAGS) -o $@ $^"
+$(NAME): $(_LIB_FT) $(OBJS)
+	@echo "$(CC) $(LDFLAGS) -o $@ $(OBJS) $(_LIB_FT)"
 	@$(CC) $(LDFLAGS) -o $@ $(OBJS) $(_LIB_FT)
 
 run_test: test
@@ -137,8 +139,8 @@ test: $(NTEST)
 
 
 $(NTEST): $(CRIT_PC) $(_LIB_FT) $(TESTOBJS)
-	@echo "$(TEST_CC) $(LDFLAGS) -o $@ $(TESTOBJS) $(_LIB_FT)"
-	@$(TEST_CC) $(LDFLAGS) -o $@ $(TESTOBJS) $(_LIB_FT)
+	@echo "$(TEST_CC) $(LDFLAGS) $(TEST_LDFLAGS) -o $@ $(TESTOBJS) $(_LIB_FT)"
+	@$(TEST_CC) $(LDFLAGS) $(TEST_LDFLAGS) -o $@ $(TESTOBJS) $(_LIB_FT)
 
 $(_LIB_FT):
 	@if [ ! -d $(LFT_DIR) ]; then \
@@ -166,8 +168,8 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 $(TEST_OBJD)/%.o: $(TEST_DIR)/%.c
 # Create the parent directory of the object file if it doesn't exist
 	@mkdir -p $(dir $@)
-	@echo "$(TEST_CC) $(CFLAGS) -c $< -o $@"
-	@$(TEST_CC) $(CFLAGS) -c $< -o $@
+	@echo "$(TEST_CC) $(CFLAGS) $(TEST_CFLAGS) -c $< -o $@"
+	@$(TEST_CC) $(CFLAGS) $(TEST_CFLAGS) -c $< -o $@
 
 clean:
 	@rm -rf $(OBJ_DIR)

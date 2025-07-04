@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 15:31:30 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/04 11:53:30 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/04 13:48:51 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 #ifndef UTILS_H
 # define UTILS_H
 
+# include "libft.h"
 # include <stdbool.h>
 
 /**
@@ -202,5 +203,7 @@ typedef struct s_file
  * The caller is responsible for freeing the returned t_file structure.
  */
 t_file				*ft_opentmp(int rand_fd, bool auto_unlink);
+
+void				print_prompt(t_list *env);
 
 #endif
