@@ -65,7 +65,7 @@ Test(exit, argument_out_of_range)
 	int		code;
 
 	code = run_exit_and_get_code(args);
-	cr_assert_eq(code, 255, "exit with argument >255 should return (255");
+	cr_assert_eq(code, 44, "exit with argument 300 should return (44)");
 }
 
 Test(exit, negative_argument)

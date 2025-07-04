@@ -243,4 +243,9 @@ check: $(HOME)/.local/bin/trunk
 	@$(HOME)/.local/bin/trunk check --all
 	@echo "Trunk check completed."
 
-.PHONY: all clean fclean re bundle
+format: $(HOME)/.local/bin/trunk
+	@echo "Running trunk format..."
+	@$(HOME)/.local/bin/trunk fmt --all
+	@echo "Trunk format completed."
+
+.PHONY: all clean fclean re bundle test run_test check format
