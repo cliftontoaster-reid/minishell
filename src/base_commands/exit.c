@@ -48,7 +48,7 @@ bool	isstring_noomber(char *s)
 
 void	ft_exit(char **s, t_reader *reader)
 {
-	int	exit_code;
+	unsigned char	exit_code;
 
 	if (!s || !*s)
 	{
@@ -69,11 +69,6 @@ void	ft_exit(char **s, t_reader *reader)
 	if (s[1])
 	{
 		exit_code = ft_atoi(s[1]);
-		if (exit_code < 0 || exit_code > 255)
-		{
-			ft_putstr_fd("exit: exit code out of range (0-255)\n", 2);
-			exit_code = 255; // Set to a default exit code
-		}
 	}
 	// Free the reader resources
 	if (reader)
