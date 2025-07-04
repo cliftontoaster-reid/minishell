@@ -69,7 +69,7 @@ typedef struct s_cmd
 	int		cmdnbr;
 	int		fd_infile;
 	int		fd_outfile;
-	int		**pipes; //-------------------TODO
+	int		**pipes;
 	int     fd[2];
 	char	**args;
 	char	**cmdpathlist;
@@ -81,14 +81,15 @@ typedef struct s_cmd
                                                       
 //pipex/ft_pipex.c                                    
 void	ft_pipex(t_cmd *cmd, t_list *tenvp);
-                                                      
+
 //pipex/cmd_path.c                                    
 void	ft_free_split(char **split);
-                                                      
+
 //pipex/ft_error.c                                    
 void	ft_cmdpathlist(t_cmd *cmd, t_list *tenvp);
 
 // pipex/ft_utils.c
+void    closefd(t_cmd *cmd, int exitnbr);
 int		ft_nbrofcmds(t_cmd *cmd);
 
 // base_commands/exit.c

@@ -6,7 +6,7 @@
 /*   By: jfranc <jfranc@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 13:34:25 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/01 13:35:27 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/07/04 14:45:15 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,22 @@
 #include "utils.h"
 #include "pipex.h"
 
-int  ft_nbrofcmds(t_cmd *cmd)
+void	closefd(t_cmd *cmd, int exitnbr)
+{
+	t_iteration	iter;
+
+	iter.i = 0;
+	while (iter.i < cmd->cmdnbr - 1)
+	{
+		close(cmd->pipes[iter.i][0]);
+		close(cmd->pipes[iter.i][1]);
+		iter.i++;
+	}
+	if (exitnbr)
+		exit(EXIT_FAILURE);
+}
+
+int		ft_nbrofcmds(t_cmd *cmd)
 {
 	int nbr;
 
