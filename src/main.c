@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:49:10 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/01 14:26:53 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/07/04 13:49:50 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)reader_ptr;
 	while (1)
 	{
-		write(1, PROMPT, sizeof(PROMPT) - 1);
+		print_prompt(reader_ptr->env);
 		if (cached_input)
 			free(cached_input);
 		cached_input = ft_readline(&reader);
@@ -121,14 +121,14 @@ int	main(int argc, char **argv, char **envp)
 		/// Lexer printing
 		if (reader_ptr->lexer && reader_ptr->tokens)
 		{
-			printf("%sLexer Tokens:%s\n", BOLD, RESET);
-			print_tokens(reader_ptr->tokens);
+			// printf("%sLexer Tokens:%s\n", BOLD, RESET);
+			// print_tokens(reader_ptr->tokens);
 		}
 		/// Parser printing
 		if (reader_ptr->parser)
 		{
-			printf("%sParser State:%s\n", BOLD, RESET);
-			print_parser(reader_ptr->parser);
+			// printf("%sParser State:%s\n", BOLD, RESET);
+			// print_parser(reader_ptr->parser);
 			commands = parser_to_list(reader_ptr->parser);
 			ft_pipex(commands, reader_ptr->env);
 			parser_free(reader_ptr->parser);
