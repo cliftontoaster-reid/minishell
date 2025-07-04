@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 13:13:05 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/04 13:45:55 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/04 14:10:09 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@
 #define STYLE_ITALIC "\033[3m"
 #define STYLE_UNDERLINE "\033[4m"
 
-#define PROMPT_SYMBOL_ERROR "✴️"
-#define PROMPT_SYMBOL_SUCCESS "❇️"
+#define PROMPT_SYMBOL_ERROR "\033[31m!\033[0m"
+#define PROMPT_SYMBOL_SUCCESS "\033[32m$\033[0m"
 
 static char	*get_dirname(t_list *env)
 {
@@ -51,28 +51,44 @@ static char	*get_dirname(t_list *env)
 	return (res);
 }
 
-// Runs `git rev-parse --is-inside-work-tree` to check if the current directory is a git repository
+static void	redirect_output_to_devnull(void)
+{
+	int	devnull;
+
+	devnull = open("/dev/null", O_WRONLY);
+	if (devnull != -1)
+	{
+		dup2(devnull, STDOUT_FILENO);
+		dup2(devnull, STDERR_FILENO);
+		close(devnull);
+	}
+	else
+	{
+		ft_putstr_fd("Error opening /dev/null\n", STDERR_FILENO);
+		exit(1);
+	}
+}
+
+// Runs `git rev-parse --is-inside-work-tree` to check if the
+// current directory is a git repository
 // if it returns status code 0, it is a git repository,
 //	it must use fork and execve
 static bool	is_repo(t_list *env)
 {
 	int		status;
 	pid_t	pid;
-	char	*cmd[] = {"git", "rev-parse", "--is-inside-work-tree", NULL};
+	char	*cmd[4];
 	char	**envp;
-	int		devnull;
 
+	cmd[0] = "git";
+	cmd[1] = "rev-parse";
+	cmd[2] = "--is-inside-work-tree";
+	cmd[3] = NULL;
 	envp = b_getenv(NULL, env);
 	pid = fork();
 	if (pid == 0)
 	{
-		devnull = open("/dev/null", O_WRONLY);
-		if (devnull != -1)
-		{
-			dup2(devnull, STDOUT_FILENO);
-			dup2(devnull, STDERR_FILENO);
-			close(devnull);
-		}
+		redirect_output_to_devnull();
 		execve("/usr/bin/git", cmd, envp);
 		exit(1);
 	}
@@ -86,21 +102,18 @@ static bool	git_changes(t_list *env)
 {
 	int		status;
 	pid_t	pid;
-	char	*cmd[] = {"git", "diff", "--quiet", NULL};
+	char	*cmd[4];
 	char	**envp;
-	int		devnull;
 
+	cmd[0] = "git";
+	cmd[1] = "diff";
+	cmd[2] = "--quiet";
+	cmd[3] = NULL;
 	envp = b_getenv(NULL, env);
 	pid = fork();
 	if (pid == 0)
 	{
-		devnull = open("/dev/null", O_WRONLY);
-		if (devnull != -1)
-		{
-			dup2(devnull, STDOUT_FILENO);
-			dup2(devnull, STDERR_FILENO);
-			close(devnull);
-		}
+		redirect_output_to_devnull();
 		execve("/usr/bin/git", cmd, envp);
 		exit(1);
 	}
@@ -144,9 +157,14 @@ static char	*git_getbranch(t_list *env)
 	int		status;
 	pid_t	pid;
 	int		pipefd[2];
-	char	*cmd[] = {"git", "rev-parse", "--abbrev-ref", "HEAD", NULL};
+	char	*cmd[5];
 	char	*branch;
 
+	cmd[0] = "git";
+	cmd[1] = "rev-parse";
+	cmd[2] = "--abbrev-ref";
+	cmd[3] = "HEAD";
+	cmd[4] = NULL;
 	branch = NULL;
 	if (pipe(pipefd) == -1)
 		return (NULL);
@@ -169,17 +187,40 @@ static char	*git_getbranch(t_list *env)
 
 /// {symbol} [green] [italic] [bold] [underline] dirname [reset] (if git repo) git:[branch]
 
+static void	git_message(t_list *env)
+{
+	char	*branch;
+
+	branch = git_getbranch(env);
+	if (branch)
+	{
+		ft_putstr_fd(" (git: ", STDOUT_FILENO);
+		ft_putstr_fd(COLOUR_YELLOW, STDOUT_FILENO);
+		ft_putstr_fd(branch, STDOUT_FILENO);
+		ft_putstr_fd(COLOUR_RESET, STDOUT_FILENO);
+		if (git_changes(env))
+		{
+			ft_putstr_fd(COLOUR_PINK, STDOUT_FILENO);
+			ft_putstr_fd(" *", STDOUT_FILENO);
+			ft_putstr_fd(COLOUR_RESET, STDOUT_FILENO);
+		}
+		else
+			ft_putstr_fd(" ", STDOUT_FILENO);
+		ft_putstr_fd(")", STDOUT_FILENO);
+		free(branch);
+	}
+}
+
 void	print_prompt(t_list *env)
 {
 	char	*dirname;
-	char	*branch;
 
 	dirname = get_dirname(env);
 	if (g_status_code == 0)
 		ft_putstr_fd(PROMPT_SYMBOL_SUCCESS, STDOUT_FILENO);
 	else
 		ft_putstr_fd(PROMPT_SYMBOL_ERROR, STDOUT_FILENO);
-	ft_putstr_fd("  ", STDOUT_FILENO);
+	ft_putstr_fd(" ", STDOUT_FILENO);
 	if (g_status_code == 0)
 		ft_putstr_fd(COLOUR_GREEN, STDOUT_FILENO);
 	else
@@ -190,26 +231,7 @@ void	print_prompt(t_list *env)
 	ft_putstr_fd(dirname, STDOUT_FILENO);
 	ft_putstr_fd(COLOUR_RESET, STDOUT_FILENO);
 	if (is_repo(env))
-	{
-		branch = git_getbranch(env);
-		if (branch)
-		{
-			ft_putstr_fd(" (git: ", STDOUT_FILENO);
-			ft_putstr_fd(COLOUR_YELLOW, STDOUT_FILENO);
-			ft_putstr_fd(branch, STDOUT_FILENO);
-			ft_putstr_fd(COLOUR_RESET, STDOUT_FILENO);
-			if (git_changes(env))
-			{
-				ft_putstr_fd(COLOUR_PINK, STDOUT_FILENO);
-				ft_putstr_fd(" *", STDOUT_FILENO);
-				ft_putstr_fd(COLOUR_RESET, STDOUT_FILENO);
-			}
-			else
-				ft_putstr_fd(" ", STDOUT_FILENO);
-			ft_putstr_fd(")", STDOUT_FILENO);
-			free(branch);
-		}
-	}
+		git_message(env);
 	ft_putstr_fd(" > ", STDOUT_FILENO);
 	free(dirname);
 }
