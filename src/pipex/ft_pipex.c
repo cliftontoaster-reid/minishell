@@ -6,13 +6,26 @@
 /*   By: jfranc <jfranc@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:03:33 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/04 14:52:49 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/07/07 15:24:40 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shared.h"
 #include "utils.h"
 #include "pipex.h"
+
+static void	pipe_redirection(t_cmd *cmd, int cmd_idx)
+{
+		if (cmd[cmd_idx].fd_infile != STDIN_FILENO)
+			dup2(cmd[cmd_idx].fd_infile, STDIN_FILENO);
+		else if (cmd_idx > 0)
+			dup2(cmd->pipes[cmd_idx - 1][0], STDIN_FILENO);
+		if (cmd[cmd_idx].fd_outfile != STDOUT_FILENO)
+			dup2(cmd[cmd_idx].fd_outfile, STDOUT_FILENO);
+		else if (cmd_idx < cmd->cmdnbr - 1)
+			dup2(cmd->pipes[cmd_idx][1], STDOUT_FILENO);
+		closefd(cmd, NO_EXIT);
+}
 
 static void	fd_child(t_cmd *cmd, t_list *tenvp, int cmd_idx)
 {
@@ -24,21 +37,15 @@ static void	fd_child(t_cmd *cmd, t_list *tenvp, int cmd_idx)
 	}
 	if (cmd[cmd_idx].pid == 0)
 	{
+		pipe_redirection(cmd, cmd_idx);
+		is_builtin(cmd, &tenvp, cmd_idx);
+		printf("if builtin this is wrong\n");
 		if (cmd->error == 1)
 			closefd(cmd, EXIT_FAILURE); // TODO exit failure free
 		/*
 		if (!cmd->cmdpathlist[cmd_idx])
-			return (closefd(cmd, exit)); // TODO handle exit failure
+			closefd(cmd, EXIT_FAILURE); // TODO exit failure free
 		*/
-		if (cmd[cmd_idx].fd_infile != STDIN_FILENO)
-			dup2(cmd[cmd_idx].fd_infile, STDIN_FILENO);
-		else if (cmd_idx > 0)
-			dup2(cmd->pipes[cmd_idx - 1][0], STDIN_FILENO);
-		if (cmd[cmd_idx].fd_outfile != STDOUT_FILENO)
-			dup2(cmd[cmd_idx].fd_outfile, STDOUT_FILENO);
-		else if (cmd_idx < cmd->cmdnbr - 1)
-			dup2(cmd->pipes[cmd_idx][1], STDOUT_FILENO);
-		closefd(cmd, 0);
 		execve(cmd->cmdpathlist[cmd_idx], cmd[cmd_idx].args, b_getenv(NULL, tenvp));
 		// TODO handle exit failure
 	}
@@ -83,6 +90,11 @@ void	ft_pipex(t_cmd *cmd, t_list *tenvp)
 	cmd->cmdnbr = ft_nbrofcmds(cmd);
 	if (!ft_strncmp(cmd->args[0], "exit", 4) && cmd->cmdnbr == 1)
 		ft_exit(cmd->args, NULL);
+	if (!ft_strncmp(cmd->args[0], "cd", 2) && cmd->cmdnbr == 1)
+    {
+        ft_cd(cmd->args, &tenvp);
+		return ;
+    }
 	fd_pipex_execute(cmd, tenvp);
 	g_status_code = cmd->error; // TODO exit success free
 }
