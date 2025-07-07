@@ -60,7 +60,8 @@ SRCS     = \
   $(SRC_DIR)/pipex/cmd_path.c \
   $(SRC_DIR)/pipex/ft_errors.c \
   $(SRC_DIR)/pipex/ft_utils.c \
-  # TODO added $(SRC_DIR)/pipex/ft_errors.c \ TODO
+  $(SRC_DIR)/pipex/ft_builtin.c \
+  # TODO added $(SRC_DIR)/pipex/ft_builtin.c \ TODO
   
   
  # add the source files from SRCS to the test files excluding 'src/main.c'
