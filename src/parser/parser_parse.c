@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 10:25:58 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/01 14:29:23 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/07 14:31:17 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -268,19 +268,19 @@ static void	parser_special_redirect_append(t_parser *parser)
 		return ;
 	}
 	fd = open(token->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	if (parser->command == NULL)
+		parser->command = cmd_init();
 	if (fd < 0)
 	{
 		errno = EINVAL;
 		parser->error = PARSING_MISSING_SPECIAL_TARGET;
 		return ;
 	}
-	if (parser->command == NULL)
-		parser->command = cmd_init();
+	parser->command->fd_outfile = fd;
 	if (errno == ENOMEM)
 		return ;
-	parser->command->fd_outfile = fd;
 	parser->command->redirect_append = ft_strdup(token->value);
-	if (parser->command->redirect_in == NULL)
+	if (parser->command->redirect_append == NULL)
 	{
 		close(fd);
 		errno = ENOMEM;

@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 15:31:30 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/04 13:48:51 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/07 11:40:44 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,12 @@
  */
 typedef struct s_iteration
 {
-	int i; /**< First iteration counter */
-	int j; /**< Second iteration counter */
-	int k; /**< Third iteration counter */
+	// First iteration counter
+	int				i;
+	// Second iteration counter
+	int				j;
+	// Third iteration counter
+	int				k;
 }					t_iteration;
 
 /**
@@ -47,8 +50,10 @@ typedef struct s_iteration
  */
 typedef struct s_linereader
 {
-	char *line; /**< Current line buffer */
-	int fd;     /**< File descriptor to read from */
+	// Current line buffer
+	char			*line;
+	// File descriptor to read from
+	int				fd;
 }					t_linereader;
 
 /**
@@ -182,26 +187,25 @@ char				*ft_readstr(int fd, int len);
  */
 typedef struct s_file
 {
-	char *path; /**< Path to the file */
-	int fd;     /**< File descriptor for the opened file */
+	// Path to the file
+	char			*path;
+	// File descriptor for the opened file
+	int				fd;
 }					t_file;
 
-/**
- * @brief Creates a temporary file with optional automatic unlinking
- * @param rand_fd File descriptor for random number generation
- * @param auto_unlink If true,
-	the file will be automatically unlinked after creation
- * @return Pointer to a t_file structure representing the temporary file,
-	or NULL on failure
- *
-
-	* This function creates a temporary file using the provided random file descriptor
- * to generate a unique filename. If auto_unlink is true,
-	the file will be unlinked
- * immediately after creation,
-	making it accessible only through the file descriptor.
- * The caller is responsible for freeing the returned t_file structure.
- */
+/// @brief Creates a temporary file with optional automatic unlinking
+/// @param rand_fd File descriptor for random number generation
+/// @param auto_unlink If true,
+/// the file will be automatically unlinked after creation
+/// @return Pointer to a t_file structure representing the temporary file,
+/// or NULL on failure
+///
+/// This function creates a temporary file using the provided
+/// random file descriptor
+/// to generate a unique filename. If auto_unlink is true,
+/// the file will be unlinked immediately after creation,
+/// making it accessible only through the file descriptor.
+/// The caller is responsible for freeing the returned t_file structure.
 t_file				*ft_opentmp(int rand_fd, bool auto_unlink);
 
 void				print_prompt(t_list *env);

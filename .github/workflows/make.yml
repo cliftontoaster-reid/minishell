@@ -8,6 +8,7 @@ on:
     branches:
       - main
       - toaster
+      - julien
     paths:
       - src/**
       - .test/**
@@ -44,7 +45,8 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get purge -y man-db
-          sudo apt-get install -y make clang wget tar gzip mold
+          # Install required packages for commands : bear, clang, make, mold, wget, tar, zip, xz
+          sudo apt-get install -y make clang wget tar gzip mold xz-utils zip
 
       - name: Build project
         run: make all

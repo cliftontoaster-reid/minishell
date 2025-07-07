@@ -187,7 +187,7 @@ bundle:
 	@echo "Creating bundle for $(NAME)..."
 	@if command -v bear >/dev/null 2>&1; then \
 		echo "Using bear to generate compile_commands.json..."; \
-		bear -- ${MAKE} all CC=cc; \
+		bear -- ${MAKE} test all CC=cc; \
 	else \
 		${MAKE} all CC=cc; \
 	fi
