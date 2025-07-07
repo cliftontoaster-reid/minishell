@@ -6,7 +6,7 @@
 /*   By: jfranc <jfranc@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 18:51:56 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/01 13:36:41 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/07/07 10:19:07 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,7 @@ void ft_cmdpathlist(t_cmd *cmd, t_list *tenvp)
 	if (!cmd->cmdpathlist)
 	{
 		write(1, "malloc failure\n", 15);
-		g_status_code = 12;
-		cmd->error = 1;
+		cmd->error = 12;
 		return ;
 	}
 	iter.i = 0;
@@ -35,8 +34,7 @@ void ft_cmdpathlist(t_cmd *cmd, t_list *tenvp)
 		if (!cmd->cmdpathlist[iter.i])
 		{
 			printf("%s: command not found\n", cmd[iter.i].args[0]);
-			g_status_code = 127;
-			cmd->error = 1;
+			cmd->error = 127;
 		}
 		iter.i++;
 	}
