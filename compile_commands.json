@@ -1301,7 +1301,7 @@
   },
   {
     "arguments": [
-      "/usr/lib64/ccache/cc",
+      "/usr/lib64/ccache/clang",
       "-Wall",
       "-Wextra",
       "-Werror",
@@ -1310,14 +1310,456 @@
       "-I./include",
       "-pipe",
       "-I./target/libft/",
+      "-I./target/criterion-2.4.2/include",
       "-c",
       "-o",
-      "target/main.o",
-      "src/main.c"
+      "target/test/test_lexer_basic.o",
+      ".test/test_lexer_basic.c"
     ],
     "directory": "/home/creid/Documents/42/minishell",
-    "file": "/home/creid/Documents/42/minishell/src/main.c",
-    "output": "/home/creid/Documents/42/minishell/target/main.o"
+    "file": "/home/creid/Documents/42/minishell/.test/test_lexer_basic.c",
+    "output": "/home/creid/Documents/42/minishell/target/test/test_lexer_basic.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/clang",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-I./target/criterion-2.4.2/include",
+      "-c",
+      "-o",
+      "target/test/test_lexer_redirections.o",
+      ".test/test_lexer_redirections.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/.test/test_lexer_redirections.c",
+    "output": "/home/creid/Documents/42/minishell/target/test/test_lexer_redirections.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/clang",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-I./target/criterion-2.4.2/include",
+      "-c",
+      "-o",
+      "target/test/test_lexer_quotes.o",
+      ".test/test_lexer_quotes.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/.test/test_lexer_quotes.c",
+    "output": "/home/creid/Documents/42/minishell/target/test/test_lexer_quotes.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/clang",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-I./target/criterion-2.4.2/include",
+      "-c",
+      "-o",
+      "target/test/test_lexer_complex.o",
+      ".test/test_lexer_complex.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/.test/test_lexer_complex.c",
+    "output": "/home/creid/Documents/42/minishell/target/test/test_lexer_complex.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/clang",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-I./target/criterion-2.4.2/include",
+      "-c",
+      "-o",
+      "target/test/test_join_words.o",
+      ".test/test_join_words.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/.test/test_join_words.c",
+    "output": "/home/creid/Documents/42/minishell/target/test/test_join_words.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/clang",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-I./target/criterion-2.4.2/include",
+      "-c",
+      "-o",
+      "target/test/test_lexer_utils.o",
+      ".test/test_lexer_utils.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/.test/test_lexer_utils.c",
+    "output": "/home/creid/Documents/42/minishell/target/test/test_lexer_utils.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/clang",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-I./target/criterion-2.4.2/include",
+      "-c",
+      "-o",
+      "target/test/test_b_fromenvp.o",
+      ".test/test_b_fromenvp.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/.test/test_b_fromenvp.c",
+    "output": "/home/creid/Documents/42/minishell/target/test/test_b_fromenvp.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/clang",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-I./target/criterion-2.4.2/include",
+      "-c",
+      "-o",
+      "target/test/test_b_getenv.o",
+      ".test/test_b_getenv.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/.test/test_b_getenv.c",
+    "output": "/home/creid/Documents/42/minishell/target/test/test_b_getenv.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/clang",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-I./target/criterion-2.4.2/include",
+      "-c",
+      "-o",
+      "target/test/test_b_setenv.o",
+      ".test/test_b_setenv.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/.test/test_b_setenv.c",
+    "output": "/home/creid/Documents/42/minishell/target/test/test_b_setenv.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/clang",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-I./target/criterion-2.4.2/include",
+      "-c",
+      "-o",
+      "target/test/test_b_unsetenv.o",
+      ".test/test_b_unsetenv.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/.test/test_b_unsetenv.c",
+    "output": "/home/creid/Documents/42/minishell/target/test/test_b_unsetenv.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/clang",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-I./target/criterion-2.4.2/include",
+      "-c",
+      "-o",
+      "target/test/test_b_varexists.o",
+      ".test/test_b_varexists.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/.test/test_b_varexists.c",
+    "output": "/home/creid/Documents/42/minishell/target/test/test_b_varexists.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/clang",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-I./target/criterion-2.4.2/include",
+      "-c",
+      "-o",
+      "target/test/test_parser_basic.o",
+      ".test/test_parser_basic.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/.test/test_parser_basic.c",
+    "output": "/home/creid/Documents/42/minishell/target/test/test_parser_basic.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/clang",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-I./target/criterion-2.4.2/include",
+      "-c",
+      "-o",
+      "target/test/test_parser_pipe.o",
+      ".test/test_parser_pipe.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/.test/test_parser_pipe.c",
+    "output": "/home/creid/Documents/42/minishell/target/test/test_parser_pipe.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/clang",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-I./target/criterion-2.4.2/include",
+      "-c",
+      "-o",
+      "target/test/test_utils.o",
+      ".test/test_utils.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/.test/test_utils.c",
+    "output": "/home/creid/Documents/42/minishell/target/test/test_utils.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/clang",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-I./target/criterion-2.4.2/include",
+      "-c",
+      "-o",
+      "target/test/test_utils_string.o",
+      ".test/test_utils_string.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/.test/test_utils_string.c",
+    "output": "/home/creid/Documents/42/minishell/target/test/test_utils_string.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/clang",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-I./target/criterion-2.4.2/include",
+      "-c",
+      "-o",
+      "target/test/test_utils_readline.o",
+      ".test/test_utils_readline.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/.test/test_utils_readline.c",
+    "output": "/home/creid/Documents/42/minishell/target/test/test_utils_readline.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/clang",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-I./target/criterion-2.4.2/include",
+      "-c",
+      "-o",
+      "target/test/test_cd.o",
+      ".test/test_cd.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/.test/test_cd.c",
+    "output": "/home/creid/Documents/42/minishell/target/test/test_cd.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/clang",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-I./target/criterion-2.4.2/include",
+      "-c",
+      "-o",
+      "target/test/test_env.o",
+      ".test/test_env.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/.test/test_env.c",
+    "output": "/home/creid/Documents/42/minishell/target/test/test_env.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/clang",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-I./target/criterion-2.4.2/include",
+      "-c",
+      "-o",
+      "target/test/test_pwd.o",
+      ".test/test_pwd.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/.test/test_pwd.c",
+    "output": "/home/creid/Documents/42/minishell/target/test/test_pwd.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/clang",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-I./target/criterion-2.4.2/include",
+      "-c",
+      "-o",
+      "target/test/test_unset.o",
+      ".test/test_unset.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/.test/test_unset.c",
+    "output": "/home/creid/Documents/42/minishell/target/test/test_unset.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/clang",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-I./target/criterion-2.4.2/include",
+      "-c",
+      "-o",
+      "target/test/test_export.o",
+      ".test/test_export.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/.test/test_export.c",
+    "output": "/home/creid/Documents/42/minishell/target/test/test_export.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/clang",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-I./target/criterion-2.4.2/include",
+      "-c",
+      "-o",
+      "target/test/test_exit.o",
+      ".test/test_exit.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/.test/test_exit.c",
+    "output": "/home/creid/Documents/42/minishell/target/test/test_exit.o"
   },
   {
     "arguments": [
@@ -1832,6 +2274,26 @@
       "-I./target/libft/",
       "-c",
       "-o",
+      "target/utils/print_prompt.o",
+      "src/utils/print_prompt.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/utils/print_prompt.c",
+    "output": "/home/creid/Documents/42/minishell/target/utils/print_prompt.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-c",
+      "-o",
       "target/parser/p_strerror.o",
       "src/parser/p_strerror.c"
     ],
@@ -2198,5 +2660,25 @@
     "directory": "/home/creid/Documents/42/minishell",
     "file": "/home/creid/Documents/42/minishell/src/pipex/ft_utils.c",
     "output": "/home/creid/Documents/42/minishell/target/pipex/ft_utils.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-c",
+      "-o",
+      "target/main.o",
+      "src/main.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/main.c",
+    "output": "/home/creid/Documents/42/minishell/target/main.o"
   }
 ]
