@@ -2674,6 +2674,26 @@
       "-I./target/libft/",
       "-c",
       "-o",
+      "target/pipex/ft_builtin.o",
+      "src/pipex/ft_builtin.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/pipex/ft_builtin.c",
+    "output": "/home/creid/Documents/42/minishell/target/pipex/ft_builtin.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-c",
+      "-o",
       "target/main.o",
       "src/main.c"
     ],
