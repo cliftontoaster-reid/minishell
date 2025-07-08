@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 13:13:05 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/08 18:09:48 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/08 19:17:13 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,18 +179,81 @@ static char	*git_getbranch(void)
 	return (branch);
 }
 
-/// {symbol} [green] [italic] [bold] [underline] dirname [reset] (if git repo) git:[branch]
+/// {symbol} [green] [italic] [bold] [underline] dirname [reset] (if git repo) git:[branch[ *]]
+
+static bool	is_git_changes(void)
+{
+	pid_t		pid;
+	int			status;
+	char		*argv[5];
+	extern char	**environ;
+
+	argv[0] = "git";
+	argv[1] = "diff";
+	argv[2] = "--quiet";
+	argv[3] = "--exit-code";
+	argv[4] = NULL;
+	pid = fork();
+	if (pid < 0)
+		return (false);
+	if (pid == 0)
+	{
+		execve("/usr/bin/git", argv, environ);
+		_exit(1);
+	}
+	if (waitpid(pid, &status, 0) < 0)
+		return (false);
+	if (WIFEXITED(status))
+		return (WEXITSTATUS(status) != 0);
+	return (false);
+}
+
+static bool	is_git_changes_staged(void)
+{
+	pid_t		pid;
+	int			status;
+	char		*argv[6];
+	extern char	**environ;
+
+	argv[0] = "git";
+	argv[1] = "diff";
+	argv[2] = "--staged";
+	argv[3] = "--quiet";
+	argv[4] = "--exit-code";
+	argv[5] = NULL;
+	pid = fork();
+	if (pid < 0)
+		return (false);
+	if (pid == 0)
+	{
+		execve("/usr/bin/git", argv, environ);
+		_exit(1);
+	}
+	if (waitpid(pid, &status, 0) < 0)
+		return (false);
+	if (WIFEXITED(status))
+		return (WEXITSTATUS(status) != 0);
+	return (false);
+}
 
 static void	git_message(void)
 {
 	char	*branch;
+	bool	uncommitted_changes;
+	bool	staged_changes;
 
 	branch = git_getbranch();
 	if (branch)
 	{
 		ft_putstr_fd(" (git: " COLOUR_YELLOW, STDOUT_FILENO);
 		ft_putstr_fd(branch, STDOUT_FILENO);
-		ft_putstr_fd(COLOUR_RESET " )", STDOUT_FILENO);
+		uncommitted_changes = is_git_changes();
+		staged_changes = is_git_changes_staged();
+		if (uncommitted_changes || staged_changes)
+			ft_putstr_fd(COLOUR_PINK "*", STDOUT_FILENO);
+		if (uncommitted_changes)
+			ft_putstr_fd(COLOUR_RED "!", STDOUT_FILENO);
+		ft_putstr_fd(COLOUR_RESET ")", STDOUT_FILENO);
 		free(branch);
 	}
 }
