@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:49:10 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/08 15:08:41 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/08 18:21:22 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 #include "shared.h"
 #include "utils.h"
 #include <errno.h>
+#include <readline/history.h>
+#include <readline/readline.h>
 #include <stdio.h>
 #include <unistd.h>
 
@@ -90,12 +92,13 @@ void	print_parser(t_parser *parser)
 }
 
 // New: process here-documents for parsed commands
-static void	process_heredocs(t_cmd *cmds, t_linereader *lr, t_list *env)
+static void	process_heredocs(t_cmd *cmds, t_list *env)
 {
 	size_t	i;
 	char	*line;
 	t_file	*f;
 
+	(void)env;
 	for (i = 0; cmds[i].args && cmds[i].argc; ++i)
 	{
 		if (cmds[i].redirect_heredoc)
@@ -108,9 +111,7 @@ static void	process_heredocs(t_cmd *cmds, t_linereader *lr, t_list *env)
 			}
 			while (true)
 			{
-				ft_putstr_fd("\n", STDOUT_FILENO);
-				print_prompt(env, "heredoc");
-				line = ft_readline(lr);
+				line = readline("heredoc> ");
 				if (!line)
 					break ;
 				if (ft_strncmp(line, cmds[i].redirect_heredoc,
@@ -144,8 +145,9 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	while (1)
 	{
-		print_prompt(reader_ptr->env, "picoshell");
-		cached_input = ft_readline(&reader);
+		print_prompt(reader_ptr->env);
+		cached_input = readline(PROMPT);
+		add_history(cached_input);
 		if (!cached_input)
 		{
 			if (errno == EINTR)
@@ -169,7 +171,7 @@ int	main(int argc, char **argv, char **envp)
 			commands = parser_to_list(reader_ptr->parser);
 			// read heredoc bodies before execution
 			if (commands)
-				process_heredocs(commands, &reader, reader_ptr->env);
+				process_heredocs(commands, reader_ptr->env);
 			if (cached_input)
 			{
 				free(cached_input);
@@ -201,5 +203,6 @@ int	main(int argc, char **argv, char **envp)
 		free(reader_ptr);
 	if (reader.line)
 		free(reader.line);
+	clear_history();
 	return (g_status_code);
 }

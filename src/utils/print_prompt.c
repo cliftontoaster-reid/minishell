@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 13:13:05 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/08 15:01:41 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/08 18:09:48 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,7 +195,7 @@ static void	git_message(void)
 	}
 }
 
-void	print_prompt(t_list *env, char *msg)
+void	print_prompt(t_list *env)
 {
 	char	*dirname;
 
@@ -215,8 +215,5 @@ void	print_prompt(t_list *env, char *msg)
 	if (is_repo())
 		git_message();
 	ft_putstr_fd("\n" STYLE_ITALIC, STDOUT_FILENO);
-	if (msg)
-		ft_putstr_fd(msg, STDOUT_FILENO);
-	ft_putstr_fd(COLOUR_RESET " > " COLOUR_RESET, STDOUT_FILENO);
 	free(dirname);
 }
