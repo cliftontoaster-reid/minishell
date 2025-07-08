@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:49:10 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/08 14:41:11 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/08 15:08:41 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ void	print_parser(t_parser *parser)
 }
 
 // New: process here-documents for parsed commands
-static void	process_heredocs(t_cmd *cmds, t_linereader *lr)
+static void	process_heredocs(t_cmd *cmds, t_linereader *lr, t_list *env)
 {
 	size_t	i;
 	char	*line;
@@ -108,6 +108,8 @@ static void	process_heredocs(t_cmd *cmds, t_linereader *lr)
 			}
 			while (true)
 			{
+				ft_putstr_fd("\n", STDOUT_FILENO);
+				print_prompt(env, "heredoc");
 				line = ft_readline(lr);
 				if (!line)
 					break ;
@@ -167,7 +169,7 @@ int	main(int argc, char **argv, char **envp)
 			commands = parser_to_list(reader_ptr->parser);
 			// read heredoc bodies before execution
 			if (commands)
-				process_heredocs(commands, &reader);
+				process_heredocs(commands, &reader, reader_ptr->env);
 			if (cached_input)
 			{
 				free(cached_input);
