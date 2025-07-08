@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:49:10 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/04 13:49:50 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/08 14:41:11 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,27 +89,60 @@ void	print_parser(t_parser *parser)
 	}
 }
 
+// New: process here-documents for parsed commands
+static void	process_heredocs(t_cmd *cmds, t_linereader *lr)
+{
+	size_t	i;
+	char	*line;
+	t_file	*f;
+
+	for (i = 0; cmds[i].args && cmds[i].argc; ++i)
+	{
+		if (cmds[i].redirect_heredoc)
+		{
+			f = ft_opentmp(ft_openurand(), true);
+			if (!f)
+			{
+				perror("heredoc");
+				continue ;
+			}
+			while (true)
+			{
+				line = ft_readline(lr);
+				if (!line)
+					break ;
+				if (ft_strncmp(line, cmds[i].redirect_heredoc,
+						ft_strlen(cmds[i].redirect_heredoc)) == 0)
+				{
+					free(line);
+					break ;
+				}
+				ft_putstr_fd(line, f->fd);
+				ft_putstr_fd("\n", f->fd);
+				free(line);
+			}
+			lseek(f->fd, 0, SEEK_SET);
+			cmds[i].fd_infile = f->fd;
+			free(f);
+		}
+	}
+}
+
 int	main(int argc, char **argv, char **envp)
 {
-	t_list			*env_list;
 	t_reader		*reader_ptr;
 	char			*cached_input;
 	t_linereader	reader;
 	t_cmd			*commands;
 
 	ft_bzero(&reader, sizeof(t_linereader));
-	env_list = b_fromenvp(envp);
 	cached_input = NULL;
 	reader_ptr = reader_init(envp);
 	(void)argc;
 	(void)argv;
-	(void)env_list;
-	(void)reader_ptr;
 	while (1)
 	{
-		print_prompt(reader_ptr->env);
-		if (cached_input)
-			free(cached_input);
+		print_prompt(reader_ptr->env, "picoshell");
 		cached_input = ft_readline(&reader);
 		if (!cached_input)
 		{
@@ -118,6 +151,8 @@ int	main(int argc, char **argv, char **envp)
 			break ;        // Exit on EOF or error
 		}
 		handle_read(reader_ptr, cached_input);
+		free(cached_input);
+		cached_input = NULL;
 		/// Lexer printing
 		if (reader_ptr->lexer && reader_ptr->tokens)
 		{
@@ -130,6 +165,14 @@ int	main(int argc, char **argv, char **envp)
 			// printf("%sParser State:%s\n", BOLD, RESET);
 			// print_parser(reader_ptr->parser);
 			commands = parser_to_list(reader_ptr->parser);
+			// read heredoc bodies before execution
+			if (commands)
+				process_heredocs(commands, &reader);
+			if (cached_input)
+			{
+				free(cached_input);
+				cached_input = NULL;
+			}
 			ft_pipex(commands, reader_ptr->env);
 			parser_free(reader_ptr->parser);
 			reader_ptr->parser = NULL;
@@ -154,5 +197,7 @@ int	main(int argc, char **argv, char **envp)
 		ft_lstclear(&reader_ptr->env, free);
 	if (reader_ptr)
 		free(reader_ptr);
+	if (reader.line)
+		free(reader.line);
 	return (g_status_code);
 }

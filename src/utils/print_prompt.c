@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 13:13:05 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/08 11:28:01 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/08 15:01:41 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,17 @@
 # define PATH_MAX 4096
 #endif
 
-#define COLOUR_RESET ("\033[0m")
-#define COLOUR_YELLOW ("\033[33m")
-#define COLOUR_RED ("\033[31m")
-#define COLOUR_GREEN ("\033[32m")
-#define COLOUR_PINK ("\033[35m")
-#define STYLE_BOLD ("\033[1m")
-#define STYLE_ITALIC ("\033[3m")
-#define STYLE_UNDERLINE ("\033[4m")
+#define COLOUR_RESET "\001\033[0m\002"
+#define COLOUR_YELLOW "\001\033[33m\002"
+#define COLOUR_RED "\001\033[31m\002"
+#define COLOUR_GREEN "\001\033[32m\002"
+#define COLOUR_PINK "\001\033[35m\002"
+#define STYLE_BOLD "\001\033[1m\002"
+#define STYLE_ITALIC "\001\033[3m\002"
+#define STYLE_UNDERLINE "\001\033[4m\002"
 
-#define PROMPT_SYMBOL_ERROR ("\033[31m!\033[0m")
-#define PROMPT_SYMBOL_SUCCESS ("\033[32m$\033[0m")
+#define PROMPT_SYMBOL_ERROR "\001\033[31m\002!\001\033[0m\002"
+#define PROMPT_SYMBOL_SUCCESS "\001\033[32m\002$\001\033[0m\002"
 
 static char	*get_dirname(t_list *env)
 {
@@ -104,29 +104,26 @@ static bool	is_repo(void)
 	return (false);
 }
 
-// Read current branch from .git/HEAD
-static char	*git_getbranch(void)
+static char	*get_branch_name(char *buffer, ssize_t n)
 {
-	char	*git_dir;
-	char	*head_file;
-	char	*buffer;
-	char	*branch;
-	int		fd;
-	ssize_t	n;
 	char	*newline;
 	size_t	len;
 
-	git_dir = find_git_dir();
-	if (!git_dir)
-		return (NULL);
-	head_file = ft_strjoin(git_dir, "/HEAD");
-	free(git_dir);
-	if (!head_file)
-		return (NULL);
-	fd = open(head_file, O_RDONLY);
-	free(head_file);
-	if (fd < 0)
-		return (NULL);
+	if (ft_strncmp(buffer, "ref: refs/heads/", 16) == 0)
+	{
+		newline = ft_strchr(buffer, '\n');
+		len = newline ? (size_t)(newline - (buffer + 16)) : (size_t)(n - 16);
+		return (ft_strndup(buffer + 16, len));
+	}
+	else
+		return (ft_strndup(buffer, (n > 7 ? 7 : (size_t)n)));
+}
+
+static char	*read_head_file(int fd)
+{
+	char	*buffer;
+	ssize_t	n;
+
 	buffer = malloc(256);
 	if (!buffer)
 		return (NULL);
@@ -138,39 +135,67 @@ static char	*git_getbranch(void)
 		return (NULL);
 	}
 	buffer[n] = '\0';
-	if (ft_strncmp(buffer, "ref: refs/heads/", 16) == 0)
-	{
-		newline = ft_strchr(buffer, '\n');
-		len = newline ? (size_t)(newline - (buffer + 16)) : (size_t)(n - 16);
-		branch = ft_strndup(buffer + 16, len);
-	}
-	else
-		branch = ft_strndup(buffer, (n > 7 ? 7 : (size_t)n));
+	return (buffer);
+}
+
+static char	*open_head_file(char *git_dir)
+{
+	char	*head_file;
+	int		fd;
+
+	head_file = ft_strjoin(git_dir, "/HEAD");
+	free(git_dir);
+	if (!head_file)
+		return (NULL);
+	fd = open(head_file, O_RDONLY);
+	free(head_file);
+	if (fd < 0)
+		return (NULL);
+	return (head_file ? ft_itoa(fd) : NULL);
+}
+
+// Read current branch from .git/HEAD
+static char	*git_getbranch(void)
+{
+	char	*git_dir;
+	char	*head_file_fd_str;
+	int		fd;
+	char	*buffer;
+	char	*branch;
+
+	git_dir = find_git_dir();
+	if (!git_dir)
+		return (NULL);
+	head_file_fd_str = open_head_file(git_dir);
+	if (!head_file_fd_str)
+		return (NULL);
+	fd = ft_atoi(head_file_fd_str);
+	free(head_file_fd_str);
+	buffer = read_head_file(fd);
+	if (!buffer)
+		return (NULL);
+	branch = get_branch_name(buffer, ft_strlen(buffer));
 	free(buffer);
 	return (branch);
 }
 
 /// {symbol} [green] [italic] [bold] [underline] dirname [reset] (if git repo) git:[branch]
 
-static void	git_message(t_list *env)
+static void	git_message(void)
 {
 	char	*branch;
 
-	(void)env; // no longer needed
 	branch = git_getbranch();
 	if (branch)
 	{
-		ft_putstr_fd(" (git: ", STDOUT_FILENO);
-		ft_putstr_fd(COLOUR_YELLOW, STDOUT_FILENO);
+		ft_putstr_fd(" (git: " COLOUR_YELLOW, STDOUT_FILENO);
 		ft_putstr_fd(branch, STDOUT_FILENO);
-		ft_putstr_fd(COLOUR_RESET, STDOUT_FILENO);
-		ft_putstr_fd(" ", STDOUT_FILENO);
-		ft_putstr_fd(")", STDOUT_FILENO);
+		ft_putstr_fd(COLOUR_RESET " )", STDOUT_FILENO);
 		free(branch);
 	}
 }
 
-void	print_prompt(t_list *env)
+void	print_prompt(t_list *env, char *msg)
 {
 	char	*dirname;
 
@@ -184,13 +209,14 @@ void	print_prompt(t_list *env)
 		ft_putstr_fd(COLOUR_GREEN, STDOUT_FILENO);
 	else
 		ft_putstr_fd(COLOUR_RED, STDOUT_FILENO);
-	ft_putstr_fd(STYLE_ITALIC, STDOUT_FILENO);
-	ft_putstr_fd(STYLE_BOLD, STDOUT_FILENO);
-	ft_putstr_fd(STYLE_UNDERLINE, STDOUT_FILENO);
+	ft_putstr_fd(STYLE_ITALIC STYLE_BOLD STYLE_UNDERLINE, STDOUT_FILENO);
 	ft_putstr_fd(dirname, STDOUT_FILENO);
 	ft_putstr_fd(COLOUR_RESET, STDOUT_FILENO);
 	if (is_repo())
-		git_message(env);
-	ft_putstr_fd("\n > ", STDOUT_FILENO);
+		git_message();
+	ft_putstr_fd("\n" STYLE_ITALIC, STDOUT_FILENO);
+	if (msg)
+		ft_putstr_fd(msg, STDOUT_FILENO);
+	ft_putstr_fd(COLOUR_RESET " > " COLOUR_RESET, STDOUT_FILENO);
 	free(dirname);
 }
