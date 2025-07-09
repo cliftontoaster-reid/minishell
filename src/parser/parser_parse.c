@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 10:25:58 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/07 14:31:17 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/08 14:34:29 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -295,10 +295,20 @@ static void	parser_special_redirect_append(t_parser *parser)
 /// @param parser The parser instance.
 static void	parser_special_redirect_heredoc(t_parser *parser)
 {
+	t_token	*token;
+
+	// get the heredoc delimiter token
+	token = get_redirect_token(parser);
+	if (!token)
+		return ;
 	if (parser->command == NULL)
 		parser->command = cmd_init();
-	if (parser->heredoc_delimiter)
+	// store the heredoc delimiter in the command
+	parser->command->redirect_heredoc = ft_strdup(token->value);
+	if (parser->command->redirect_heredoc == NULL)
 	{
+		errno = ENOMEM;
+		parser->error = PARSING_ERROR_MALLOC;
 	}
 }
 
