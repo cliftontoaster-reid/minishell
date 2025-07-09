@@ -61,6 +61,8 @@ SRCS     = \
   $(SRC_DIR)/pipex/ft_errors.c \
   $(SRC_DIR)/pipex/ft_utils.c \
   $(SRC_DIR)/pipex/ft_builtin.c \
+	\
+	$(SRC_DIR)/varextract/extract_var_list.c \
   # TODO added $(SRC_DIR)/pipex/ft_builtin.c \ TODO
   
   
