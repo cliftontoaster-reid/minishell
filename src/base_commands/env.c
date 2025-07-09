@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 11:30:46 by jfranc            #+#    #+#             */
-/*   Updated: 2025/06/30 14:26:29 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/09 11:11:26 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <string.h>
 #include <unistd.h>
 
-int	ft_env(t_list **env)
+void	ft_env(t_list **env)
 {
 	int		iteri;
 	char	**envp;
@@ -25,7 +25,7 @@ int	ft_env(t_list **env)
 	if (!envp)
 	{
 		write(2, "env: no environment variables found\n", 36);
-		return (1);
+		g_status_code = 1;
 	}
 	while (envp[iteri])
 	{
@@ -33,5 +33,5 @@ int	ft_env(t_list **env)
 		write(1, "\n", 1);
 		iteri++;
 	}
-	return (0);
+	g_status_code = 0;
 }

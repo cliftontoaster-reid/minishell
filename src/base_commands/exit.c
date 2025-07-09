@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 13:37:28 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/03 16:16:41 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/09 11:10:25 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,9 +67,7 @@ void	ft_exit(char **s, t_reader *reader)
 	}
 	exit_code = 0;
 	if (s[1])
-	{
 		exit_code = ft_atoi(s[1]);
-	}
 	// Free the reader resources
 	if (reader)
 	{

@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 14:21:36 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/30 14:31:06 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/09 11:16:38 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,16 @@ static int	is_valid_identifiir(const char *str)
 	return (1);
 }
 
-int	ft_unset(char **args, t_list **envp)
+void	ft_unset(char **args, t_list **envp)
 {
 	int	i;
 	int	exit_status;
 
 	if (!args || !envp)
-		return (0);
+	{
+		g_status_code = 0;
+		return ;
+	}
 	exit_status = 0;
 	i = 1;
 	while (args[i])
@@ -70,5 +73,5 @@ int	ft_unset(char **args, t_list **envp)
 		}
 		i++;
 	}
-	return (exit_status);
+	g_status_code = exit_status;
 }

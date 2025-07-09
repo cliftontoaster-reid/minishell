@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 17:55:52 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/03 16:11:25 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/09 11:15:54 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,18 +80,22 @@ static int	export_variable(const char *arg, t_list **envp)
 	return (0);
 }
 
-int	ft_export(char **argv, t_list **envp)
+void	ft_export(char **argv, t_list **envp)
 {
 	int	i;
 	int	exit_status;
 
 	if (!argv || !envp)
-		return (1);
+	{
+		g_status_code = 1;
+		return ;
+	}
 	if (!argv[1])
 	{
 		if (envp && *envp)
 			print_exported_vars(*envp);
-		return (0);
+		g_status_code = 0;
+		return ;
 	}
 	exit_status = 0;
 	i = 1;
@@ -101,5 +105,5 @@ int	ft_export(char **argv, t_list **envp)
 			exit_status = 1;
 		i++;
 	}
-	return (exit_status);
+	g_status_code = exit_status;
 }

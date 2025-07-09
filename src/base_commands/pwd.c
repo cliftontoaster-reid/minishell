@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 11:55:23 by jfranc            #+#    #+#             */
-/*   Updated: 2025/06/30 14:27:38 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/09 11:07:45 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <string.h>
 #include <unistd.h>
 
-int	ft_pwd(t_list **envp)
+void	ft_pwd(t_list **envp)
 {
 	char	**pwd;
 
@@ -27,12 +27,10 @@ int	ft_pwd(t_list **envp)
 		free(pwd[0]);
 		free(pwd);
 		g_status_code = 0;
-		return (0);
 	}
 	else
 	{
 		write(2, "pwd: error retrieving current directory\n", 40);
 		g_status_code = 1;
-		return (1);
 	}
 }
