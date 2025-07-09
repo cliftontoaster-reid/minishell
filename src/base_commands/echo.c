@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
+/*   By: jfranc <jfranc@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/13 15:24:35 by jfranc            #+#    #+#             */
-/*   Updated: 2025/06/30 14:31:21 by lfiorell@st      ###   ########.fr       */
+/*   Created: 2025/07/09 10:58:57 by jfranc            #+#    #+#             */
+/*   Updated: 2025/07/09 11:13:29 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <shared.h>
 
 static void	ft_echo_screen(int argc, char **argv, int newline, int iter)
 {
@@ -26,6 +27,7 @@ static void	ft_echo_screen(int argc, char **argv, int newline, int iter)
 		else if (newline)
 			write(1, "\n", 1);
 	}
+	g_status_code = 0;
 }
 
 void	ft_echo(int argc, char **argv)

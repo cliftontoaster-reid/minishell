@@ -6,7 +6,7 @@
 /*   By: jfranc <jfranc@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:03:33 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/07 15:24:40 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/07/07 17:42:21 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static void	fd_child(t_cmd *cmd, t_list *tenvp, int cmd_idx)
 	{
 		pipe_redirection(cmd, cmd_idx);
 		is_builtin(cmd, &tenvp, cmd_idx);
-		printf("if builtin this is wrong\n");
+		write(2, "if builtin this is wrong\n", 25);
 		if (cmd->error == 1)
 			closefd(cmd, EXIT_FAILURE); // TODO exit failure free
 		/*
@@ -88,9 +88,9 @@ void	ft_pipex(t_cmd *cmd, t_list *tenvp)
 {
 	cmd->error = 0;
 	cmd->cmdnbr = ft_nbrofcmds(cmd);
-	if (!ft_strncmp(cmd->args[0], "exit", 4) && cmd->cmdnbr == 1)
+	if (!ft_strncmp(cmd->args[0], "exit", 5) && cmd->cmdnbr == 1)
 		ft_exit(cmd->args, NULL);
-	if (!ft_strncmp(cmd->args[0], "cd", 2) && cmd->cmdnbr == 1)
+	if (!ft_strncmp(cmd->args[0], "cd", 3) && cmd->cmdnbr == 1)
     {
         ft_cd(cmd->args, &tenvp);
 		return ;

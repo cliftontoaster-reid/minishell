@@ -102,10 +102,10 @@ void	is_builtin(t_cmd *cmd, t_list **env, int cmd_idx);
 // base_commands/(...).c
 void	ft_cd(char **argv, t_list **envp);
 void	ft_echo(int argc, char **argv);
-int		ft_env(t_list **env);
+void	ft_env(t_list **env);
 void	ft_exit(char **s, t_reader *reader);
-int		ft_export(char **argv, t_list **envp);
-int		ft_pwd(t_list **envp);
-int		ft_unset(char **args, t_list **envp);
+void	ft_export(char **argv, t_list **envp);
+void	ft_pwd(t_list **envp);
+void	ft_unset(char **args, t_list **envp);
 
 #endif
