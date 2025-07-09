@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 18:43:50 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/08 18:22:01 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/09 14:45:09 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ typedef struct s_reader
 	t_list				*tokens;
 	t_parser			*parser;
 	t_list				*env;
+	t_list				*vars;
 }						t_reader;
 
 t_reader				*reader_init(char *const *envp);

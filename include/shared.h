@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:24:32 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/07 11:41:14 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/09 15:08:16 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 
 # define NO_EXIT -1
 
-typedef struct s_reader t_reader;
+typedef struct s_reader	t_reader;
 
 extern int				g_status_code;
 
@@ -81,6 +81,8 @@ typedef struct s_cmd
 	char				*redirect_out;
 	char				*redirect_append;
 	char				*redirect_heredoc;
+
+	t_list				*var_list;
 }						t_cmd;
 
 // pipex/ft_pipex.c
@@ -97,15 +99,15 @@ void					closefd(t_cmd *cmd, int exitnbr);
 int						ft_nbrofcmds(t_cmd *cmd);
 
 // pipex/ft_builtin.c
-void	is_builtin(t_cmd *cmd, t_list **env, int cmd_idx);
+void					is_builtin(t_cmd *cmd, t_list **env, int cmd_idx);
 
 // base_commands/(...).c
-void	ft_cd(char **argv, t_list **envp);
-void	ft_echo(int argc, char **argv);
-void	ft_env(t_list **env);
-void	ft_exit(char **s, t_reader *reader);
-void	ft_export(char **argv, t_list **envp);
-void	ft_pwd(t_list **envp);
-void	ft_unset(char **args, t_list **envp);
+void					ft_cd(char **argv, t_list **envp);
+void					ft_echo(int argc, char **argv);
+void					ft_env(t_list **env);
+void					ft_exit(char **s, t_reader *reader);
+void					ft_export(char **argv, t_list **envp);
+void					ft_pwd(t_list **envp);
+void					ft_unset(char **args, t_list **envp);
 
 #endif
