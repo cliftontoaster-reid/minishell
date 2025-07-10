@@ -2694,6 +2694,26 @@
       "-I./target/libft/",
       "-c",
       "-o",
+      "target/varextract/extract_var_list.o",
+      "src/varextract/extract_var_list.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/varextract/extract_var_list.c",
+    "output": "/home/creid/Documents/42/minishell/target/varextract/extract_var_list.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-c",
+      "-o",
       "target/main.o",
       "src/main.c"
     ],

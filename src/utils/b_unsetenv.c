@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 11:00:00 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/06 14:12:18 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/10 12:13:34 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@ void	b_unsetenv(const char *key, void (*del)(void *), t_list **envp)
 	t_list	*prev;
 
 	if (!key || !envp || !*envp)
+		return ;
+	if (ft_strncmp(key, "PWD", 4) == 0 || ft_strncmp(key, "OLDPWD", 7) == 0)
 		return ;
 	current = *envp;
 	prev = NULL;

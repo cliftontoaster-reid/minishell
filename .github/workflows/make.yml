@@ -47,6 +47,8 @@ jobs:
           sudo apt-get purge -y man-db
           # Install required packages for commands : bear, clang, make, mold, wget, tar, zip, xz
           sudo apt-get install -y make clang wget tar gzip mold xz-utils zip
+          # Install libraries for the project, including GNU Readline
+          sudo apt-get install -y libreadline-dev
 
       - name: Build project
         run: make all
