@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 16:00:00 by creid             #+#    #+#             */
-/*   Updated: 2025/07/03 15:53:25 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/10 14:46:13 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include <unistd.h>
 
 #ifndef PATH_MAX
-	#define PATH_MAX 4096
+# define PATH_MAX 4096
 #endif
 
 // Forward declaration for ft_cd if it's not in a header included by test_utils.h
@@ -93,8 +93,12 @@ Test(cd, no_argument, .init = cr_redirect_stderr)
 	char	*argv[] = {"cd", NULL};
 
 	envp = NULL;
+	b_setenv("HOME", "/home", &envp);
 	ft_cd(argv, &envp);
 	fflush(stderr);
-	cr_assert_stderr_eq_str("cd: no such file or directory: ");
+	cr_assert_str_eq(*b_getenv("HOME", envp),
+						"/home",
+						"HOME should be set to"
+						" /home");
 	ft_lstclear(&envp, free);
 }

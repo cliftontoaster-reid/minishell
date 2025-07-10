@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 11:30:46 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/09 11:11:26 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/07/10 14:34:41 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	ft_env(t_list **env)
 	{
 		write(2, "env: no environment variables found\n", 36);
 		g_status_code = 1;
+		return ;
 	}
 	while (envp[iteri])
 	{

@@ -23,9 +23,6 @@
 #endif
 #include <limits.h>
 
-// Forward declaration for ft_pwd if not in a header
-int	ft_pwd(t_list **envp);
-
 Test(pwd, prints_current_directory, .init = cr_redirect_stdout)
 {
 	t_list	*envp;

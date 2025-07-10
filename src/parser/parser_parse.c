@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 10:25:58 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/08 14:34:29 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/10 14:21:47 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,7 +183,8 @@ static inline t_token	*get_redirect_token(t_parser *parser)
 /// @brief Handles the input redirection token ('<') when in the PARSER_SPECIAL
 /// state. It retrieves the target filename for the redirection and stores it in
 /// the command structure. Sets parser error on issues like missing target or
-/// memory allocation failure.
+/// memory allocation failure. If there's already an input redirection,
+///	it closes the previous file descriptor and replaces it with the new one.
 /// @param parser The parser instance.
 static void	parser_special_redirect_in(t_parser *parser)
 {
@@ -204,9 +205,15 @@ static void	parser_special_redirect_in(t_parser *parser)
 	}
 	if (parser->command == NULL)
 		parser->command = cmd_init();
+	// Close previous input file descriptor if it exists and is not stdin
+	if (parser->command->fd_infile > STDIN_FILENO)
+		close(parser->command->fd_infile);
 	parser->command->fd_infile = fd;
 	if (errno == ENOMEM)
 		return ;
+	// Free previous redirect_in if it exists
+	if (parser->command->redirect_in != NULL)
+		free(parser->command->redirect_in);
 	parser->command->redirect_in = ft_strdup(token->value);
 	if (parser->command->redirect_in == NULL)
 	{
@@ -219,7 +226,8 @@ static void	parser_special_redirect_in(t_parser *parser)
 /// @brief Handles the output redirection token ('>') when in the PARSER_SPECIAL
 /// state. It retrieves the target filename for the redirection and stores it in
 /// the command structure. Sets parser error on issues like missing target or
-/// memory allocation failure.
+/// memory allocation failure. If there's already an output redirection,
+/// it closes the previous file descriptor and replaces it with the new one.
 /// @param parser The parser instance.
 static void	parser_special_redirect_out(t_parser *parser)
 {
@@ -240,9 +248,15 @@ static void	parser_special_redirect_out(t_parser *parser)
 		parser->error = PARSING_MISSING_SPECIAL_TARGET;
 		return ;
 	}
+	// Close previous output file descriptor if it exists and is not stdout
+	if (parser->command->fd_outfile > STDOUT_FILENO)
+		close(parser->command->fd_outfile);
 	parser->command->fd_outfile = fd;
 	if (errno == ENOMEM)
 		return ;
+	// Free previous redirect_out if it exists
+	if (parser->command->redirect_out != NULL)
+		free(parser->command->redirect_out);
 	parser->command->redirect_out = ft_strdup(token->value);
 	if (parser->command->redirect_out == NULL)
 	{
@@ -255,7 +269,9 @@ static void	parser_special_redirect_out(t_parser *parser)
 /// @brief Handles the append output redirection token ('>>') when in the
 /// PARSER_SPECIAL state. It retrieves the target filename for the redirection
 /// and stores it in the command structure. Sets parser error on issues like
-/// missing target or memory allocation failure.
+/// missing target or memory allocation failure. If there's already an append
+/// redirection,
+/// it closes the previous file descriptor and replaces it with the new one.
 /// @param parser The parser instance.
 static void	parser_special_redirect_append(t_parser *parser)
 {
@@ -276,9 +292,15 @@ static void	parser_special_redirect_append(t_parser *parser)
 		parser->error = PARSING_MISSING_SPECIAL_TARGET;
 		return ;
 	}
+	// Close previous output file descriptor if it exists and is not stdout
+	if (parser->command->fd_outfile > STDOUT_FILENO)
+		close(parser->command->fd_outfile);
 	parser->command->fd_outfile = fd;
 	if (errno == ENOMEM)
 		return ;
+	// Free previous redirect_append if it exists
+	if (parser->command->redirect_append != NULL)
+		free(parser->command->redirect_append);
 	parser->command->redirect_append = ft_strdup(token->value);
 	if (parser->command->redirect_append == NULL)
 	{
@@ -291,7 +313,9 @@ static void	parser_special_redirect_append(t_parser *parser)
 /// @brief Handles the here-document redirection token ('<<') when in the
 /// PARSER_SPECIAL state. It retrieves the delimiter for the here-document and
 /// stores it in the command structure. Sets parser error on issues like missing
-/// delimiter or memory allocation failure.
+/// delimiter or memory allocation failure. If there's already a heredoc
+/// redirection,
+/// it frees the previous delimiter and replaces it with the new one.
 /// @param parser The parser instance.
 static void	parser_special_redirect_heredoc(t_parser *parser)
 {
@@ -303,6 +327,9 @@ static void	parser_special_redirect_heredoc(t_parser *parser)
 		return ;
 	if (parser->command == NULL)
 		parser->command = cmd_init();
+	// Free previous redirect_heredoc if it exists
+	if (parser->command->redirect_heredoc != NULL)
+		free(parser->command->redirect_heredoc);
 	// store the heredoc delimiter in the command
 	parser->command->redirect_heredoc = ft_strdup(token->value);
 	if (parser->command->redirect_heredoc == NULL)

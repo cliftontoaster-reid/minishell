@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfranc <jfranc@student.42nice.fr>          +#+  +:+       +#+        */
+/*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 17:21:40 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/07 17:52:13 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/07/10 14:43:42 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,21 +22,25 @@
 void	ft_cd(char **argv, t_list **envp)
 {
 	char	cwd[PATH_MAX];
-	char 	*home;
+	char	**home_env;
 
 	if (argv[1] == NULL)
 	{
-		home = *b_getenv("HOME", *envp);
-		if (!home)
+		home_env = b_getenv("HOME", *envp);
+		if (!home_env)
 		{
 			write(2, "cd: HOME not set\n", 18);
+			g_status_code = 1;
 			return ;
 		}
-		if (chdir(home) != 0)
+		if (chdir(*home_env) != 0)
 		{
 			perror("cd");
+			g_status_code = 1;
 			return ;
 		}
+		free(home_env[0]);
+		free(home_env);
 	}
 	else
 	{
@@ -45,6 +49,7 @@ void	ft_cd(char **argv, t_list **envp)
 			write(1, "cd: no such file or directory: ", 31);
 			write(1, argv[1], ft_strlen(argv[1]));
 			write(1, "\n", 1);
+			g_status_code = 1;
 			return ;
 		}
 	}
@@ -54,5 +59,8 @@ void	ft_cd(char **argv, t_list **envp)
 		g_status_code = 0;
 	}
 	else
+	{
 		perror("cd: error retrieving current directory");
+		g_status_code = 1;
+	}
 }

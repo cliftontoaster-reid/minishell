@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 17:55:52 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/09 11:15:54 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/07/10 14:43:46 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,14 @@ static int	export_variable(const char *arg, t_list **envp)
 	}
 	equals_pos = ft_strchr(arg, '=');
 	if (!equals_pos)
+	{
+		key = ft_strdup(arg);
+		if (!key)
+			return (1);
+		b_setenv(key, "", envp);
+		free(key);
 		return (0);
+	}
 	key_len = equals_pos - arg;
 	key = ft_substr(arg, 0, key_len);
 	if (!key)
