@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 18:43:50 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/09 14:45:09 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/11 14:12:28 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,14 @@
 
 typedef struct s_parser	t_parser;
 
+typedef enum e_reader_state
+{
+	READING,
+	LEXING,
+	PARSING,
+	EXECUTING,
+}						t_reader_state;
+
 typedef struct s_reader
 {
 	char				*cached;
@@ -30,6 +38,8 @@ typedef struct s_reader
 	t_parser			*parser;
 	t_list				*env;
 	t_list				*vars;
+	int					*pids;
+	t_reader_state		state;
 }						t_reader;
 
 t_reader				*reader_init(char *const *envp);

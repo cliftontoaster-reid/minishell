@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:49:10 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/08 18:21:22 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/11 15:32:05 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "parser.h"
 #include "reader.h"
 #include "shared.h"
+#include "sigint.h"
 #include "utils.h"
 #include <errno.h>
 #include <readline/history.h>
@@ -141,6 +142,9 @@ int	main(int argc, char **argv, char **envp)
 	ft_bzero(&reader, sizeof(t_linereader));
 	cached_input = NULL;
 	reader_ptr = reader_init(envp);
+	// Disable readline's default signal handling to use custom handlers
+	rl_catch_signals = 0;
+	register_reader();
 	(void)argc;
 	(void)argv;
 	while (1)
@@ -152,7 +156,9 @@ int	main(int argc, char **argv, char **envp)
 		{
 			if (errno == EINTR)
 				continue ; // Handle interrupted read
-			break ;        // Exit on EOF or error
+			// Print exit on EOF (Ctrl+D)
+			write(1, "exit\n", 5);
+			break ; // Exit on EOF or error
 		}
 		handle_read(reader_ptr, cached_input);
 		free(cached_input);

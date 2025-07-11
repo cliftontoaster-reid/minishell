@@ -63,6 +63,9 @@ SRCS     = \
   $(SRC_DIR)/pipex/ft_builtin.c \
 	\
 	$(SRC_DIR)/varextract/extract_var_list.c \
+	\
+	$(SRC_DIR)/sigint/register_reader.c \
+	$(SRC_DIR)/sigint/sigint_handler.c \
   # TODO added $(SRC_DIR)/pipex/ft_builtin.c \ TODO
   
   
