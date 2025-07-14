@@ -2714,6 +2714,46 @@
       "-I./target/libft/",
       "-c",
       "-o",
+      "target/sigint/register_reader.o",
+      "src/sigint/register_reader.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/sigint/register_reader.c",
+    "output": "/home/creid/Documents/42/minishell/target/sigint/register_reader.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-c",
+      "-o",
+      "target/sigint/sigint_handler.o",
+      "src/sigint/sigint_handler.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/sigint/sigint_handler.c",
+    "output": "/home/creid/Documents/42/minishell/target/sigint/sigint_handler.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=c17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-c",
+      "-o",
       "target/main.o",
       "src/main.c"
     ],
