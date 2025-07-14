@@ -17,12 +17,12 @@
 #include <signal.h>
 #include <stdio.h>
 
-void	register_reader(void)
-{
-	struct sigaction	sa;
+void register_reader(void) {
+  struct sigaction sa;
 
-	sa.sa_handler = sigint_handler;
-	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = 0;
-	sigaction(SIGINT, &sa, NULL);
+  sa.sa_handler = sigint_handler;
+  sigemptyset(&sa.sa_mask);
+  sa.sa_flags = 0;
+  sigaction(SIGINT, &sa, NULL);
+  sigaction(SIGQUIT, &sa, NULL);
 }

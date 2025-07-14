@@ -102,8 +102,8 @@ _LIB_FT	 = $(LFT_DIR)libft.a
 CRIT_DIR = $(OBJ_DIR)/criterion-2.4.2
 CRIT_INC = $(CRIT_DIR)/include
 CRIT_PC  = $(CRIT_DIR)/lib/pkgconfig/criterion.pc
-CFLAGS   = -Wall -Wextra -Werror -g3 -std=c17 -I$(INC_DIR) -pipe -MMD -MP -I$(LFT_DIR)
-LDFLAGS  = -O3 -g3 -std=c17 -pipe -lreadline
+CFLAGS   = -Wall -Wextra -Werror -g3 -std=gnu17 -I$(INC_DIR) -pipe -MMD -MP -I$(LFT_DIR)
+LDFLAGS  = -O3 -g3 -std=gnu17 -pipe -lreadline
 TEST_CFLAGS = -I$(CRIT_INC)
 TEST_LDFLAGS = -L$(CRIT_DIR)/lib -Wl,-rpath=$(CRIT_DIR)/lib -lcriterion
 

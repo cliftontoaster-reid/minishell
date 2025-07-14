@@ -11,20 +11,20 @@
 /* ************************************************************************** */
 
 #define _POSIX_C_SOURCE 200809L
+#include "libft.h"
 #include "shared.h"
 #include "sigint.h"
 #include <readline/readline.h>
 #include <signal.h>
 #include <unistd.h>
 
-void	sigint_handler(int sig)
-{
-	if (sig == SIGINT)
-	{
-		g_status_code = 130;
-		write(1, "\n", 1);
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-	}
+void sigint_handler(int sig) {
+  if (sig == SIGINT) {
+    g_status_code = 130;
+    write(1, "\n", 1);
+    rl_on_new_line();
+    rl_replace_line("", 0);
+    rl_redisplay();
+  } else if (sig == SIGQUIT) {
+  }
 }
