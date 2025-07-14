@@ -12,29 +12,42 @@
 
 #include "shared.h"
 #include "utils.h"
-#include "pipex.h"
+#include <unistd.h>
 
-void	closefd(t_cmd *cmd, int exitnbr)
-{
-	t_iteration	iter;
+void closefd(t_cmd *cmd, int exitnbr) {
+  t_iteration iter;
 
-	iter.i = 0;
-	while (iter.i < cmd->cmdnbr - 1)
-	{
-		close(cmd->pipes[iter.i][0]);
-		close(cmd->pipes[iter.i][1]);
-		iter.i++;
-	}
-	if (exitnbr > -1)
-		exit(exitnbr);
+  iter.i = 0;
+  while (iter.i < cmd->cmdnbr - 1) {
+    close(cmd->pipes[iter.i][0]);
+    close(cmd->pipes[iter.i][1]);
+    iter.i++;
+  }
+  if (exitnbr > -1)
+    exit(exitnbr);
 }
 
-int		ft_nbrofcmds(t_cmd *cmd)
-{
-	int nbr;
+int ft_nbrofcmds(t_cmd *cmd) {
+  int nbr;
 
-	nbr = 0;
-	while (cmd[nbr].args)
-		nbr++;
-	return (nbr);
+  nbr = 0;
+  while (cmd[nbr].args)
+    nbr++;
+  return (nbr);
+}
+
+void *ft_realloc(void *ptr, size_t size) {
+  void *new_ptr;
+  if (!ptr)
+    return (malloc(size));
+  if (size == 0) {
+    free(ptr);
+    return (NULL);
+  }
+  new_ptr = malloc(size);
+  if (!new_ptr)
+    return (NULL);
+  ft_memcpy(new_ptr, ptr, size);
+  free(ptr);
+  return (new_ptr);
 }
