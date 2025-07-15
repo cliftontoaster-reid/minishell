@@ -6,7 +6,7 @@
 /*   By: jfranc <jfranc@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 18:51:56 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/09 10:31:06 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/07/15 16:33:37 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@ static int	ft_check_if_builtin(t_cmd *cmd, int cmd_idx)
 	return (0);
 }
 
-void ft_cmdpathlist(t_cmd *cmd, t_list *env)
-{   
-	t_iteration iter;
+void	ft_cmdpathlist(t_cmd *cmd, t_list *env)
+{
+	t_iteration	iter;
 
 	cmd->cmdpathlist = malloc(sizeof(char *) * cmd->cmdnbr);
 	if (!cmd->cmdpathlist)
