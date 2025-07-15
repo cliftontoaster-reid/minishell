@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 10:51:55 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/23 10:52:13 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/15 16:17:28 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,14 @@
 
 char	*p_strerror(t_parsing_error error)
 {
-	switch (error)
-	{
-	case PARSING_NO_ERROR:
+	if (error == PARSING_NO_ERROR)
 		return ("No error");
-	case PARSING_ERROR_MALLOC:
+	else if (error == PARSING_ERROR_MALLOC)
 		return ("Memory allocation error");
-	case PARSING_MISSING_SPECIAL_TARGET:
+	else if (error == PARSING_MISSING_SPECIAL_TARGET)
 		return ("Missing target for special token");
-	case PARSING_DOUBLE_SPECIAL_DIRECTIVE:
+	else if (error == PARSING_DOUBLE_SPECIAL_DIRECTIVE)
 		return ("Double special directive encountered");
-	default:
+	else
 		return ("Unknown parsing error");
-	}
 }

@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 17:55:52 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/10 14:43:46 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/15 16:21:46 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,12 +53,39 @@ static void	print_exported_vars(t_list *envp)
 	free(env_vars);
 }
 
-static int	export_variable(const char *arg, t_list **envp)
+static int	export_with_value(const char *arg, t_list **envp)
 {
 	char	*key;
 	char	*value;
 	char	*equals_pos;
 	int		key_len;
+
+	equals_pos = ft_strchr(arg, '=');
+	key_len = equals_pos - arg;
+	key = ft_substr(arg, 0, key_len);
+	if (!key)
+		return (1);
+	value = equals_pos + 1;
+	b_setenv(key, value, envp);
+	free(key);
+	return (0);
+}
+
+static int	export_without_value(const char *arg, t_list **envp)
+{
+	char	*key;
+
+	key = ft_strdup(arg);
+	if (!key)
+		return (1);
+	b_setenv(key, "", envp);
+	free(key);
+	return (0);
+}
+
+static int	export_variable(const char *arg, t_list **envp)
+{
+	char	*equals_pos;
 
 	if (!is_valid_identifier(arg))
 	{
@@ -68,23 +95,9 @@ static int	export_variable(const char *arg, t_list **envp)
 		return (1);
 	}
 	equals_pos = ft_strchr(arg, '=');
-	if (!equals_pos)
-	{
-		key = ft_strdup(arg);
-		if (!key)
-			return (1);
-		b_setenv(key, "", envp);
-		free(key);
-		return (0);
-	}
-	key_len = equals_pos - arg;
-	key = ft_substr(arg, 0, key_len);
-	if (!key)
-		return (1);
-	value = equals_pos + 1;
-	b_setenv(key, value, envp);
-	free(key);
-	return (0);
+	if (equals_pos)
+		return (export_with_value(arg, envp));
+	return (export_without_value(arg, envp));
 }
 
 void	ft_export(char **argv, t_list **envp)
