@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 16:11:33 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/11 15:37:00 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/15 16:12:20 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,17 @@
 #include <signal.h>
 #include <unistd.h>
 
-void sigint_handler(int sig) {
-  if (sig == SIGINT) {
-    g_status_code = 130;
-    write(1, "\n", 1);
-    rl_on_new_line();
-    rl_replace_line("", 0);
-    rl_redisplay();
-  } else if (sig == SIGQUIT) {
-  }
+void	sigint_handler(int sig)
+{
+	if (sig == SIGINT)
+	{
+		g_status_code = 130;
+		write(1, "\n", 1);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
+	else if (sig == SIGQUIT)
+	{
+	}
 }
