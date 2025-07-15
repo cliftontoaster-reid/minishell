@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 11:00:00 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/01 16:29:54 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/15 15:59:25 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static char	*format_env_entry(t_env *env_entry)
 		value_len = ft_strlen(env_entry->value);
 	else
 		value_len = 0;
-	result = malloc(key_len + value_len + 2); // +1 for '=', +1 for '\0'
+	result = malloc(key_len + value_len + 2);
 	if (!result)
 		return (NULL);
 	ft_strlcpy(result, env_entry->key, key_len + 1);

@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 14:21:36 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/09 11:16:38 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/07/15 16:22:06 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,7 @@ void	ft_unset(char **args, t_list **envp)
 	while (args[i])
 	{
 		if (is_valid_identifiir(args[i]))
-		{
 			b_unsetenv(args[i], freeenv, envp);
-		}
 		else
 		{
 			write(2, "minishell: unset: `", 19);

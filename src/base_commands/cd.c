@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 17:21:40 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/10 14:43:42 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/15 16:19:15 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,29 +19,33 @@
 
 #define PATH_MAX 4096
 
+void	cd_go_home(t_list **envp)
+{
+	char	**home_env;
+
+	home_env = b_getenv("HOME", *envp);
+	if (!home_env)
+	{
+		write(2, "cd: HOME not set\n", 18);
+		g_status_code = 1;
+		return ;
+	}
+	if (chdir(*home_env) != 0)
+	{
+		perror("cd");
+		g_status_code = 1;
+		return ;
+	}
+	free(home_env[0]);
+	free(home_env);
+}
+
 void	ft_cd(char **argv, t_list **envp)
 {
 	char	cwd[PATH_MAX];
-	char	**home_env;
 
 	if (argv[1] == NULL)
-	{
-		home_env = b_getenv("HOME", *envp);
-		if (!home_env)
-		{
-			write(2, "cd: HOME not set\n", 18);
-			g_status_code = 1;
-			return ;
-		}
-		if (chdir(*home_env) != 0)
-		{
-			perror("cd");
-			g_status_code = 1;
-			return ;
-		}
-		free(home_env[0]);
-		free(home_env);
-	}
+		cd_go_home(envp);
 	else
 	{
 		if (chdir(argv[1]) != 0)

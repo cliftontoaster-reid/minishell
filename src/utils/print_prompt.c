@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 13:13:05 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/08 19:17:13 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/15 16:09:25 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,34 +57,45 @@ static char	*get_dirname(t_list *env)
 	return (res);
 }
 
+static bool	is_git_repo(char *cwd)
+{
+	char		*path;
+	struct stat	st;
+
+	path = ft_strjoin(cwd, "/.git");
+	if (!path)
+		return (false);
+	if (stat(path, &st) == 0 && S_ISDIR(st.st_mode))
+	{
+		free(path);
+		return (true);
+	}
+	free(path);
+	return (false);
+}
+
 // Find the .git directory by traversing up from CWD
 static char	*find_git_dir(void)
 {
-	char		*cwd;
-	char		*path;
-	struct stat	st;
-	char		*slash;
+	char	*cwd;
+	char	*slash;
+	char	*result;
 
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
 		return (NULL);
 	while (1)
 	{
-		path = ft_strjoin(cwd, "/.git");
-		if (!path)
-			break ;
-		if (stat(path, &st) == 0 && S_ISDIR(st.st_mode))
+		if (is_git_repo(cwd))
 		{
+			result = ft_strdup(cwd);
 			free(cwd);
-			return (path);
+			return (result);
 		}
-		free(path);
-		{
-			slash = ft_strrchr(cwd, '/');
-			if (!slash)
-				break ;
-			*slash = '\0';
-		}
+		slash = ft_strrchr(cwd, '/');
+		if (!slash)
+			break ;
+		*slash = '\0';
 	}
 	free(cwd);
 	return (NULL);
@@ -112,11 +123,18 @@ static char	*get_branch_name(char *buffer, ssize_t n)
 	if (ft_strncmp(buffer, "ref: refs/heads/", 16) == 0)
 	{
 		newline = ft_strchr(buffer, '\n');
-		len = newline ? (size_t)(newline - (buffer + 16)) : (size_t)(n - 16);
+		if (newline)
+			len = (size_t)(newline - (buffer + 16));
+		else
+			len = (size_t)(n - 16);
 		return (ft_strndup(buffer + 16, len));
 	}
 	else
-		return (ft_strndup(buffer, (n > 7 ? 7 : (size_t)n)));
+	{
+		if (n < 7)
+			return (ft_strndup(buffer, 7));
+		return (ft_strndup(buffer, ((size_t)n)));
+	}
 }
 
 static char	*read_head_file(int fd)
@@ -138,27 +156,23 @@ static char	*read_head_file(int fd)
 	return (buffer);
 }
 
-static char	*open_head_file(char *git_dir)
+static int	open_head_file(char *git_dir)
 {
 	char	*head_file;
 	int		fd;
 
-	head_file = ft_strjoin(git_dir, "/HEAD");
-	free(git_dir);
+	head_file = ft_strjoin(git_dir, "/.git/HEAD");
 	if (!head_file)
-		return (NULL);
+		return (-1);
 	fd = open(head_file, O_RDONLY);
 	free(head_file);
-	if (fd < 0)
-		return (NULL);
-	return (head_file ? ft_itoa(fd) : NULL);
+	return (fd);
 }
 
 // Read current branch from .git/HEAD
 static char	*git_getbranch(void)
 {
 	char	*git_dir;
-	char	*head_file_fd_str;
 	int		fd;
 	char	*buffer;
 	char	*branch;
@@ -166,11 +180,10 @@ static char	*git_getbranch(void)
 	git_dir = find_git_dir();
 	if (!git_dir)
 		return (NULL);
-	head_file_fd_str = open_head_file(git_dir);
-	if (!head_file_fd_str)
+	fd = open_head_file(git_dir);
+	free(git_dir);
+	if (fd < 0)
 		return (NULL);
-	fd = ft_atoi(head_file_fd_str);
-	free(head_file_fd_str);
 	buffer = read_head_file(fd);
 	if (!buffer)
 		return (NULL);
@@ -178,8 +191,6 @@ static char	*git_getbranch(void)
 	free(buffer);
 	return (branch);
 }
-
-/// {symbol} [green] [italic] [bold] [underline] dirname [reset] (if git repo) git:[branch[ *]]
 
 static bool	is_git_changes(void)
 {
