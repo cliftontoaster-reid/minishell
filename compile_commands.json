@@ -2254,6 +2254,26 @@
       "-I./target/libft/",
       "-c",
       "-o",
+      "target/utils/ft_var.o",
+      "src/utils/ft_var.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/utils/ft_var.c",
+    "output": "/home/creid/Documents/42/minishell/target/utils/ft_var.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=gnu17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-c",
+      "-o",
       "target/utils/ft_opentmp.o",
       "src/utils/ft_opentmp.c"
     ],
