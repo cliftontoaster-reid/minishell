@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 11:30:08 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/15 11:45:35 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/15 14:33:57 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,18 +132,14 @@ size_t	ft_strlen_or_something_i_do_not_know(char *str, char **varnames,
 					if (ft_strncmp(varnames[temp_var_idx], &str[i],
 							current_var_len) == 0)
 					{
-						if (!iskey(str[i + current_var_len]) || str[i
-							+ current_var_len] == '\0')
+						env_var = b_getenv_one(varnames[temp_var_idx], env);
+						if (env_var != NULL)
 						{
-							env_var = b_getenv_one(varnames[temp_var_idx], env);
-							if (env_var != NULL)
-							{
-								len += ft_strlen(env_var);
-							}
-							matched_var_name_len = current_var_len;
-							found_match = true;
-							break ;
+							len += ft_strlen(env_var);
 						}
+						matched_var_name_len = current_var_len;
+						found_match = true;
+						break ;
 					}
 				}
 				if (found_match)
@@ -229,19 +225,15 @@ char	*ft_var(char *var, char **varnames, t_list *env)
 					if (ft_strncmp(varnames[temp_var_idx], &var[i],
 							current_var_len) == 0)
 					{
-						if (!iskey(var[i + current_var_len]) || var[i
-							+ current_var_len] == '\0')
+						env_var = b_getenv_one(varnames[temp_var_idx], env);
+						if (env_var != NULL)
 						{
-							env_var = b_getenv_one(varnames[temp_var_idx], env);
-							if (env_var != NULL)
-							{
-								ft_strcpy(&owo[k], env_var);
-								k += ft_strlen(env_var);
-							}
-							matched_var_name_len = current_var_len;
-							found_match = true;
-							break ;
+							ft_strcpy(&owo[k], env_var);
+							k += ft_strlen(env_var);
 						}
+						matched_var_name_len = current_var_len;
+						found_match = true;
+						break ;
 					}
 				}
 				if (found_match)
@@ -275,6 +267,15 @@ char	*ft_var(char *var, char **varnames, t_list *env)
 		}
 	}
 	owo[k] = '\0';
+	i = 0;
+	while (owo[i] != '\0')
+	{
+		if (owo[i] == '\b')
+		{
+			owo[i] = '$'; // Replace backspace with dollar sign
+		}
+		i++;
+	}
 	free(var);
 	return (owo);
 }

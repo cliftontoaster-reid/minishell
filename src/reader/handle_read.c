@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 10:58:53 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/09 15:13:36 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/15 14:33:59 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,11 +62,6 @@ bool	try_lex(t_reader *reader)
 	return (true);
 }
 
-static void	free_nothing_at_all(void *content)
-{
-	(void)content;
-}
-
 static void	attach_vars_to_cmds(t_reader *reader)
 {
 	t_list	*current;
@@ -92,8 +87,6 @@ static void	attach_vars_to_cmds(t_reader *reader)
 		current = current->next;
 		i++;
 	}
-	ft_lstclear(&reader->vars, free_nothing_at_all);
-	reader->vars = NULL;
 }
 
 bool	try_parse(t_reader *reader)

@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 14:35:34 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/18 18:26:06 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/15 14:33:47 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ void	free_command(void *data)
 		free(command->redirect_out);
 	if (command->redirect_heredoc != NULL)
 		free(command->redirect_heredoc);
+	if (command->heredoc_delimiters != NULL)
+		ft_lstclear(&command->heredoc_delimiters, free);
 	free(command);
 }
 

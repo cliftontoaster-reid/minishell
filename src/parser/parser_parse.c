@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 10:25:58 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/10 14:21:47 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/15 14:33:46 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -327,10 +327,14 @@ static void	parser_special_redirect_heredoc(t_parser *parser)
 		return ;
 	if (parser->command == NULL)
 		parser->command = cmd_init();
-	// Free previous redirect_heredoc if it exists
+	// Add delimiter to the list of heredoc delimiters
+	if (parser->command->heredoc_delimiters == NULL)
+		parser->command->heredoc_delimiters = NULL;
+	ft_lstadd_back(&parser->command->heredoc_delimiters,
+		ft_lstnew(ft_strdup(token->value)));
+	// Also keep the last one in redirect_heredoc for backward compatibility
 	if (parser->command->redirect_heredoc != NULL)
 		free(parser->command->redirect_heredoc);
-	// store the heredoc delimiter in the command
 	parser->command->redirect_heredoc = ft_strdup(token->value);
 	if (parser->command->redirect_heredoc == NULL)
 	{
