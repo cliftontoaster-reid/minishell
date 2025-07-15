@@ -6,30 +6,11 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 13:37:32 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/09 15:19:05 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/15 12:06:34 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "varextract.h"
-
-static char	*extract_var_name(const char *value)
-{
-	const char	*dollar_pos;
-	const char	*start;
-	int			len;
-
-	dollar_pos = ft_strchr(value, '$');
-	if (dollar_pos != NULL && *(dollar_pos + 1))
-	{
-		start = dollar_pos + 1;
-		len = 0;
-		while (start[len] && (ft_isalnum(start[len]) || start[len] == '_'))
-			len++;
-		if (len > 0)
-			return (ft_substr(start, 0, len));
-	}
-	return (NULL);
-}
 
 static int	add_var_to_list(t_list **var_list, char *var_name)
 {
@@ -48,11 +29,14 @@ static int	add_var_to_list(t_list **var_list, char *var_name)
 
 static t_list	*extract_var_lists(t_list *tokens)
 {
-	t_list	*cmd_var_lists;
-	t_list	*cur_var_list;
-	t_token	*token;
-	char	*var_name;
-	t_list	*iter;
+	t_list		*cmd_var_lists;
+	t_list		*cur_var_list;
+	t_token		*token;
+	char		*var_name;
+	t_list		*iter;
+	const char	*p;
+	const char	*start;
+	int			len;
 
 	cmd_var_lists = NULL;
 	cur_var_list = NULL;
@@ -66,22 +50,54 @@ static t_list	*extract_var_lists(t_list *tokens)
 		}
 		else if (token->type == TOKEN_WORD)
 		{
-			var_name = extract_var_name(token->value);
-			if (var_name)
+			/* Extract all variable names after each '$' in the token value */
+			p = token->value;
+			while ((p = ft_strchr(p, '$')))
 			{
-				if (!add_var_to_list(&cur_var_list, var_name))
+				if (*(p + 1) && (ft_isalnum(*(p + 1)) || *(p + 1) == '_'))
 				{
-					ft_lstclear(&cur_var_list, free);
-					while (cmd_var_lists)
+					start = p + 1;
+					len = 0;
+					while (start[len] && (ft_isalnum(start[len])
+							|| start[len] == '_'))
+						len++;
+					if (len > 0)
 					{
-						iter = cmd_var_lists->next;
-						ft_lstclear((t_list **)&cmd_var_lists->content, free);
-						free(cmd_var_lists);
-						cmd_var_lists = iter;
+						var_name = ft_substr(start, 0, len);
+						if (!var_name)
+						{
+							/* Memory failure: cleanup and abort */
+							ft_lstclear(&cur_var_list, free);
+							while (cmd_var_lists)
+							{
+								iter = cmd_var_lists->next;
+								ft_lstclear((t_list **)&cmd_var_lists->content,
+									free);
+								free(cmd_var_lists);
+								cmd_var_lists = iter;
+							}
+							errno = ENOMEM;
+							return (NULL);
+						}
+						/* Add to current variable list */
+						if (!add_var_to_list(&cur_var_list, var_name))
+						{
+							/* add_var_to_list freed var_name on failure */
+							ft_lstclear(&cur_var_list, free);
+							while (cmd_var_lists)
+							{
+								iter = cmd_var_lists->next;
+								ft_lstclear((t_list **)&cmd_var_lists->content,
+									free);
+								free(cmd_var_lists);
+								cmd_var_lists = iter;
+							}
+							errno = ENOMEM;
+							return (NULL);
+						}
 					}
-					errno = ENOMEM;
-					return (NULL);
 				}
+				p++;
 			}
 		}
 		tokens = tokens->next;

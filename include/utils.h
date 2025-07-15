@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 15:31:30 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/08 18:10:22 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/15 11:33:37 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,5 +209,13 @@ typedef struct s_file
 t_file				*ft_opentmp(int rand_fd, bool auto_unlink);
 
 void				print_prompt(t_list *env);
+
+/// @brief Expands a variable string by replacing variable names with their values
+/// @param var The input variable string
+/// @param varnames Array of variable names
+/// @param env The environment list
+/// @return A newly allocated string with expanded variable values,
+/// or NULL on failure
+char				*ft_var(char *var, char **varnames, t_list *env);
 
 #endif
