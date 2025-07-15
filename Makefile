@@ -35,6 +35,7 @@ SRCS     = \
   $(SRC_DIR)/utils/ft_readulong.c \
   $(SRC_DIR)/utils/ft_readullong.c \
   $(SRC_DIR)/utils/ft_readstr.c \
+	$(SRC_DIR)/utils/ft_var.c \
   $(SRC_DIR)/utils/ft_opentmp.c \
 	$(SRC_DIR)/utils/print_prompt.c \
   \

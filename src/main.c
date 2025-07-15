@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:49:10 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/11 15:32:05 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/15 11:52:40 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "shared.h"
 #include "sigint.h"
 #include "utils.h"
+#include "varextract.h"
 #include <errno.h>
 #include <readline/history.h>
 #include <readline/readline.h>
@@ -138,6 +139,16 @@ int	main(int argc, char **argv, char **envp)
 	char			*cached_input;
 	t_linereader	reader;
 	t_cmd			*commands;
+	t_list			*varlists;
+	t_list			*vl_node;
+	size_t			cmd_idx;
+	t_list			*vl;
+	int				n;
+	char			**varnames;
+	int				vi;
+	t_list			*it;
+	t_list			*inner;
+	t_list			*next;
 
 	ft_bzero(&reader, sizeof(t_linereader));
 	cached_input = NULL;
@@ -175,6 +186,46 @@ int	main(int argc, char **argv, char **envp)
 			// printf("%sParser State:%s\n", BOLD, RESET);
 			// print_parser(reader_ptr->parser);
 			commands = parser_to_list(reader_ptr->parser);
+			// Variable expansion for each command argument
+			{
+				varlists = b_varextract(reader_ptr->tokens);
+				vl_node = varlists;
+				cmd_idx = 0;
+				while (vl_node && commands[cmd_idx].args
+					&& commands[cmd_idx].argc)
+				{
+					vl = (t_list *)vl_node->content;
+					n = ft_lstsize(vl);
+					varnames = malloc(sizeof(char *) * (n + 1));
+					if (varnames)
+					{
+						vi = 0;
+						it = vl;
+						while (it)
+						{
+							varnames[vi++] = it->content;
+							it = it->next;
+						}
+						varnames[vi] = NULL;
+						for (int ai = 0; commands[cmd_idx].args[ai]; ai++)
+							commands[cmd_idx].args[ai] = ft_var(commands[cmd_idx].args[ai],
+									varnames, reader_ptr->env);
+						free(varnames);
+					}
+					vl_node = vl_node->next;
+					cmd_idx++;
+				}
+				// Free varlists and inner lists
+				vl_node = varlists;
+				while (vl_node)
+				{
+					inner = vl_node->content;
+					ft_lstclear(&inner, free);
+					next = vl_node->next;
+					free(vl_node);
+					vl_node = next;
+				}
+			}
 			// read heredoc bodies before execution
 			if (commands)
 				process_heredocs(commands, reader_ptr->env);
