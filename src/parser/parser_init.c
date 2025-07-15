@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 14:31:44 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/20 14:24:13 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/15 14:33:46 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ t_cmd	*cmd_init(void)
 	cmd->redirect_out = NULL;
 	cmd->redirect_append = NULL;
 	cmd->redirect_heredoc = NULL;
+	cmd->heredoc_delimiters = NULL;
 	return (cmd);
 }
 

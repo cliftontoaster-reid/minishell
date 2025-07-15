@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:49:10 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/15 12:31:10 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/15 14:33:52 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,12 +99,73 @@ static void	process_heredocs(t_cmd *cmds, t_list *env)
 	size_t	i;
 	char	*line;
 	t_file	*f;
+	t_list	*delim_node;
+	char	*delimiter;
+	char	*last_delimiter;
 
 	(void)env;
 	for (i = 0; cmds[i].args && cmds[i].argc; ++i)
 	{
-		if (cmds[i].redirect_heredoc)
+		if (cmds[i].heredoc_delimiters)
 		{
+			// Process all heredoc delimiters, but only use the last one
+			delim_node = cmds[i].heredoc_delimiters;
+			last_delimiter = NULL;
+			f = NULL;
+			// Find the last delimiter
+			while (delim_node)
+			{
+				last_delimiter = (char *)delim_node->content;
+				delim_node = delim_node->next;
+			}
+			// Process each heredoc delimiter
+			delim_node = cmds[i].heredoc_delimiters;
+			while (delim_node)
+			{
+				delimiter = (char *)delim_node->content;
+				// Only open the temp file for the last delimiter
+				if (delimiter == last_delimiter)
+				{
+					f = ft_opentmp(ft_openurand(), true);
+					if (!f)
+					{
+						perror("heredoc");
+						break ;
+					}
+				}
+				// Always prompt for input for each heredoc
+				while (true)
+				{
+					line = readline("heredoc> ");
+					if (!line)
+						break ;
+					if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0
+						&& ft_strlen(line) == ft_strlen(delimiter))
+					{
+						free(line);
+						break ;
+					}
+					// Only write to file if this is the last heredoc
+					if (delimiter == last_delimiter && f)
+					{
+						ft_putstr_fd(line, f->fd);
+						ft_putstr_fd("\n", f->fd);
+					}
+					free(line);
+				}
+				delim_node = delim_node->next;
+			}
+			// Set the file descriptor for the last heredoc
+			if (f)
+			{
+				lseek(f->fd, 0, SEEK_SET);
+				cmds[i].fd_infile = f->fd;
+				free(f);
+			}
+		}
+		else if (cmds[i].redirect_heredoc)
+		{
+			// Fallback for backward compatibility
 			f = ft_opentmp(ft_openurand(), true);
 			if (!f)
 			{

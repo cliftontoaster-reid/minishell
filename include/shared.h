@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:24:32 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/09 15:08:16 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/15 14:33:53 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ typedef struct s_cmd
 	char				*redirect_out;
 	char				*redirect_append;
 	char				*redirect_heredoc;
+	t_list				*heredoc_delimiters;
 
 	t_list				*var_list;
 }						t_cmd;
