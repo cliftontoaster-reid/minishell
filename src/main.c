@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:49:10 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/15 11:52:40 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/15 12:31:10 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,7 +188,7 @@ int	main(int argc, char **argv, char **envp)
 			commands = parser_to_list(reader_ptr->parser);
 			// Variable expansion for each command argument
 			{
-				varlists = b_varextract(reader_ptr->tokens);
+				varlists = reader_ptr->vars;
 				vl_node = varlists;
 				cmd_idx = 0;
 				while (vl_node && commands[cmd_idx].args

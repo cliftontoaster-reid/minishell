@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 15:41:18 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/06 15:01:31 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/15 12:25:56 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,6 +206,11 @@ void	lexer_uni(t_lexer *lexer)
 		end_token(lexer);
 		lexer->state = LEXER_NONE;
 		lexer->start = lexer->pos + 1;
+	}
+	if (lexer->text[lexer->pos] == '$')
+	{
+		// Change $ to a weird character to avoid conflicts, like backspace
+		lexer->text[lexer->pos] = '\b';
 	}
 	lexer->pos++;
 }
