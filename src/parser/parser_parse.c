@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 10:25:58 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/15 14:33:46 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/15 15:03:06 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,21 @@ void	end_command(t_parser *parser)
 		parser->command->args[idx] = NULL;
 		parser->command->argc = size;
 		ft_lstclear(&parser->argument_list, free);
+	}
+	else
+	{
+		// heredoc only
+		if (parser->command == NULL)
+			parser->command = cmd_init();
+		parser->command->args = ft_calloc(1, sizeof(char *));
+		if (parser->command->args == NULL)
+		{
+			errno = ENOMEM;
+			parser->error = PARSING_ERROR_MALLOC;
+			return ;
+		}
+		parser->command->args[0] = NULL;
+		parser->command->argc = 0;
 	}
 	ft_lstadd_back(&parser->command_list, ft_lstnew(parser->command));
 	parser->command = NULL;

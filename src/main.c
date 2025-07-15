@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:49:10 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/15 14:33:52 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/15 15:18:51 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ static void	process_heredocs(t_cmd *cmds, t_list *env)
 	char	*last_delimiter;
 
 	(void)env;
-	for (i = 0; cmds[i].args && cmds[i].argc; ++i)
+	for (i = 0; cmds[i].args; ++i)
 	{
 		if (cmds[i].heredoc_delimiters)
 		{
@@ -194,6 +194,50 @@ static void	process_heredocs(t_cmd *cmds, t_list *env)
 	}
 }
 
+t_cmd	*remove_empty_commands(t_cmd *commands)
+{
+	size_t	count;
+	size_t	valid_count;
+	size_t	i;
+	size_t	j;
+	t_cmd	*new_commands;
+
+	if (!commands)
+		return (NULL);
+	// Count total commands and valid commands
+	count = 0;
+	valid_count = 0;
+	while (commands[count].args)
+	{
+		if (commands[count].argc > 0)
+			valid_count++;
+		count++;
+	}
+	// Allocate new array for valid commands + null terminator
+	new_commands = ft_calloc(valid_count + 1, sizeof(t_cmd));
+	if (!new_commands)
+		return (NULL);
+	// Copy valid commands to new array
+	j = 0;
+	for (i = 0; i < count; i++)
+	{
+		if (commands[i].argc > 0)
+		{
+			new_commands[j] = commands[i];
+			j++;
+		}
+		// Note: Don't free empty commands here - they're still referenced
+		// in the parser's command list and will be freed by parser_free()
+	}
+	// Null-terminate the new array
+	ft_bzero(&new_commands[valid_count], sizeof(t_cmd));
+	new_commands[valid_count].args = NULL;
+	new_commands[valid_count].argc = -1;
+	// Free the original commands array
+	free(commands);
+	return (new_commands);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_reader		*reader_ptr;
@@ -235,17 +279,9 @@ int	main(int argc, char **argv, char **envp)
 		handle_read(reader_ptr, cached_input);
 		free(cached_input);
 		cached_input = NULL;
-		/// Lexer printing
-		if (reader_ptr->lexer && reader_ptr->tokens)
-		{
-			// printf("%sLexer Tokens:%s\n", BOLD, RESET);
-			// print_tokens(reader_ptr->tokens);
-		}
 		/// Parser printing
 		if (reader_ptr->parser)
 		{
-			// printf("%sParser State:%s\n", BOLD, RESET);
-			// print_parser(reader_ptr->parser);
 			commands = parser_to_list(reader_ptr->parser);
 			// Variable expansion for each command argument
 			{
@@ -290,6 +326,7 @@ int	main(int argc, char **argv, char **envp)
 			// read heredoc bodies before execution
 			if (commands)
 				process_heredocs(commands, reader_ptr->env);
+			commands = remove_empty_commands(commands);
 			if (cached_input)
 			{
 				free(cached_input);
