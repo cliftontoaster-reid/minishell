@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 13:37:32 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/15 12:02:04 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/15 12:06:34 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,14 @@ static int	add_var_to_list(t_list **var_list, char *var_name)
 
 static t_list	*extract_var_lists(t_list *tokens)
 {
-	t_list	*cmd_var_lists;
-	t_list	*cur_var_list;
-	t_token	*token;
-	char	*var_name;
-	t_list	*iter;
-			const char *p = token->value;
-					const char *start = p + 1;
-	int		len;
+	t_list		*cmd_var_lists;
+	t_list		*cur_var_list;
+	t_token		*token;
+	char		*var_name;
+	t_list		*iter;
+	const char	*p;
+	const char	*start;
+	int			len;
 
 	cmd_var_lists = NULL;
 	cur_var_list = NULL;
@@ -51,10 +51,12 @@ static t_list	*extract_var_lists(t_list *tokens)
 		else if (token->type == TOKEN_WORD)
 		{
 			/* Extract all variable names after each '$' in the token value */
+			p = token->value;
 			while ((p = ft_strchr(p, '$')))
 			{
 				if (*(p + 1) && (ft_isalnum(*(p + 1)) || *(p + 1) == '_'))
 				{
+					start = p + 1;
 					len = 0;
 					while (start[len] && (ft_isalnum(start[len])
 							|| start[len] == '_'))
