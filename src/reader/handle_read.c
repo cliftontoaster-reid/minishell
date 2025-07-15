@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 10:58:53 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/15 14:33:59 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/15 16:14:57 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,29 @@ bool	str_is_whitespace(const char *str)
 	return (true);
 }
 
+bool	handle_read_two(t_reader *reader)
+{
+	if (!try_lex(reader))
+	{
+		free(reader->cached);
+		reader->cached = NULL;
+		errno = EINVAL;
+		return (true);
+	}
+	if (!try_parse(reader))
+	{
+		free(reader->cached);
+		reader->cached = NULL;
+		free_lexer(reader->lexer);
+		reader->lexer = NULL;
+		if (reader->tokens)
+			reader->tokens = NULL;
+		errno = EINVAL;
+		return (true);
+	}
+	return (false);
+}
+
 void	handle_read(t_reader *reader, const char *input)
 {
 	if (reader == NULL || input == NULL)
@@ -148,25 +171,8 @@ void	handle_read(t_reader *reader, const char *input)
 		reader->cached = NULL;
 		return ;
 	}
-	if (!try_lex(reader))
-	{
-		free(reader->cached);
-		reader->cached = NULL;
-		errno = EINVAL;
+	if (handle_read_two(reader))
 		return ;
-	}
-	if (!try_parse(reader))
-	{
-		free(reader->cached);
-		reader->cached = NULL;
-		free_lexer(reader->lexer);
-		reader->lexer = NULL;
-		if (reader->tokens)
-			reader->tokens = NULL;
-		errno = EINVAL;
-		return ;
-	}
-	// if no error, we free the cached input
 	free(reader->cached);
 	reader->cached = NULL;
 }
