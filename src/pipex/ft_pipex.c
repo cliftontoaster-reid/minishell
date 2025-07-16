@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:03:33 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/16 14:40:32 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/07/16 16:27:35 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static void	fd_child(t_cmd *cmd, t_list *tenvp, int cmd_idx, t_reader *exit)
 	}
 }
 
-void	ft_wait_for_children(void)
+void	ft_wait_for_children(int last_pid)
 {
 	int		status;
 	int		sig;
@@ -65,7 +65,7 @@ void	ft_wait_for_children(void)
 	wpid = waitpid(-1, &status, WNOHANG);
 	while (wpid != -1)
 	{
-		if (wpid != 0)
+		if (wpid == last_pid)
 		{
 			if (WIFEXITED(status))
 				g_status_code = WEXITSTATUS(status);
@@ -110,7 +110,7 @@ static void	fd_pipex_execute(t_cmd *cmd, t_list *tenvp, t_reader *exit)
 		close(cmd->pipes[iter.i][0]);
 		close(cmd->pipes[iter.i++][1]);
 	}
-	ft_wait_for_children();
+	ft_wait_for_children(cmd[cmd->cmdnbr - 1].pid);
 }
 
 // WARNING cmdpathlist does a malloc and contains mallocs
