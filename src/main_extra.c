@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 14:41:12 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/16 19:34:42 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/16 20:23:05 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,26 @@ void	print_tokens(t_list *tokens)
 	}
 }
 
+static void	ft_prints(t_cmd *cmd)
+{
+	printf("Command: %s, Arg Count: %d", cmd->args[0], cmd->argc);
+	if (cmd->is_pipe)
+		printf(" (Pipe)");
+	if (cmd->fd_infile != -1)
+		printf(", Infile: %d", cmd->fd_infile);
+	if (cmd->fd_outfile != -1)
+		printf(", Outfile: %d", cmd->fd_outfile);
+	if (cmd->redirect_in)
+		printf(", Redirect In: %s", cmd->redirect_in);
+	if (cmd->redirect_out)
+		printf(", Redirect Out: %s", cmd->redirect_out);
+	if (cmd->redirect_append)
+		printf(", Redirect Append: %s", cmd->redirect_append);
+	if (cmd->redirect_heredoc)
+		printf(", Redirect Heredoc: %s", cmd->redirect_heredoc);
+	printf("\n");
+}
+
 void	print_parser(t_parser *parser)
 {
 	t_list	*current;
@@ -46,7 +66,6 @@ void	print_parser(t_parser *parser)
 		printf("Parser is NULL\n");
 		return ;
 	}
-	// print the tokens
 	printf("Parser State: %d\n", parser->state);
 	printf("Current Index: %zu\n", parser->current_index);
 	printf("Token Count: %zu\n", parser->token_count);
@@ -58,52 +77,33 @@ void	print_parser(t_parser *parser)
 		{
 			cmd = (t_cmd *)current->content;
 			if (cmd)
-			{
-				printf("Command: %s, Arg Count: %d", cmd->args[0], cmd->argc);
-				if (cmd->is_pipe)
-					printf(" (Pipe)");
-				if (cmd->fd_infile != -1)
-					printf(", Infile: %d", cmd->fd_infile);
-				if (cmd->fd_outfile != -1)
-					printf(", Outfile: %d", cmd->fd_outfile);
-				if (cmd->redirect_in)
-					printf(", Redirect In: %s", cmd->redirect_in);
-				if (cmd->redirect_out)
-					printf(", Redirect Out: %s", cmd->redirect_out);
-				if (cmd->redirect_append)
-					printf(", Redirect Append: %s", cmd->redirect_append);
-				if (cmd->redirect_heredoc)
-					printf(", Redirect Heredoc: %s", cmd->redirect_heredoc);
-				printf("\n");
-			}
+				ft_prints(cmd);
 			current = current->next;
 		}
 	}
 	else
-	{
 		printf("No commands parsed.\n");
-	}
 }
 
 // New: process here-documents for parsed commands
 void	process_heredocs(t_cmd *cmds, t_list *env)
 {
-	size_t	i;
+	size_t	iteri;
 	char	*line;
-	t_file	*f;
+	t_file	*tmpf;
 	t_list	*delim_node;
 	char	*delimiter;
 	char	*last_delimiter;
 
 	(void)env;
-	for (i = 0; cmds[i].args; ++i)
+	for (iteri = 0; cmds[iteri].args; ++iteri)
 	{
-		if (cmds[i].heredoc_delimiters)
+		if (cmds[iteri].heredoc_delimiters)
 		{
 			// Process all heredoc delimiters, but only use the last one
-			delim_node = cmds[i].heredoc_delimiters;
+			delim_node = cmds[iteri].heredoc_delimiters;
 			last_delimiter = NULL;
-			f = NULL;
+			tmpf = NULL;
 			// Find the last delimiter
 			while (delim_node)
 			{
@@ -111,15 +111,15 @@ void	process_heredocs(t_cmd *cmds, t_list *env)
 				delim_node = delim_node->next;
 			}
 			// Process each heredoc delimiter
-			delim_node = cmds[i].heredoc_delimiters;
+			delim_node = cmds[iteri].heredoc_delimiters;
 			while (delim_node)
 			{
 				delimiter = (char *)delim_node->content;
 				// Only open the temp file for the last delimiter
 				if (delimiter == last_delimiter)
 				{
-					f = ft_opentmp(ft_openurand(), true);
-					if (!f)
+					tmpf = ft_opentmp(ft_openurand(), true);
+					if (!tmpf)
 					{
 						perror("heredoc");
 						break ;
@@ -138,28 +138,28 @@ void	process_heredocs(t_cmd *cmds, t_list *env)
 						break ;
 					}
 					// Only write to file if this is the last heredoc
-					if (delimiter == last_delimiter && f)
+					if (delimiter == last_delimiter && tmpf)
 					{
-						ft_putstr_fd(line, f->fd);
-						ft_putstr_fd("\n", f->fd);
+						ft_putstr_fd(line, tmpf->fd);
+						ft_putstr_fd("\n", tmpf->fd);
 					}
 					free(line);
 				}
 				delim_node = delim_node->next;
 			}
 			// Set the file descriptor for the last heredoc
-			if (f)
+			if (tmpf)
 			{
-				lseek(f->fd, 0, SEEK_SET);
-				cmds[i].fd_infile = f->fd;
-				free(f);
+				lseek(tmpf->fd, 0, SEEK_SET);
+				cmds[iteri].fd_infile = tmpf->fd;
+				free(tmpf);
 			}
 		}
-		else if (cmds[i].redirect_heredoc)
+		else if (cmds[iteri].redirect_heredoc)
 		{
 			// Fallback for backward compatibility
-			f = ft_opentmp(ft_openurand(), true);
-			if (!f)
+			tmpf = ft_opentmp(ft_openurand(), true);
+			if (!tmpf)
 			{
 				perror("heredoc");
 				continue ;
@@ -169,19 +169,19 @@ void	process_heredocs(t_cmd *cmds, t_list *env)
 				line = readline("heredoc> ");
 				if (!line)
 					break ;
-				if (ft_strncmp(line, cmds[i].redirect_heredoc,
-						ft_strlen(cmds[i].redirect_heredoc)) == 0)
+				if (ft_strncmp(line, cmds[iteri].redirect_heredoc,
+						ft_strlen(cmds[iteri].redirect_heredoc)) == 0)
 				{
 					free(line);
 					break ;
 				}
-				ft_putstr_fd(line, f->fd);
-				ft_putstr_fd("\n", f->fd);
+				ft_putstr_fd(line, tmpf->fd);
+				ft_putstr_fd("\n", tmpf->fd);
 				free(line);
 			}
-			lseek(f->fd, 0, SEEK_SET);
-			cmds[i].fd_infile = f->fd;
-			free(f);
+			lseek(tmpf->fd, 0, SEEK_SET);
+			cmds[iteri].fd_infile = tmpf->fd;
+			free(tmpf);
 		}
 	}
 }
