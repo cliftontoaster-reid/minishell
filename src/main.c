@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:49:10 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/16 19:37:32 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/16 19:49:00 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,16 +30,16 @@
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_reader		*reader_ptr;
-	t_list			*varlists;
-	t_list			*vl_node;
-	size_t			cmd_idx;
-	t_list			*vl;
-	int				n;
-	int				vi;
-	t_list			*it;
-	t_list			*inner;
-	t_list			*next;
+	t_reader	*reader_ptr;
+	t_list		*varlists;
+	t_list		*vl_node;
+	size_t		cmd_idx;
+	t_list		*vl;
+	int			n;
+	int			vi;
+	t_list		*it;
+	t_list		*inner;
+	t_list		*next;
 
 	reader_ptr = reader_init(envp);
 	// Disable readline's default signal handling to use custom handlers
