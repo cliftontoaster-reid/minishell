@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 14:38:32 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/16 16:36:24 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/16 19:10:13 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,6 +153,10 @@ void					parser_handle_special(t_parser *parser);
 ///          or an error code if an issue occurred.
 t_parsing_error			parser_step(t_parser *parser);
 
+/// @brief Ends the current command being built and adds it to the command list.
+/// @param parser The parser instance.
+void					end_command(t_parser *parser);
+
 /// @brief Turns the AST into a list of commands
 /// @param parser The parser to use
 /// @return A list of commands
@@ -165,5 +169,54 @@ t_cmd					*parser_to_list(t_parser *parser);
 t_cmd					*cmd_init(void);
 
 char					*p_strerror(t_parsing_error error);
+
+/// @brief Retrieves the token that should be used as the target for a
+/// redirection. This is typically the token immediately following a redirection
+/// operator. It handles cases where the next token is a word or if there's a
+/// TOKEN_NONE in between. Sets parser error if a valid target is not found.
+/// @param parser The parser instance.
+/// @return A pointer to the redirection target token,
+///          or NULL if an error occurs or no valid token is found.
+t_token					*get_redirect_token(t_parser *parser);
+
+/// @brief Handles the pipe token when in the PARSER_SPECIAL state.
+/// It checks for syntax errors (e.g., double pipes, pipe at the end of input)
+/// and sets the is_pipe flag in the current command structure.
+/// @param parser The parser instance.
+void					parser_special_pipe(t_parser *parser);
+
+/// @brief Handles the input redirection token ('<') when in the PARSER_SPECIAL
+/// state. It retrieves the target filename for the redirection and stores it in
+/// the command structure. Sets parser error on issues like missing target or
+/// memory allocation failure. If there's already an input redirection,
+/// it closes the previous file descriptor and replaces it with the new one.
+/// @param parser The parser instance.
+void					parser_special_redirect_in(t_parser *parser);
+
+/// @brief Handles the output redirection token ('>') when in the PARSER_SPECIAL
+/// state. It retrieves the target filename for the redirection and stores it in
+/// the command structure. Sets parser error on issues like missing target or
+/// memory allocation failure. If there's already an output redirection,
+/// it closes the previous file descriptor and replaces it with the new one.
+/// @param parser The parser instance.
+void					parser_special_redirect_out(t_parser *parser);
+
+/// @brief Handles the append output redirection token ('>>') when in the
+/// PARSER_SPECIAL state. It retrieves the target filename for the redirection
+/// and stores it in the command structure. Sets parser error on issues like
+/// missing target or memory allocation failure. If there's already an append
+/// redirection,
+/// it closes the previous file descriptor and replaces it with the new one.
+/// @param parser The parser instance.
+void					parser_special_redirect_append(t_parser *parser);
+
+/// @brief Handles the here-document redirection token ('<<') when in the
+/// PARSER_SPECIAL state. It retrieves the delimiter for the here-document and
+/// stores it in the command structure. Sets parser error on issues like missing
+/// delimiter or memory allocation failure. If there's already a heredoc
+/// redirection,
+/// it frees the previous delimiter and replaces it with the new one.
+/// @param parser The parser instance.
+void					parser_special_redirect_heredoc(t_parser *parser);
 
 #endif

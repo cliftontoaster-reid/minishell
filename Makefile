@@ -69,6 +69,16 @@ SRCS     = \
   $(SRC_DIR)/parser/parser_free.c \
   $(SRC_DIR)/parser/parser_parse.c \
   $(SRC_DIR)/parser/parser_to_list.c \
+  $(SRC_DIR)/parser/parser_handle_command.c \
+  $(SRC_DIR)/parser/parser_handle_none.c \
+  $(SRC_DIR)/parser/parser_special_pipe.c \
+  $(SRC_DIR)/parser/parser_special_redirect_in.c \
+  $(SRC_DIR)/parser/parser_special_redirect_out.c \
+  $(SRC_DIR)/parser/parser_special_redirect_append.c \
+  $(SRC_DIR)/parser/parser_special_redirect_heredoc.c \
+  $(SRC_DIR)/parser/get_redirect_token.c \
+	$(SRC_DIR)/parser/end_command.c \
+	$(SRC_DIR)/parser/ft_lstget.c \
 	\
   $(SRC_DIR)/base_commands/cd.c \
   $(SRC_DIR)/base_commands/echo.c \
