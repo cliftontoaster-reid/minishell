@@ -1,37 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   handle_read.c                                      :+:      :+:    :+:   */
+/*   open_head_file.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/17 10:58:53 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/16 14:23:48 by lfiorell@st      ###   ########.fr       */
+/*   Created: 2025/07/16 00:00:00 by lfiorell@st       #+#    #+#             */
+/*   Updated: 2025/07/16 14:08:08 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "reader.h"
+#include "git.h"
+#include "libft.h"
+#include <fcntl.h>
+#include <stdlib.h>
 
-void	handle_read(t_reader *reader, const char *input)
+char	*open_head_file(char *git_dir)
 {
-	if (reader == NULL || input == NULL)
+	char	*head_file;
+	int		fd;
+	char	*fd_str;
+
+	head_file = ft_strjoin(git_dir, "/HEAD");
+	free(git_dir);
+	if (!head_file)
+		return (NULL);
+	fd = open(head_file, O_RDONLY);
+	if (fd < 0)
 	{
-		errno = EINVAL;
-		return ;
+		free(head_file);
+		return (NULL);
 	}
-	if (!try_read(reader, input))
-	{
-		errno = ENOMEM;
-		return ;
-	}
-	if (str_is_whitespace(reader->cached))
-	{
-		free(reader->cached);
-		reader->cached = NULL;
-		return ;
-	}
-	if (handle_read_two(reader))
-		return ;
-	free(reader->cached);
-	reader->cached = NULL;
+	fd_str = ft_itoa(fd);
+	free(head_file);
+	return (fd_str);
 }

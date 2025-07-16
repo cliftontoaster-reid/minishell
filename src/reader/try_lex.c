@@ -1,37 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   handle_read.c                                      :+:      :+:    :+:   */
+/*   try_lex.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/17 10:58:53 by lfiorell@st       #+#    #+#             */
+/*   Created: 2025/07/16 00:00:00 by lfiorell@st       #+#    #+#             */
 /*   Updated: 2025/07/16 14:23:48 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "lexer.h"
 #include "reader.h"
+#include "varextract.h"
 
-void	handle_read(t_reader *reader, const char *input)
+bool	try_lex(t_reader *reader)
 {
-	if (reader == NULL || input == NULL)
-	{
-		errno = EINVAL;
-		return ;
-	}
-	if (!try_read(reader, input))
+	reader->lexer = create_lexer(reader->cached);
+	if (reader->lexer == NULL)
 	{
 		errno = ENOMEM;
-		return ;
+		return (false);
 	}
-	if (str_is_whitespace(reader->cached))
+	reader->tokens = run_lexer(reader->lexer);
+	if (reader->tokens == NULL)
 	{
-		free(reader->cached);
-		reader->cached = NULL;
-		return ;
+		free_lexer(reader->lexer);
+		reader->lexer = NULL;
+		errno = EINVAL;
+		return (false);
 	}
-	if (handle_read_two(reader))
-		return ;
-	free(reader->cached);
-	reader->cached = NULL;
+	reader->vars = b_varextract(reader->lexer->token_list);
+	join_words(reader->lexer);
+	return (true);
 }

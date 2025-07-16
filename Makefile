@@ -56,6 +56,11 @@ SRCS     = \
   $(SRC_DIR)/reader/reader_free.c \
   $(SRC_DIR)/reader/reader_init.c \
   $(SRC_DIR)/reader/handle_read.c \
+  $(SRC_DIR)/reader/try_read.c \
+  $(SRC_DIR)/reader/try_lex.c \
+  $(SRC_DIR)/reader/try_parse.c \
+  $(SRC_DIR)/reader/str_is_whitespace.c \
+  $(SRC_DIR)/reader/handle_read_two.c \
   \
   $(SRC_DIR)/pipex/ft_pipex.c \
   $(SRC_DIR)/pipex/cmd_path.c \
@@ -64,6 +69,16 @@ SRCS     = \
   $(SRC_DIR)/pipex/ft_builtin.c \
 	\
 	$(SRC_DIR)/varextract/extract_var_list.c \
+	\
+	$(SRC_DIR)/git/find_git_dir.c \
+	$(SRC_DIR)/git/is_repo.c \
+	$(SRC_DIR)/git/get_branch_name.c \
+	$(SRC_DIR)/git/read_head_file.c \
+	$(SRC_DIR)/git/open_head_file.c \
+	$(SRC_DIR)/git/git_getbranch.c \
+	$(SRC_DIR)/git/is_git_changes.c \
+	$(SRC_DIR)/git/is_git_changes_staged.c \
+	$(SRC_DIR)/git/git_message.c \
 	\
 	$(SRC_DIR)/sigint/register_reader.c \
 	$(SRC_DIR)/sigint/sigint_handler.c \

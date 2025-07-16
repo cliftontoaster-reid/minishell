@@ -1,37 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   handle_read.c                                      :+:      :+:    :+:   */
+/*   is_repo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/17 10:58:53 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/16 14:23:48 by lfiorell@st      ###   ########.fr       */
+/*   Created: 2025/07/16 00:00:00 by lfiorell@st       #+#    #+#             */
+/*   Updated: 2025/07/16 13:38:50 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "reader.h"
+#include "git.h"
+#include <stdlib.h>
 
-void	handle_read(t_reader *reader, const char *input)
+// Check if current directory is inside a git repository
+bool	is_repo(void)
 {
-	if (reader == NULL || input == NULL)
+	char	*gd;
+
+	gd = find_git_dir();
+	if (gd)
 	{
-		errno = EINVAL;
-		return ;
+		free(gd);
+		return (true);
 	}
-	if (!try_read(reader, input))
-	{
-		errno = ENOMEM;
-		return ;
-	}
-	if (str_is_whitespace(reader->cached))
-	{
-		free(reader->cached);
-		reader->cached = NULL;
-		return ;
-	}
-	if (handle_read_two(reader))
-		return ;
-	free(reader->cached);
-	reader->cached = NULL;
+	return (false);
 }

@@ -1,37 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   handle_read.c                                      :+:      :+:    :+:   */
+/*   read_head_file.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/17 10:58:53 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/16 14:23:48 by lfiorell@st      ###   ########.fr       */
+/*   Created: 2025/07/16 00:00:00 by lfiorell@st       #+#    #+#             */
+/*   Updated: 2025/07/16 13:38:50 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "reader.h"
+#include "git.h"
+#include <stdlib.h>
+#include <unistd.h>
 
-void	handle_read(t_reader *reader, const char *input)
+char	*read_head_file(int fd)
 {
-	if (reader == NULL || input == NULL)
+	char	*buffer;
+	ssize_t	n;
+
+	buffer = malloc(256);
+	if (!buffer)
+		return (NULL);
+	n = read(fd, buffer, 255);
+	close(fd);
+	if (n <= 0)
 	{
-		errno = EINVAL;
-		return ;
+		free(buffer);
+		return (NULL);
 	}
-	if (!try_read(reader, input))
-	{
-		errno = ENOMEM;
-		return ;
-	}
-	if (str_is_whitespace(reader->cached))
-	{
-		free(reader->cached);
-		reader->cached = NULL;
-		return ;
-	}
-	if (handle_read_two(reader))
-		return ;
-	free(reader->cached);
-	reader->cached = NULL;
+	buffer[n] = '\0';
+	return (buffer);
 }
