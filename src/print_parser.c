@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 20:29:30 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/16 20:29:38 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/16 20:41:34 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 
 void	print_parser(t_parser *parser)
 {
-	t_list *current;
-	t_cmd *cmd;
+	t_list	*current;
+	t_cmd	*cmd;
 
 	if (!parser)
 	{
