@@ -6,11 +6,12 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:49:10 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/16 19:49:00 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/16 20:08:13 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include "main.h"
 #include "main_extra.h"
 #include "parser.h"
 #include "reader.h"
@@ -24,115 +25,28 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#define PROMPT "picoshell> "
-#define BOLD "\033[1m"
-#define RESET "\033[0m"
-
 int	main(int argc, char **argv, char **envp)
 {
 	t_reader	*reader_ptr;
-	t_list		*varlists;
-	t_list		*vl_node;
-	size_t		cmd_idx;
-	t_list		*vl;
-	int			n;
-	int			vi;
-	t_list		*it;
-	t_list		*inner;
-	t_list		*next;
+	int			input_status;
 
-	reader_ptr = reader_init(envp);
-	// Disable readline's default signal handling to use custom handlers
-	rl_catch_signals = 0;
-	register_reader();
 	(void)argc;
 	(void)argv;
+	reader_ptr = init_shell(envp);
 	while (1)
 	{
-		print_prompt(reader_ptr->env);
-		reader_ptr->cached_input = readline(PROMPT);
-		add_history(reader_ptr->cached_input);
-		if (!reader_ptr->cached_input)
-		{
-			if (errno == EINTR)
-				continue ; // Handle interrupted read
-			// Print exit on EOF (Ctrl+D)
-			write(1, "exit\n", 5);
-			break ; // Exit on EOF or error
-		}
+		input_status = read_input(reader_ptr);
+		if (input_status == 1)
+			continue ;
+		if (input_status == 0)
+			break ;
 		handle_read(reader_ptr, reader_ptr->cached_input);
 		free(reader_ptr->cached_input);
 		reader_ptr->cached_input = NULL;
-		/// Parser printing
 		if (reader_ptr->parser)
-		{
-			reader_ptr->commands = parser_to_list(reader_ptr->parser);
-			// Variable expansion for each command argument
-			{
-				varlists = reader_ptr->vars;
-				vl_node = varlists;
-				cmd_idx = 0;
-				while (vl_node && reader_ptr->commands[cmd_idx].args
-					&& reader_ptr->commands[cmd_idx].argc)
-				{
-					vl = (t_list *)vl_node->content;
-					n = ft_lstsize(vl);
-					reader_ptr->varnames = malloc(sizeof(char *) * (n + 1));
-					if (reader_ptr->varnames)
-					{
-						vi = 0;
-						it = vl;
-						while (it)
-						{
-							reader_ptr->varnames[vi++] = it->content;
-							it = it->next;
-						}
-						reader_ptr->varnames[vi] = NULL;
-						for (int ai = 0; reader_ptr->commands[cmd_idx].args[ai]; ai++)
-							reader_ptr->commands[cmd_idx].args[ai] = ft_var(reader_ptr->commands[cmd_idx].args[ai],
-									reader_ptr->varnames, reader_ptr->env);
-						free(reader_ptr->varnames);
-						reader_ptr->varnames = NULL;
-					}
-					vl_node = vl_node->next;
-					cmd_idx++;
-				}
-				// Free varlists and inner lists
-				vl_node = varlists;
-				while (vl_node)
-				{
-					inner = vl_node->content;
-					ft_lstclear(&inner, free);
-					next = vl_node->next;
-					free(vl_node);
-					vl_node = next;
-				}
-			}
-			// read heredoc bodies before execution
-			if (reader_ptr->commands)
-				process_heredocs(reader_ptr->commands, reader_ptr->env);
-			reader_ptr->commands = remove_empty_commands(reader_ptr->commands);
-			ft_pipex(reader_ptr->commands, reader_ptr->env, reader_ptr);
-			// Free only the commands array itself, not the contents
-			// (ft_var already freed and replaced the original argument strings)
-			if (reader_ptr->commands)
-			{
-				free(reader_ptr->commands);
-				reader_ptr->commands = NULL;
-			}
-			parser_free(reader_ptr->parser);
-			reader_ptr->parser = NULL;
-		}
-		if (reader_ptr->lexer)
-		{
-			free_lexer(reader_ptr->lexer);
-			reader_ptr->lexer = NULL;
-		}
-		reader_ptr->tokens = NULL;
+			process_commands(reader_ptr);
+		cleanup_iteration(reader_ptr);
 	}
-	// free reader resources
-	if (reader_ptr)
-		reader_free(reader_ptr);
-	clear_history();
+	cleanup_shell(reader_ptr);
 	return (g_status_code);
 }

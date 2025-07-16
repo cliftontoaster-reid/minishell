@@ -12,6 +12,15 @@ SRCS     = \
   $(SRC_DIR)/main_extra.c \
   $(SRC_DIR)/globals.c \
 	$(SRC_DIR)/remove_empty_commands.c \
+  $(SRC_DIR)/init_shell.c \
+  $(SRC_DIR)/read_input.c \
+  $(SRC_DIR)/build_varnames_array.c \
+  $(SRC_DIR)/expand_command_variables.c \
+  $(SRC_DIR)/process_variable_expansion.c \
+  $(SRC_DIR)/free_varlists.c \
+  $(SRC_DIR)/process_commands.c \
+  $(SRC_DIR)/cleanup_iteration.c \
+  $(SRC_DIR)/cleanup_shell.c \
   \
   $(SRC_DIR)/lexer/create_token.c \
   $(SRC_DIR)/lexer/free_token.c \
