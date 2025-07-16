@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:24:32 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/16 14:43:56 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/07/16 17:23:36 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ void					ft_cmdpathlist(t_cmd *cmd, t_list *tenvp);
 
 // pipex/ft_utils.c
 void					closefd(t_cmd *cmd, int exitnbr, t_reader *reader);
+void					ft_cleanup_cmd(t_cmd *cmd);
 int						ft_nbrofcmds(t_cmd *cmd);
 
 // pipex/ft_builtin.c

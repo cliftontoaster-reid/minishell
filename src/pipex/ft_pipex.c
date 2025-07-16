@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:03:33 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/16 16:27:35 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/07/16 17:35:05 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,22 +37,20 @@ static void	fd_child(t_cmd *cmd, t_list *tenvp, int cmd_idx, t_reader *exit)
 	if (cmd[cmd_idx].pid == -1)
 	{
 		printf("error fork of pid %d", cmd_idx);
-		closefd(cmd, EXIT_FAILURE, exit); // TODO handle exit failure
+		closefd(cmd, EXIT_FAILURE, exit);
 	}
 	if (cmd[cmd_idx].pid == 0)
 	{
 		pipe_redirection(cmd, cmd_idx);
 		is_builtin(cmd, &tenvp, cmd_idx);
 		if (cmd->error == 1)
-			closefd(cmd, EXIT_FAILURE, NULL); // TODO exit failure free
-		/*
-		   if (!cmd->cmdpathlist[cmd_idx])
-		   closefd(cmd, EXIT_FAILURE, NULL); // TODO exit failure free
-		 */
+			closefd(cmd, EXIT_FAILURE, NULL);
+		if (!cmd->cmdpathlist[cmd_idx])
+			closefd(cmd, EXIT_FAILURE, NULL);
 		execve(cmd->cmdpathlist[cmd_idx],
 			cmd[cmd_idx].args,
 			b_getenv(NULL, tenvp));
-		// TODO handle exit failure
+		closefd(cmd, EXIT_FAILURE, exit);
 	}
 }
 
@@ -86,19 +84,20 @@ void	ft_wait_for_children(int last_pid)
 
 // iter.i, in fd_child indicates the command nbr
 // waitpdid->(cmd[iter.i].pid, ...) and fd_child(cmd, tenvp, iter.i++) teamwork
+// WARNING cmdpathlist does a malloc and contains mallocs
 static void	fd_pipex_execute(t_cmd *cmd, t_list *tenvp, t_reader *exit)
 {
 	t_iteration	iter;
 
 	cmd->pipes = malloc(sizeof(int *) * (cmd->cmdnbr - 1));
 	if (!cmd->pipes)
-		return ;//TODO handle exit failure
+		return ((void)cmd->error++);
 	iter.i = 0;
 	while (iter.i < cmd->cmdnbr - 1)
 	{
 		cmd->pipes[iter.i] = malloc(sizeof(int) * 2);
 		if (pipe(cmd->pipes[iter.i++]) == -1)
-			return ; //TODO handle exit failure
+			return ((void)cmd->error++);
 	}
 	ft_cmdpathlist(cmd, tenvp);
 	iter.i = 0;
@@ -113,7 +112,6 @@ static void	fd_pipex_execute(t_cmd *cmd, t_list *tenvp, t_reader *exit)
 	ft_wait_for_children(cmd[cmd->cmdnbr - 1].pid);
 }
 
-// WARNING cmdpathlist does a malloc and contains mallocs
 void	ft_pipex(t_cmd *cmd, t_list *tenvp, t_reader *exit)
 {
 	cmd->error = 0;
@@ -137,5 +135,8 @@ void	ft_pipex(t_cmd *cmd, t_list *tenvp, t_reader *exit)
 	}
 	fd_pipex_execute(cmd, tenvp, exit);
 	if (cmd->error != 0)
-		g_status_code = cmd->error; // TODO exit success free
+	{
+		g_status_code = cmd->error;
+		ft_cleanup_cmd(cmd);
+	}
 }
