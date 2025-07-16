@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:40:56 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/16 16:50:51 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/16 17:07:33 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,23 +35,12 @@
 /// and returns false.
 ///
 /// @return (true on successful token finalization and addition); false on error
-bool	end_token(t_lexer *lexer)
+static bool	end_token_create_and_add(t_lexer *lexer, char *value,
+		t_token_type type)
 {
-	char			*value;
-	t_token			*token;
-	t_list			*new_node;
-	t_token_type	type;
+	t_token	*token;
+	t_list	*new_node;
 
-	if (lexer->state == LEXER_NONE)
-		type = TOKEN_NONE;
-	else
-		type = TOKEN_WORD;
-	value = ft_substr(lexer->text, lexer->start, lexer->pos - lexer->start);
-	if (value == NULL)
-	{
-		errno = ENOMEM;
-		return (false);
-	}
 	token = create_token(value, type);
 	free(value);
 	if (token == NULL)
@@ -67,6 +56,26 @@ bool	end_token(t_lexer *lexer)
 		return (false);
 	}
 	ft_lstadd_back(&lexer->token_list, new_node);
+	return (true);
+}
+
+bool	end_token(t_lexer *lexer)
+{
+	char			*value;
+	t_token_type	type;
+
+	if (lexer->state == LEXER_NONE)
+		type = TOKEN_NONE;
+	else
+		type = TOKEN_WORD;
+	value = ft_substr(lexer->text, lexer->start, lexer->pos - lexer->start);
+	if (value == NULL)
+	{
+		errno = ENOMEM;
+		return (false);
+	}
+	if (!end_token_create_and_add(lexer, value, type))
+		return (false);
 	lexer->state = LEXER_NONE;
 	lexer->start = lexer->pos;
 	return (true);
