@@ -6,7 +6,7 @@
 /*   By: jfranc <jfranc@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 13:34:25 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/16 14:45:46 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/07/16 17:33:48 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,26 @@
 #include "utils.h"
 #include <unistd.h>
 #include "reader.h"
+
+void	ft_cleanup_cmd(t_cmd *cmd)
+{
+	int	i;
+
+	i = 0;
+	if (cmd->cmdpathlist)
+	{
+		while (i < cmd->cmdnbr)
+			free(cmd->cmdpathlist[i++]);
+		free(cmd->cmdpathlist);
+	}
+	i = 0;
+	if (cmd->pipes)
+	{
+		while (i < cmd->cmdnbr - 1)
+			free(cmd->pipes[i++]);
+		free(cmd->pipes);
+	}
+}
 
 void	closefd(t_cmd *cmd, int exitnbr, t_reader *reader)
 {
@@ -29,7 +49,10 @@ void	closefd(t_cmd *cmd, int exitnbr, t_reader *reader)
 	if (reader)
 		reader_free(reader);
 	if (exitnbr > -1)
+	{
+		ft_cleanup_cmd(cmd);
 		exit(exitnbr);
+	}
 }
 
 int	ft_nbrofcmds(t_cmd *cmd)
