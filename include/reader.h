@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 18:43:50 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/11 14:12:28 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/16 14:23:48 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,5 +47,15 @@ t_reader				*reader_init(char *const *envp);
 void					reader_free(t_reader *reader);
 
 void					handle_read(t_reader *reader, const char *input);
+
+bool					try_read(t_reader *reader, const char *input);
+
+bool					try_lex(t_reader *reader);
+
+bool					try_parse(t_reader *reader);
+
+bool					str_is_whitespace(const char *str);
+
+bool					handle_read_two(t_reader *reader);
 
 #endif
