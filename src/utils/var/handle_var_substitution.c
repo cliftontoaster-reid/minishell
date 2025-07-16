@@ -1,37 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   create_token.c                                     :+:      :+:    :+:   */
+/*   handle_var_substitution.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/14 15:07:52 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/16 16:47:48 by lfiorell@st      ###   ########.fr       */
+/*   Created: 2025/07/16 15:40:00 by lfiorell@st       #+#    #+#             */
+/*   Updated: 2025/07/16 15:48:17 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexer.h"
-#include "libft.h"
-#include <errno.h>
-#include <stdlib.h>
+#include "utils.h"
 
-t_token	*create_token(char *value, t_token_type type)
+size_t	handle_var_substitution(t_var_context *ctx)
 {
-	t_token	*token;
+	t_var_match	match;
 
-	token = malloc(sizeof(t_token));
-	if (!token)
+	match = find_var_match(&ctx->src[*ctx->i], ctx->varnames, ctx->env);
+	if (match.found)
 	{
-		errno = ENOMEM;
-		return (NULL);
+		ctx->k = expand_matched_var(ctx->dest, match, ctx->k);
+		*ctx->i += match.var_len;
 	}
-	token->value = ft_strdup(value);
-	if (!token->value)
+	else
 	{
-		free(token);
-		errno = ENOMEM;
-		return (NULL);
+		ctx->k = expand_unmatched_var(ctx->dest, ctx->src, *ctx->i, ctx->k);
+		while (iskey(ctx->src[*ctx->i]))
+			(*ctx->i)++;
 	}
-	token->type = type;
-	return (token);
+	return (ctx->k);
 }

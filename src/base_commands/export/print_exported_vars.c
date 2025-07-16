@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   export.c                                           :+:      :+:    :+:   */
+/*   print_exported_vars.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/27 17:55:52 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/16 15:59:27 by lfiorell@st      ###   ########.fr       */
+/*   Created: 2025/07/16 00:00:00 by lfiorell@st       #+#    #+#             */
+/*   Updated: 2025/07/16 16:00:55 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,30 +14,24 @@
 #include "shared.h"
 #include <unistd.h>
 
-void	ft_export(char **argv, t_list **envp)
+void	print_exported_vars(t_list *envp)
 {
-	int	i;
-	int	exit_status;
+	char	**env_vars;
+	int		i;
 
-	if (!argv || !envp)
-	{
-		g_status_code = 1;
+	if (!envp)
 		return ;
-	}
-	if (!argv[1])
-	{
-		if (envp && *envp)
-			print_exported_vars(*envp);
-		g_status_code = 0;
+	env_vars = b_getenv(NULL, envp);
+	if (!env_vars)
 		return ;
-	}
-	exit_status = 0;
-	i = 1;
-	while (argv[i])
+	i = 0;
+	while (env_vars[i])
 	{
-		if (export_variable(argv[i], envp) != 0)
-			exit_status = 1;
+		write(1, "declare -x ", 11);
+		write(1, env_vars[i], ft_strlen(env_vars[i]));
+		write(1, "\n", 1);
+		free(env_vars[i]);
 		i++;
 	}
-	g_status_code = exit_status;
+	free(env_vars);
 }

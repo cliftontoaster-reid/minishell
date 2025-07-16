@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 15:31:30 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/15 11:33:37 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/16 16:05:26 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # define UTILS_H
 
 # include "libft.h"
+# include <fcntl.h>
 # include <stdbool.h>
 
 /**
@@ -210,12 +211,171 @@ t_file				*ft_opentmp(int rand_fd, bool auto_unlink);
 
 void				print_prompt(t_list *env);
 
-/// @brief Expands a variable string by replacing variable names with their values
+/// @brief Expands a variable string by replacing variable
+/// names with their values
 /// @param var The input variable string
 /// @param varnames Array of variable names
 /// @param env The environment list
 /// @return A newly allocated string with expanded variable values,
 /// or NULL on failure
 char				*ft_var(char *var, char **varnames, t_list *env);
+
+/// @brief Finds and returns the PID of the current process
+/// @return The process ID of the current process
+pid_t				b_getpid(void);
+
+/**
+ * @struct s_var_match
+ * @brief Structure to hold variable matching information
+ *
+ * This structure encapsulates the result of a variable name search,
+ * including whether a match was found, the length of the matched variable name,
+ * and the value of the matched variable.
+ */
+typedef struct s_var_match
+{
+	// Whether a variable match was found
+	bool			found;
+	// Length of the matched variable name
+	int				var_len;
+	// Value of the matched variable
+	char			*value;
+}					t_var_match;
+
+/**
+ * @struct s_var_context
+ * @brief Structure to encapsulate variable substitution context
+ *
+ * This structure contains all the parameters commonly passed to variable
+ * substitution functions, reducing function parameter count and improving
+ * code maintainability.
+ */
+typedef struct s_var_context
+{
+	// Destination buffer
+	char			*dest;
+	// Source string
+	char			*src;
+	// Pointer to current index in source
+	size_t			*i;
+	// Current position in destination buffer
+	size_t			k;
+	// Array of variable names
+	char			**varnames;
+	// Environment list
+	t_list			*env;
+	// Total length of destination buffer (when needed)
+	size_t			len;
+}					t_var_context;
+
+/// @brief Gets a single environment variable value
+/// @param name The name of the environment variable
+/// @param env The environment list
+/// @return The value of the environment variable, or NULL if not found
+char				*b_getenv_one(char *name, t_list *env);
+
+/// @brief Finds a variable match in the provided variable names
+/// @param str_pos Position in string to start matching from
+/// @param varnames Array of variable names to search
+/// @param env The environment list
+/// @return A t_var_match structure containing match information
+t_var_match			find_var_match(char *str_pos, char **varnames, t_list *env);
+
+/// @brief Handles special variables like $? and $$
+/// @param c The special variable character ('?' or '$')
+/// @return The length of the special variable value as string
+size_t				handle_special_var(char c);
+
+/// @brief Counts the length of an unmatched variable
+/// @param str The input string
+/// @param i Starting index in the string
+/// @return The count of characters in the unmatched variable
+size_t				count_unmatched_var(char *str, size_t i);
+
+/// @brief Copies a string from source to destination
+/// @param dest Destination buffer
+/// @param src Source string
+void				ft_strcpy(char *dest, const char *src);
+
+/// @brief Expands a matched variable into the destination string
+/// @param dest Destination buffer
+/// @param match The variable match information
+/// @param k Current position in destination buffer
+/// @return Updated position in destination buffer
+size_t				expand_matched_var(char *dest, t_var_match match, size_t k);
+
+/// @brief Expands an unmatched variable into the destination string
+/// @param dest Destination buffer
+/// @param src Source string
+/// @param i Current position in source string
+/// @param k Current position in destination buffer
+/// @return Updated position in destination buffer
+size_t				expand_unmatched_var(char *dest, char *src, size_t i,
+						size_t k);
+
+/// @brief Expands a special variable into the destination string
+/// @param dest Destination buffer
+/// @param c The special variable character
+/// @param k Current position in destination buffer
+/// @param len Total length of destination buffer
+/// @return Updated position in destination buffer
+size_t				expand_special_var(char *dest, char c, size_t k,
+						size_t len);
+
+/// @brief Checks if a character is a valid variable key character
+/// @param c The character to check
+/// @return true if the character is valid for variable names, false otherwise
+bool				iskey(char c);
+
+/// @brief Calculates the number of digits in an integer
+/// @param n The integer to count digits for
+/// @return The number of digits in the integer
+int					num_places(int n);
+
+/// @brief Handles regular character processing for variable expansion
+/// @param i Pointer to current index position
+/// @return The length contribution (1 for regular characters)
+size_t				handle_regular_char(size_t *i);
+
+/// @brief Handles variable expansion during length calculation
+/// @param str The input string
+/// @param i Pointer to current index position
+/// @param varnames Array of variable names
+/// @param env The environment list
+/// @return The length of the expanded variable
+size_t				handle_var_expansion(char *str, size_t *i, char **varnames,
+						t_list *env);
+
+/// @brief Handles dollar character processing during length calculation
+/// @param str The input string
+/// @param i Pointer to current index position
+/// @param varnames Array of variable names
+/// @param env The environment list
+/// @return The length contribution from the dollar character processing
+size_t				handle_dollar_char(char *str, size_t *i, char **varnames,
+						t_list *env);
+
+/// @brief Copies a regular character during variable substitution
+/// @param dest Destination buffer
+/// @param src Source string
+/// @param i Pointer to current index in source
+/// @param k Current position in destination buffer
+/// @return Updated position in destination buffer
+size_t				copy_regular_char(char *dest, char *src, size_t *i,
+						size_t k);
+
+/// @brief Handles variable substitution during string building
+/// @param ctx Variable context containing all necessary parameters
+/// @return Updated position in destination buffer
+size_t				handle_var_substitution(t_var_context *ctx);
+
+/// @brief Handles dollar character substitution during string building
+/// @param ctx Variable context containing all necessary parameters
+/// @return Updated position in destination buffer
+size_t				handle_dollar_substitution(t_var_context *ctx);
+
+/// @brief Replaces backspace characters with dollar signs
+/// @param str String to process
+void				replace_backspace_with_dollar(char *str);
 
 #endif

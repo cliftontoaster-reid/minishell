@@ -1,37 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   create_token.c                                     :+:      :+:    :+:   */
+/*   replace_backspace_with_dollar.c                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/14 15:07:52 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/16 16:47:48 by lfiorell@st      ###   ########.fr       */
+/*   Created: 2025/07/16 15:40:00 by lfiorell@st       #+#    #+#             */
+/*   Updated: 2025/07/16 15:44:41 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexer.h"
-#include "libft.h"
-#include <errno.h>
-#include <stdlib.h>
+#include "utils.h"
 
-t_token	*create_token(char *value, t_token_type type)
+void	replace_backspace_with_dollar(char *str)
 {
-	t_token	*token;
+	size_t	i;
 
-	token = malloc(sizeof(t_token));
-	if (!token)
+	i = 0;
+	while (str[i] != '\0')
 	{
-		errno = ENOMEM;
-		return (NULL);
+		if (str[i] == '\b')
+			str[i] = '$';
+		i++;
 	}
-	token->value = ft_strdup(value);
-	if (!token->value)
-	{
-		free(token);
-		errno = ENOMEM;
-		return (NULL);
-	}
-	token->type = type;
-	return (token);
 }

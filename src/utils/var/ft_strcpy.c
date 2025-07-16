@@ -1,37 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   create_token.c                                     :+:      :+:    :+:   */
+/*   ft_strcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/14 15:07:52 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/16 16:47:48 by lfiorell@st      ###   ########.fr       */
+/*   Created: 2025/07/16 15:25:00 by lfiorell@st       #+#    #+#             */
+/*   Updated: 2025/07/16 15:26:42 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexer.h"
-#include "libft.h"
-#include <errno.h>
-#include <stdlib.h>
+#include "utils.h"
 
-t_token	*create_token(char *value, t_token_type type)
+void	ft_strcpy(char *dest, const char *src)
 {
-	t_token	*token;
-
-	token = malloc(sizeof(t_token));
-	if (!token)
+	while (*src)
 	{
-		errno = ENOMEM;
-		return (NULL);
+		*dest++ = *src++;
 	}
-	token->value = ft_strdup(value);
-	if (!token->value)
-	{
-		free(token);
-		errno = ENOMEM;
-		return (NULL);
-	}
-	token->type = type;
-	return (token);
+	*dest = '\0';
 }

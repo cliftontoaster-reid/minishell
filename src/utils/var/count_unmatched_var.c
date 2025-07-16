@@ -1,37 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   create_token.c                                     :+:      :+:    :+:   */
+/*   count_unmatched_var.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/14 15:07:52 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/16 16:47:48 by lfiorell@st      ###   ########.fr       */
+/*   Created: 2025/07/16 15:25:00 by lfiorell@st       #+#    #+#             */
+/*   Updated: 2025/07/16 15:26:42 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexer.h"
-#include "libft.h"
-#include <errno.h>
-#include <stdlib.h>
+#include "utils.h"
+#include <stddef.h>
 
-t_token	*create_token(char *value, t_token_type type)
+size_t	count_unmatched_var(char *str, size_t i)
 {
-	t_token	*token;
+	size_t	count;
 
-	token = malloc(sizeof(t_token));
-	if (!token)
+	count = 1;
+	while (iskey(str[i]))
 	{
-		errno = ENOMEM;
-		return (NULL);
+		count++;
+		i++;
 	}
-	token->value = ft_strdup(value);
-	if (!token->value)
-	{
-		free(token);
-		errno = ENOMEM;
-		return (NULL);
-	}
-	token->type = type;
-	return (token);
+	return (count);
 }

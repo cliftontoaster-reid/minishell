@@ -1,37 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   create_token.c                                     :+:      :+:    :+:   */
+/*   expand_matched_var.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/14 15:07:52 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/16 16:47:48 by lfiorell@st      ###   ########.fr       */
+/*   Created: 2025/07/16 15:25:00 by lfiorell@st       #+#    #+#             */
+/*   Updated: 2025/07/16 15:26:42 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexer.h"
 #include "libft.h"
-#include <errno.h>
-#include <stdlib.h>
+#include "utils.h"
+#include <stddef.h>
 
-t_token	*create_token(char *value, t_token_type type)
+size_t	expand_matched_var(char *dest, t_var_match match, size_t k)
 {
-	t_token	*token;
-
-	token = malloc(sizeof(t_token));
-	if (!token)
+	if (match.value != NULL)
 	{
-		errno = ENOMEM;
-		return (NULL);
+		ft_strcpy(&dest[k], match.value);
+		k += ft_strlen(match.value);
 	}
-	token->value = ft_strdup(value);
-	if (!token->value)
-	{
-		free(token);
-		errno = ENOMEM;
-		return (NULL);
-	}
-	token->type = type;
-	return (token);
+	return (k);
 }

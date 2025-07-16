@@ -1,37 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   create_token.c                                     :+:      :+:    :+:   */
+/*   num_places.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/14 15:07:52 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/16 16:47:48 by lfiorell@st      ###   ########.fr       */
+/*   Created: 2025/07/16 15:25:00 by lfiorell@st       #+#    #+#             */
+/*   Updated: 2025/07/16 15:30:58 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexer.h"
-#include "libft.h"
-#include <errno.h>
-#include <stdlib.h>
+#include "utils.h"
+#include <limits.h>
 
-t_token	*create_token(char *value, t_token_type type)
+int	num_places(int n)
 {
-	t_token	*token;
+	int	count;
 
-	token = malloc(sizeof(t_token));
-	if (!token)
+	if (n == 0)
+		return (1);
+	if (n < 0)
 	{
-		errno = ENOMEM;
-		return (NULL);
+		if (n == INT_MIN)
+			n = INT_MAX;
+		else
+			n = -n;
 	}
-	token->value = ft_strdup(value);
-	if (!token->value)
+	count = 0;
+	while (n > 0)
 	{
-		free(token);
-		errno = ENOMEM;
-		return (NULL);
+		n /= 10;
+		count++;
 	}
-	token->type = type;
-	return (token);
+	return (count);
 }

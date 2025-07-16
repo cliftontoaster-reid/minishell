@@ -1,37 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   create_token.c                                     :+:      :+:    :+:   */
+/*   base_commands.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/14 15:07:52 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/16 16:47:48 by lfiorell@st      ###   ########.fr       */
+/*   Created: 2025/07/16 00:10:00 by lfiorell@st       #+#    #+#             */
+/*   Updated: 2025/07/16 16:00:55 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexer.h"
-#include "libft.h"
-#include <errno.h>
-#include <stdlib.h>
+#ifndef BASE_COMMANDS_H
+# define BASE_COMMANDS_H
 
-t_token	*create_token(char *value, t_token_type type)
-{
-	t_token	*token;
+# include "shared.h"
+# include <unistd.h>
 
-	token = malloc(sizeof(t_token));
-	if (!token)
-	{
-		errno = ENOMEM;
-		return (NULL);
-	}
-	token->value = ft_strdup(value);
-	if (!token->value)
-	{
-		free(token);
-		errno = ENOMEM;
-		return (NULL);
-	}
-	token->type = type;
-	return (token);
-}
+int		is_valid_identifier(const char *str);
+void	print_exported_vars(t_list *envp);
+int		export_with_value(const char *arg, t_list **envp);
+int		export_without_value(const char *arg, t_list **envp);
+int		export_variable(const char *arg, t_list **envp);
+
+#endif
