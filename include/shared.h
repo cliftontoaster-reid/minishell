@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:24:32 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/16 19:32:12 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/16 19:59:47 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,20 @@ typedef struct s_cmd
 
 	t_list				*var_list;
 }						t_cmd;
+
+/// @brief Structure to hold variable expansion processing state
+/// @note Used during command argument variable expansion
+typedef struct s_varexp
+{
+	t_list				*vl_node;
+	size_t				cmd_idx;
+	t_list				*vl;
+	int					n;
+	int					vi;
+	t_list				*it;
+	t_list				*inner;
+	t_list				*next;
+}						t_varexp;
 
 // pipex/ft_pipex.c
 void					ft_pipex(t_cmd *cmd, t_list *tenvp, t_reader *reader);
