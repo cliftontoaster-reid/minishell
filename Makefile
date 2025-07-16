@@ -10,6 +10,8 @@ NTEST    = minishell_test
 SRCS     = \
   $(SRC_DIR)/main.c \
   $(SRC_DIR)/main_extra.c \
+  $(SRC_DIR)/print_tokens.c \
+  $(SRC_DIR)/ft_prints.c \
   $(SRC_DIR)/globals.c \
 	$(SRC_DIR)/remove_empty_commands.c \
   $(SRC_DIR)/init_shell.c \
