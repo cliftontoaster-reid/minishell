@@ -106,6 +106,8 @@ void					parser_free(t_parser *parser);
 /// @param data The command to free
 void					free_command(void *data);
 
+void					free_command_contents(t_cmd *command);
+
 /// @brief Parse the tokens
 /// @param parser The parser to use
 /// @return The parsing error

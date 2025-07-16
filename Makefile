@@ -9,7 +9,9 @@ NTEST    = minishell_test
 
 SRCS     = \
   $(SRC_DIR)/main.c \
+  $(SRC_DIR)/main_extra.c \
   $(SRC_DIR)/globals.c \
+	$(SRC_DIR)/remove_empty_commands.c \
   \
   $(SRC_DIR)/lexer/create_token.c \
   $(SRC_DIR)/lexer/free_token.c \

@@ -29,5 +29,16 @@ t_reader	*reader_init(char *const *envp)
 		errno = ENOMEM;
 		return (NULL);
 	}
+	reader->linereader = ft_calloc(1, sizeof(t_linereader));
+	if (reader->linereader == NULL)
+	{
+		ft_lstclear(&reader->env, free);
+		free(reader);
+		errno = ENOMEM;
+		return (NULL);
+	}
+	reader->cached_input = NULL;
+	reader->commands = NULL;
+	reader->varnames = NULL;
 	return (reader);
 }

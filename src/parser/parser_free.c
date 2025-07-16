@@ -22,11 +22,8 @@
 /// - Freeing the command structure itself
 ///
 /// @note This function can safely handle NULL pointers
-void	free_command(void *data)
+void	free_command_contents(t_cmd *command)
 {
-	t_cmd	*command;
-
-	command = (t_cmd *)data;
 	if (command == NULL)
 		return ;
 	if (command->args != NULL)
@@ -48,6 +45,16 @@ void	free_command(void *data)
 		free(command->redirect_heredoc);
 	if (command->heredoc_delimiters != NULL)
 		ft_lstclear(&command->heredoc_delimiters, free);
+}
+
+void	free_command(void *data)
+{
+	t_cmd	*command;
+
+	command = (t_cmd *)data;
+	if (command == NULL)
+		return ;
+	free_command_contents(command);
 	free(command);
 }
 
