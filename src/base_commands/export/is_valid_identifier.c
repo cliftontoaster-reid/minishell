@@ -1,43 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   export.c                                           :+:      :+:    :+:   */
+/*   is_valid_identifier.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/27 17:55:52 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/16 15:59:27 by lfiorell@st      ###   ########.fr       */
+/*   Created: 2025/07/16 00:00:00 by lfiorell@st       #+#    #+#             */
+/*   Updated: 2025/07/16 16:00:55 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "base_commands.h"
 #include "shared.h"
-#include <unistd.h>
 
-void	ft_export(char **argv, t_list **envp)
+int	is_valid_identifier(const char *str)
 {
 	int	i;
-	int	exit_status;
 
-	if (!argv || !envp)
-	{
-		g_status_code = 1;
-		return ;
-	}
-	if (!argv[1])
-	{
-		if (envp && *envp)
-			print_exported_vars(*envp);
-		g_status_code = 0;
-		return ;
-	}
-	exit_status = 0;
+	if (!str || !str[0])
+		return (0);
+	if (!ft_isalpha(str[0]) && str[0] != '_')
+		return (0);
 	i = 1;
-	while (argv[i])
+	while (str[i] && str[i] != '=')
 	{
-		if (export_variable(argv[i], envp) != 0)
-			exit_status = 1;
+		if (!ft_isalnum(str[i]) && str[i] != '_')
+			return (0);
 		i++;
 	}
-	g_status_code = exit_status;
+	return (1);
 }

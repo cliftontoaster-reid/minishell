@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 15:31:30 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/16 15:48:17 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/16 16:05:26 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,7 +211,8 @@ t_file				*ft_opentmp(int rand_fd, bool auto_unlink);
 
 void				print_prompt(t_list *env);
 
-/// @brief Expands a variable string by replacing variable names with their values
+/// @brief Expands a variable string by replacing variable
+/// names with their values
 /// @param var The input variable string
 /// @param varnames Array of variable names
 /// @param env The environment list
@@ -233,9 +234,12 @@ pid_t				b_getpid(void);
  */
 typedef struct s_var_match
 {
-	bool found;  // Whether a variable match was found
-	int var_len; // Length of the matched variable name
-	char *value; // Value of the matched variable
+	// Whether a variable match was found
+	bool			found;
+	// Length of the matched variable name
+	int				var_len;
+	// Value of the matched variable
+	char			*value;
 }					t_var_match;
 
 /**
@@ -248,13 +252,20 @@ typedef struct s_var_match
  */
 typedef struct s_var_context
 {
-	char *dest;      // Destination buffer
-	char *src;       // Source string
-	size_t *i;       // Pointer to current index in source
-	size_t k;        // Current position in destination buffer
-	char **varnames; // Array of variable names
-	t_list *env;     // Environment list
-	size_t len;      // Total length of destination buffer (when needed)
+	// Destination buffer
+	char			*dest;
+	// Source string
+	char			*src;
+	// Pointer to current index in source
+	size_t			*i;
+	// Current position in destination buffer
+	size_t			k;
+	// Array of variable names
+	char			**varnames;
+	// Environment list
+	t_list			*env;
+	// Total length of destination buffer (when needed)
+	size_t			len;
 }					t_var_context;
 
 /// @brief Gets a single environment variable value

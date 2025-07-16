@@ -1,43 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   export.c                                           :+:      :+:    :+:   */
+/*   export_with_value.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/27 17:55:52 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/16 15:59:27 by lfiorell@st      ###   ########.fr       */
+/*   Created: 2025/07/16 00:00:00 by lfiorell@st       #+#    #+#             */
+/*   Updated: 2025/07/16 16:00:55 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "base_commands.h"
 #include "shared.h"
-#include <unistd.h>
 
-void	ft_export(char **argv, t_list **envp)
+int	export_with_value(const char *arg, t_list **envp)
 {
-	int	i;
-	int	exit_status;
+	char	*key;
+	char	*value;
+	char	*equals_pos;
+	int		key_len;
 
-	if (!argv || !envp)
-	{
-		g_status_code = 1;
-		return ;
-	}
-	if (!argv[1])
-	{
-		if (envp && *envp)
-			print_exported_vars(*envp);
-		g_status_code = 0;
-		return ;
-	}
-	exit_status = 0;
-	i = 1;
-	while (argv[i])
-	{
-		if (export_variable(argv[i], envp) != 0)
-			exit_status = 1;
-		i++;
-	}
-	g_status_code = exit_status;
+	equals_pos = ft_strchr(arg, '=');
+	key_len = equals_pos - arg;
+	key = ft_substr(arg, 0, key_len);
+	if (!key)
+		return (1);
+	value = equals_pos + 1;
+	b_setenv(key, value, envp);
+	free(key);
+	return (0);
 }

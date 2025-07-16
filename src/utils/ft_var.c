@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 11:30:08 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/16 15:50:32 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/16 17:02:50 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ char	*ft_var(char *var, char **varnames, t_list *env)
 	ctx = (t_var_context){owo, var, &i, k, varnames, env, len};
 	while (var[i] != '\0')
 		loopvar(&ctx);
+	owo[len] = '\0';
 	replace_backspace_with_dollar(owo);
 	free(var);
 	return (owo);

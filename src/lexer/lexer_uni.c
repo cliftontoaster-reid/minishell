@@ -1,37 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   create_token.c                                     :+:      :+:    :+:   */
+/*   lexer_uni.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/14 15:07:52 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/16 16:47:48 by lfiorell@st      ###   ########.fr       */
+/*   Created: 2025/07/16 16:43:28 by lfiorell@st       #+#    #+#             */
+/*   Updated: 2025/07/16 16:43:40 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
-#include "libft.h"
-#include <errno.h>
-#include <stdlib.h>
 
-t_token	*create_token(char *value, t_token_type type)
+void	lexer_uni(t_lexer *lexer)
 {
-	t_token	*token;
-
-	token = malloc(sizeof(t_token));
-	if (!token)
+	if (lexer->text[lexer->pos] == '\'')
 	{
-		errno = ENOMEM;
-		return (NULL);
+		end_token(lexer);
+		lexer->state = LEXER_NONE;
+		lexer->start = lexer->pos + 1;
 	}
-	token->value = ft_strdup(value);
-	if (!token->value)
-	{
-		free(token);
-		errno = ENOMEM;
-		return (NULL);
-	}
-	token->type = type;
-	return (token);
+	if (lexer->text[lexer->pos] == '$')
+		lexer->text[lexer->pos] = '\b';
+	lexer->pos++;
 }

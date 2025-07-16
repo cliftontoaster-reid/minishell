@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 13:27:40 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/09 15:08:16 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/16 16:05:37 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,5 +15,6 @@
 
 /// @brief Finds and extracts variable names from a list of tokens.
 /// @param tokens Pointer to the list of tokens to process.
-/// @return A t_list where each node content is a t_list* of variable name strings for a single command.
+/// @return A t_list where each node content is a t_list* of
+/// variable name strings for a single command.
 t_list	*b_varextract(t_list *tokens);

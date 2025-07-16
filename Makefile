@@ -17,6 +17,12 @@ SRCS     = \
   $(SRC_DIR)/lexer/free_lexer.c \
   $(SRC_DIR)/lexer/run_lexer.c \
   $(SRC_DIR)/lexer/join_words.c \
+  $(SRC_DIR)/lexer/lexer_none.c \
+  $(SRC_DIR)/lexer/lexer_word.c \
+  $(SRC_DIR)/lexer/lexer_uni.c \
+  $(SRC_DIR)/lexer/lexer_duo.c \
+  $(SRC_DIR)/lexer/lexer_special.c \
+	$(SRC_DIR)/lexer/end_token.c \
   \
   $(SRC_DIR)/utils/b_varexists.c \
   $(SRC_DIR)/utils/b_fromenvp.c \
@@ -71,6 +77,11 @@ SRCS     = \
   $(SRC_DIR)/base_commands/exit.c \
   $(SRC_DIR)/base_commands/export.c \
   $(SRC_DIR)/base_commands/unset.c \
+	$(SRC_DIR)/base_commands/export/is_valid_identifier.c \
+	$(SRC_DIR)/base_commands/export/print_exported_vars.c \
+	$(SRC_DIR)/base_commands/export/export_with_value.c \
+	$(SRC_DIR)/base_commands/export/export_without_value.c \
+	$(SRC_DIR)/base_commands/export/export_variable.c \
   \
   $(SRC_DIR)/reader/reader_free.c \
   $(SRC_DIR)/reader/reader_init.c \
