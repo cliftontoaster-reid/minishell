@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:03:33 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/15 15:24:30 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/07/16 14:40:32 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "shared.h"
 #include "utils.h"
 #include <sys/wait.h>
+#include "reader.h"
 
 static void	pipe_redirection(t_cmd *cmd, int cmd_idx)
 {
@@ -27,26 +28,26 @@ static void	pipe_redirection(t_cmd *cmd, int cmd_idx)
 		dup2(cmd[cmd_idx].fd_outfile, STDOUT_FILENO);
 	else if (cmd_idx < cmd->cmdnbr - 1)
 		dup2(cmd->pipes[cmd_idx][1], STDOUT_FILENO);
-	closefd(cmd, NO_EXIT);
+	closefd(cmd, NO_EXIT, NULL);
 }
 
-static void	fd_child(t_cmd *cmd, t_list *tenvp, int cmd_idx)
+static void	fd_child(t_cmd *cmd, t_list *tenvp, int cmd_idx, t_reader *exit)
 {
 	cmd[cmd_idx].pid = fork();
 	if (cmd[cmd_idx].pid == -1)
 	{
 		printf("error fork of pid %d", cmd_idx);
-		closefd(cmd, EXIT_FAILURE); // TODO handle exit failure
+		closefd(cmd, EXIT_FAILURE, exit); // TODO handle exit failure
 	}
 	if (cmd[cmd_idx].pid == 0)
 	{
 		pipe_redirection(cmd, cmd_idx);
 		is_builtin(cmd, &tenvp, cmd_idx);
 		if (cmd->error == 1)
-			closefd(cmd, EXIT_FAILURE); // TODO exit failure free
+			closefd(cmd, EXIT_FAILURE, NULL); // TODO exit failure free
 		/*
 		   if (!cmd->cmdpathlist[cmd_idx])
-		   closefd(cmd, EXIT_FAILURE); // TODO exit failure free
+		   closefd(cmd, EXIT_FAILURE, NULL); // TODO exit failure free
 		 */
 		execve(cmd->cmdpathlist[cmd_idx],
 			cmd[cmd_idx].args,
@@ -85,7 +86,7 @@ void	ft_wait_for_children(void)
 
 // iter.i, in fd_child indicates the command nbr
 // waitpdid->(cmd[iter.i].pid, ...) and fd_child(cmd, tenvp, iter.i++) teamwork
-static void	fd_pipex_execute(t_cmd *cmd, t_list *tenvp)
+static void	fd_pipex_execute(t_cmd *cmd, t_list *tenvp, t_reader *exit)
 {
 	t_iteration	iter;
 
@@ -102,7 +103,7 @@ static void	fd_pipex_execute(t_cmd *cmd, t_list *tenvp)
 	ft_cmdpathlist(cmd, tenvp);
 	iter.i = 0;
 	while (iter.i < cmd->cmdnbr)
-		fd_child(cmd, tenvp, iter.i++);
+		fd_child(cmd, tenvp, iter.i++, exit);
 	iter.i = 0;
 	while (iter.i < cmd->cmdnbr - 1)
 	{
@@ -113,7 +114,7 @@ static void	fd_pipex_execute(t_cmd *cmd, t_list *tenvp)
 }
 
 // WARNING cmdpathlist does a malloc and contains mallocs
-void	ft_pipex(t_cmd *cmd, t_list *tenvp)
+void	ft_pipex(t_cmd *cmd, t_list *tenvp, t_reader *exit)
 {
 	cmd->error = 0;
 	cmd->cmdnbr = ft_nbrofcmds(cmd);
@@ -134,7 +135,7 @@ void	ft_pipex(t_cmd *cmd, t_list *tenvp)
 		ft_unset(cmd->args, &tenvp);
 		return ;
 	}
-	fd_pipex_execute(cmd, tenvp);
+	fd_pipex_execute(cmd, tenvp, exit);
 	if (cmd->error != 0)
 		g_status_code = cmd->error; // TODO exit success free
 }

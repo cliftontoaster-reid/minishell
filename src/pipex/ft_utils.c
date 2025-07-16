@@ -6,15 +6,16 @@
 /*   By: jfranc <jfranc@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 13:34:25 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/15 16:18:58 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/07/16 14:45:46 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shared.h"
 #include "utils.h"
 #include <unistd.h>
+#include "reader.h"
 
-void	closefd(t_cmd *cmd, int exitnbr)
+void	closefd(t_cmd *cmd, int exitnbr, t_reader *reader)
 {
 	t_iteration	iter;
 
@@ -25,6 +26,8 @@ void	closefd(t_cmd *cmd, int exitnbr)
 		close(cmd->pipes[iter.i][1]);
 		iter.i++;
 	}
+	if (reader)
+		reader_free(reader);
 	if (exitnbr > -1)
 		exit(exitnbr);
 }

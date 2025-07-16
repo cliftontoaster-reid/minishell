@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:24:32 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/15 14:33:53 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/16 14:43:56 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ typedef struct s_cmd
 }						t_cmd;
 
 // pipex/ft_pipex.c
-void					ft_pipex(t_cmd *cmd, t_list *tenvp);
+void					ft_pipex(t_cmd *cmd, t_list *tenvp, t_reader *reader);
 
 // pipex/cmd_path.c
 void					ft_free_split(char **split);
@@ -96,7 +96,7 @@ void					ft_free_split(char **split);
 void					ft_cmdpathlist(t_cmd *cmd, t_list *tenvp);
 
 // pipex/ft_utils.c
-void					closefd(t_cmd *cmd, int exitnbr);
+void					closefd(t_cmd *cmd, int exitnbr, t_reader *reader);
 int						ft_nbrofcmds(t_cmd *cmd);
 
 // pipex/ft_builtin.c

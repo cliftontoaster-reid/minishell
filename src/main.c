@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:49:10 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/15 15:18:51 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/16 14:41:12 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -332,7 +332,7 @@ int	main(int argc, char **argv, char **envp)
 				free(cached_input);
 				cached_input = NULL;
 			}
-			ft_pipex(commands, reader_ptr->env);
+			ft_pipex(commands, reader_ptr->env, reader_ptr);
 			parser_free(reader_ptr->parser);
 			reader_ptr->parser = NULL;
 		}
