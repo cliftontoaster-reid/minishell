@@ -1994,6 +1994,26 @@
       "-I./target/libft/",
       "-c",
       "-o",
+      "target/utils/b_getpid.o",
+      "src/utils/b_getpid.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/utils/b_getpid.c",
+    "output": "/home/creid/Documents/42/minishell/target/utils/b_getpid.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=gnu17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-c",
+      "-o",
       "target/utils/b_setenv.o",
       "src/utils/b_setenv.c"
     ],
@@ -2314,6 +2334,346 @@
       "-I./target/libft/",
       "-c",
       "-o",
+      "target/utils/var/b_getenv_one.o",
+      "src/utils/var/b_getenv_one.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/utils/var/b_getenv_one.c",
+    "output": "/home/creid/Documents/42/minishell/target/utils/var/b_getenv_one.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=gnu17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-c",
+      "-o",
+      "target/utils/var/find_var_match.o",
+      "src/utils/var/find_var_match.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/utils/var/find_var_match.c",
+    "output": "/home/creid/Documents/42/minishell/target/utils/var/find_var_match.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=gnu17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-c",
+      "-o",
+      "target/utils/var/handle_special_var.o",
+      "src/utils/var/handle_special_var.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/utils/var/handle_special_var.c",
+    "output": "/home/creid/Documents/42/minishell/target/utils/var/handle_special_var.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=gnu17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-c",
+      "-o",
+      "target/utils/var/count_unmatched_var.o",
+      "src/utils/var/count_unmatched_var.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/utils/var/count_unmatched_var.c",
+    "output": "/home/creid/Documents/42/minishell/target/utils/var/count_unmatched_var.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=gnu17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-c",
+      "-o",
+      "target/utils/var/ft_strcpy.o",
+      "src/utils/var/ft_strcpy.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/utils/var/ft_strcpy.c",
+    "output": "/home/creid/Documents/42/minishell/target/utils/var/ft_strcpy.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=gnu17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-c",
+      "-o",
+      "target/utils/var/expand_matched_var.o",
+      "src/utils/var/expand_matched_var.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/utils/var/expand_matched_var.c",
+    "output": "/home/creid/Documents/42/minishell/target/utils/var/expand_matched_var.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=gnu17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-c",
+      "-o",
+      "target/utils/var/expand_unmatched_var.o",
+      "src/utils/var/expand_unmatched_var.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/utils/var/expand_unmatched_var.c",
+    "output": "/home/creid/Documents/42/minishell/target/utils/var/expand_unmatched_var.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=gnu17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-c",
+      "-o",
+      "target/utils/var/expand_special_var.o",
+      "src/utils/var/expand_special_var.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/utils/var/expand_special_var.c",
+    "output": "/home/creid/Documents/42/minishell/target/utils/var/expand_special_var.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=gnu17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-c",
+      "-o",
+      "target/utils/var/iskey.o",
+      "src/utils/var/iskey.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/utils/var/iskey.c",
+    "output": "/home/creid/Documents/42/minishell/target/utils/var/iskey.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=gnu17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-c",
+      "-o",
+      "target/utils/var/num_places.o",
+      "src/utils/var/num_places.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/utils/var/num_places.c",
+    "output": "/home/creid/Documents/42/minishell/target/utils/var/num_places.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=gnu17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-c",
+      "-o",
+      "target/utils/var/handle_regular_char.o",
+      "src/utils/var/handle_regular_char.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/utils/var/handle_regular_char.c",
+    "output": "/home/creid/Documents/42/minishell/target/utils/var/handle_regular_char.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=gnu17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-c",
+      "-o",
+      "target/utils/var/handle_var_expansion.o",
+      "src/utils/var/handle_var_expansion.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/utils/var/handle_var_expansion.c",
+    "output": "/home/creid/Documents/42/minishell/target/utils/var/handle_var_expansion.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=gnu17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-c",
+      "-o",
+      "target/utils/var/handle_dollar_char.o",
+      "src/utils/var/handle_dollar_char.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/utils/var/handle_dollar_char.c",
+    "output": "/home/creid/Documents/42/minishell/target/utils/var/handle_dollar_char.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=gnu17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-c",
+      "-o",
+      "target/utils/var/copy_regular_char.o",
+      "src/utils/var/copy_regular_char.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/utils/var/copy_regular_char.c",
+    "output": "/home/creid/Documents/42/minishell/target/utils/var/copy_regular_char.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=gnu17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-c",
+      "-o",
+      "target/utils/var/handle_var_substitution.o",
+      "src/utils/var/handle_var_substitution.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/utils/var/handle_var_substitution.c",
+    "output": "/home/creid/Documents/42/minishell/target/utils/var/handle_var_substitution.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=gnu17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-c",
+      "-o",
+      "target/utils/var/handle_dollar_substitution.o",
+      "src/utils/var/handle_dollar_substitution.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/utils/var/handle_dollar_substitution.c",
+    "output": "/home/creid/Documents/42/minishell/target/utils/var/handle_dollar_substitution.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=gnu17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-c",
+      "-o",
+      "target/utils/var/replace_backspace_with_dollar.o",
+      "src/utils/var/replace_backspace_with_dollar.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/utils/var/replace_backspace_with_dollar.c",
+    "output": "/home/creid/Documents/42/minishell/target/utils/var/replace_backspace_with_dollar.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=gnu17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-c",
+      "-o",
       "target/parser/p_strerror.o",
       "src/parser/p_strerror.c"
     ],
@@ -2614,6 +2974,106 @@
       "-I./target/libft/",
       "-c",
       "-o",
+      "target/reader/try_read.o",
+      "src/reader/try_read.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/reader/try_read.c",
+    "output": "/home/creid/Documents/42/minishell/target/reader/try_read.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=gnu17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-c",
+      "-o",
+      "target/reader/try_lex.o",
+      "src/reader/try_lex.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/reader/try_lex.c",
+    "output": "/home/creid/Documents/42/minishell/target/reader/try_lex.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=gnu17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-c",
+      "-o",
+      "target/reader/try_parse.o",
+      "src/reader/try_parse.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/reader/try_parse.c",
+    "output": "/home/creid/Documents/42/minishell/target/reader/try_parse.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=gnu17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-c",
+      "-o",
+      "target/reader/str_is_whitespace.o",
+      "src/reader/str_is_whitespace.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/reader/str_is_whitespace.c",
+    "output": "/home/creid/Documents/42/minishell/target/reader/str_is_whitespace.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=gnu17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-c",
+      "-o",
+      "target/reader/handle_read_two.o",
+      "src/reader/handle_read_two.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/reader/handle_read_two.c",
+    "output": "/home/creid/Documents/42/minishell/target/reader/handle_read_two.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=gnu17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-c",
+      "-o",
       "target/pipex/ft_pipex.o",
       "src/pipex/ft_pipex.c"
     ],
@@ -2720,6 +3180,186 @@
     "directory": "/home/creid/Documents/42/minishell",
     "file": "/home/creid/Documents/42/minishell/src/varextract/extract_var_list.c",
     "output": "/home/creid/Documents/42/minishell/target/varextract/extract_var_list.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=gnu17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-c",
+      "-o",
+      "target/git/find_git_dir.o",
+      "src/git/find_git_dir.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/git/find_git_dir.c",
+    "output": "/home/creid/Documents/42/minishell/target/git/find_git_dir.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=gnu17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-c",
+      "-o",
+      "target/git/is_repo.o",
+      "src/git/is_repo.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/git/is_repo.c",
+    "output": "/home/creid/Documents/42/minishell/target/git/is_repo.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=gnu17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-c",
+      "-o",
+      "target/git/get_branch_name.o",
+      "src/git/get_branch_name.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/git/get_branch_name.c",
+    "output": "/home/creid/Documents/42/minishell/target/git/get_branch_name.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=gnu17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-c",
+      "-o",
+      "target/git/read_head_file.o",
+      "src/git/read_head_file.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/git/read_head_file.c",
+    "output": "/home/creid/Documents/42/minishell/target/git/read_head_file.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=gnu17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-c",
+      "-o",
+      "target/git/open_head_file.o",
+      "src/git/open_head_file.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/git/open_head_file.c",
+    "output": "/home/creid/Documents/42/minishell/target/git/open_head_file.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=gnu17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-c",
+      "-o",
+      "target/git/git_getbranch.o",
+      "src/git/git_getbranch.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/git/git_getbranch.c",
+    "output": "/home/creid/Documents/42/minishell/target/git/git_getbranch.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=gnu17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-c",
+      "-o",
+      "target/git/is_git_changes.o",
+      "src/git/is_git_changes.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/git/is_git_changes.c",
+    "output": "/home/creid/Documents/42/minishell/target/git/is_git_changes.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=gnu17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-c",
+      "-o",
+      "target/git/is_git_changes_staged.o",
+      "src/git/is_git_changes_staged.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/git/is_git_changes_staged.c",
+    "output": "/home/creid/Documents/42/minishell/target/git/is_git_changes_staged.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib64/ccache/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-std=gnu17",
+      "-I./include",
+      "-pipe",
+      "-I./target/libft/",
+      "-c",
+      "-o",
+      "target/git/git_message.o",
+      "src/git/git_message.c"
+    ],
+    "directory": "/home/creid/Documents/42/minishell",
+    "file": "/home/creid/Documents/42/minishell/src/git/git_message.c",
+    "output": "/home/creid/Documents/42/minishell/target/git/git_message.o"
   },
   {
     "arguments": [

@@ -22,6 +22,7 @@ SRCS     = \
   $(SRC_DIR)/utils/b_fromenvp.c \
   $(SRC_DIR)/utils/b_unsetenv.c \
   $(SRC_DIR)/utils/b_getenv.c \
+	$(SRC_DIR)/utils/b_getpid.c \
   $(SRC_DIR)/utils/b_setenv.c \
   $(SRC_DIR)/utils/ft_readline.c \
   $(SRC_DIR)/utils/ft_strjoin_free.c \
@@ -38,6 +39,24 @@ SRCS     = \
 	$(SRC_DIR)/utils/ft_var.c \
   $(SRC_DIR)/utils/ft_opentmp.c \
 	$(SRC_DIR)/utils/print_prompt.c \
+	\
+	$(SRC_DIR)/utils/var/b_getenv_one.c \
+	$(SRC_DIR)/utils/var/find_var_match.c \
+	$(SRC_DIR)/utils/var/handle_special_var.c \
+	$(SRC_DIR)/utils/var/count_unmatched_var.c \
+	$(SRC_DIR)/utils/var/ft_strcpy.c \
+	$(SRC_DIR)/utils/var/expand_matched_var.c \
+	$(SRC_DIR)/utils/var/expand_unmatched_var.c \
+	$(SRC_DIR)/utils/var/expand_special_var.c \
+	$(SRC_DIR)/utils/var/iskey.c \
+	$(SRC_DIR)/utils/var/num_places.c \
+	$(SRC_DIR)/utils/var/handle_regular_char.c \
+	$(SRC_DIR)/utils/var/handle_var_expansion.c \
+	$(SRC_DIR)/utils/var/handle_dollar_char.c \
+	$(SRC_DIR)/utils/var/copy_regular_char.c \
+	$(SRC_DIR)/utils/var/handle_var_substitution.c \
+	$(SRC_DIR)/utils/var/handle_dollar_substitution.c \
+	$(SRC_DIR)/utils/var/replace_backspace_with_dollar.c \
   \
   $(SRC_DIR)/parser/p_strerror.c \
   $(SRC_DIR)/parser/parser_init.c \
@@ -126,10 +145,8 @@ TEST_LDFLAGS = -L$(CRIT_DIR)/lib -Wl,-rpath=$(CRIT_DIR)/lib -lcriterion
 
 # Compiler preference: clang > gcc for main binary
 ifeq ($(shell which clang),)
-  $(shell echo "No suitable compiler found. Please install clang or gcc." >&2)
   CC = gcc
 else
-  $(shell echo "Using clang as the compiler." >&2)
   CC = clang
 endif
 
@@ -147,7 +164,7 @@ endif
 
 all: $(NAME)
 
-$(NAME): $(_LIB_FT) $(OBJS)
+$(NAME): $(OBJS)
 	@echo "$(CC) $(LDFLAGS) -o $@ $(OBJS) $(_LIB_FT)"
 	@$(CC) $(LDFLAGS) -o $@ $(OBJS) $(_LIB_FT)
 
@@ -160,7 +177,7 @@ run_test: test
 test: $(NTEST)
 
 
-$(NTEST): $(CRIT_PC) $(_LIB_FT) $(TESTOBJS)
+$(NTEST): $(CRIT_PC) $(TESTOBJS)
 	@echo "$(TEST_CC) $(LDFLAGS) $(TEST_LDFLAGS) -o $@ $(TESTOBJS) $(_LIB_FT)"
 	@$(TEST_CC) $(LDFLAGS) $(TEST_LDFLAGS) -o $@ $(TESTOBJS) $(_LIB_FT)
 
@@ -180,14 +197,13 @@ $(CRIT_PC):
 	@tar -xf $(CRIT_DIR).tar.xz -C $(OBJ_DIR)
 	@rm $(CRIT_DIR).tar.xz
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c  $(_LIB_FT)
 # Create the parent directory of the object file if it doesn't exist
 	@mkdir -p $(dir $@)
-	@echo "$(CC) $(CFLAGS) -c $< -o $@"
-	@$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 
-$(TEST_OBJD)/%.o: $(TEST_DIR)/%.c
+$(TEST_OBJD)/%.o: $(TEST_DIR)/%.c $(_LIB_FT)
 # Create the parent directory of the object file if it doesn't exist
 	@mkdir -p $(dir $@)
 	@echo "$(TEST_CC) $(CFLAGS) $(TEST_CFLAGS) -c $< -o $@"
@@ -199,9 +215,13 @@ clean:
 fclean: clean
 	@rm -f $(NAME) $(NTEST)
 
-re: fclean all
+re: fclean
+	@$(MAKE) all -j$(shell nproc) CC=$(CC)
+	@echo "Picoshell recompiled successfully."
 
-qre: clean all
+qre: clean
+	@$(MAKE) all -j$(shell nproc) CC=$(CC)
+	@echo "Picoshell quick recompiled successfully."
 
 bundle:
 	@${MAKE} fclean
@@ -210,7 +230,7 @@ bundle:
 		echo "Using bear to generate compile_commands.json..."; \
 		bear -- ${MAKE} test all CC=cc; \
 	else \
-		${MAKE} all CC=cc; \
+		${MAKE} all CC=cc -j$(shell nproc); \
 	fi
 	@mkdir -p $(OBJ_DIR)/bundle
 	@cp $(NAME) $(OBJ_DIR)/bundle/

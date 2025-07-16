@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 13:37:32 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/15 16:27:38 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/16 15:12:56 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,25 +63,29 @@ static int	extract_vars_from_word(const char *value, t_list **cur_var_list,
 		t_list **cmd_var_lists)
 {
 	const char	*p;
+	const char	*next_dollar;
 
 	p = value;
-	while ((p = ft_strchr(p, '$')))
+	next_dollar = ft_strchr(p, '$');
+	while (next_dollar)
 	{
-		if (*(p + 1) && (ft_isalnum(*(p + 1)) || *(p + 1) == '_'))
+		if (*(next_dollar + 1) && (ft_isalnum(*(next_dollar + 1))
+				|| *(next_dollar + 1) == '_'))
 		{
-			if (!handle_variable(p + 1, cur_var_list))
+			if (!handle_variable(next_dollar + 1, cur_var_list))
 			{
 				cleanup_var_lists(*cmd_var_lists, *cur_var_list);
 				errno = ENOMEM;
 				return (-1);
 			}
 		}
-		p++;
+		p = next_dollar + 1;
+		next_dollar = ft_strchr(p, '$');
 	}
 	return (0);
 }
 
-static t_list	*extract_var_lists(t_list *tokens)
+t_list	*b_varextract(t_list *tokens)
 {
 	t_list	*cmd_var_lists;
 	t_list	*cur_var_list;
@@ -107,11 +111,4 @@ static t_list	*extract_var_lists(t_list *tokens)
 	}
 	ft_lstadd_back(&cmd_var_lists, ft_lstnew(cur_var_list));
 	return (cmd_var_lists);
-}
-
-t_list	*b_varextract(t_list *tokens)
-{
-	if (!tokens)
-		return (NULL);
-	return (extract_var_lists(tokens));
 }
