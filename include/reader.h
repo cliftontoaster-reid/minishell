@@ -17,10 +17,12 @@
 # include "libft.h"
 # include "parser.h"
 # include "shared.h"
+# include "utils.h"
 # include <errno.h>
 # include <stdio.h>
 
 typedef struct s_parser	t_parser;
+typedef struct s_cmd	t_cmd;
 
 typedef enum e_reader_state
 {
@@ -40,6 +42,10 @@ typedef struct s_reader
 	t_list				*vars;
 	int					*pids;
 	t_reader_state		state;
+	char				*cached_input;
+	t_linereader		*linereader;
+	t_cmd				*commands;
+	char				**varnames;
 }						t_reader;
 
 t_reader				*reader_init(char *const *envp);
