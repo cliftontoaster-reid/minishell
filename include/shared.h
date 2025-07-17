@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:24:32 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/17 14:51:07 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/07/17 15:25:45 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ void					is_builtin(t_cmd *cmd, t_list **env, int cmd_idx, t_reader *exit);
 void					ft_cd(char **argv, t_list **envp);
 void					ft_echo(int argc, char **argv);
 void					ft_env(t_list **env);
-void					ft_exit(char **s, t_reader *reader);
+void					ft_exit(char **s, t_reader *reader, t_cmd *cmd);
 void					ft_export(char **argv, t_list **envp);
 void					ft_pwd(t_list **envp);
 void					ft_unset(char **args, t_list **envp);
