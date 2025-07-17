@@ -56,3 +56,11 @@
    fun:readline
    ...
 }
+
+{
+   readline_set_prompt
+   Memcheck:Leak
+   ...
+   fun:rl_set_prompt
+   ...
+}
