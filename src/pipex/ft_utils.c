@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   ft_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfranc <jfranc@student.42nice.fr>          +#+  +:+       +#+        */
+/*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 13:34:25 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/16 17:33:48 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/07/17 15:03:02 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "reader.h"
 #include "shared.h"
 #include "utils.h"
 #include <unistd.h>
-#include "reader.h"
 
 void	ft_cleanup_cmd(t_cmd *cmd)
 {
@@ -46,13 +46,15 @@ void	closefd(t_cmd *cmd, int exitnbr, t_reader *reader)
 		close(cmd->pipes[iter.i][1]);
 		iter.i++;
 	}
-	if (reader)
-		reader_free(reader);
 	if (exitnbr > -1)
 	{
 		ft_cleanup_cmd(cmd);
+		if (reader)
+			reader_free(reader);
 		exit(exitnbr);
 	}
+	if (reader)
+		reader_free(reader);
 }
 
 int	ft_nbrofcmds(t_cmd *cmd)
