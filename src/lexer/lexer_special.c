@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:44:26 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/16 16:45:19 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/17 15:10:49 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,16 @@ static t_token	*make_special_token(const char *text, int pos, bool special,
 		t_token_type type)
 {
 	t_token	*token;
+	char	*substr;
 
-	token = create_token(ft_substr(text, pos, 1 + special), type);
+	substr = ft_substr(text, pos, 1 + special);
+	if (substr == NULL)
+	{
+		errno = ENOMEM;
+		return (NULL);
+	}
+	token = create_token(substr, type);
+	free(substr);
 	if (token == NULL)
 		errno = ENOMEM;
 	return (token);
