@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 09:38:39 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/17 14:56:21 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/17 15:25:16 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static void	is_builtin2(t_cmd *cmd, t_list **env, int cmd_idx, t_reader *exit)
 	}
 	if (!ft_strncmp(cmd[cmd_idx].args[0], "exit", 5))
 	{
-		ft_exit(cmd[cmd_idx].args, exit);
+		ft_exit(cmd[cmd_idx].args, exit, cmd);
 		closefd(cmd, EXIT_SUCCESS, exit);
 	}
 }
