@@ -6,23 +6,17 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:49:10 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/16 20:08:13 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/17 10:41:57 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
 #include "main.h"
-#include "main_extra.h"
 #include "parser.h"
 #include "reader.h"
 #include "shared.h"
-#include "sigint.h"
-#include "utils.h"
 #include "varextract.h"
-#include <errno.h>
 #include <readline/history.h>
 #include <readline/readline.h>
-#include <stdio.h>
 #include <unistd.h>
 
 int	main(int argc, char **argv, char **envp)
