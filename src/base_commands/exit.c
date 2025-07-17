@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 13:37:28 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/17 15:31:20 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/07/17 16:49:34 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ bool	isstring_noomber(char *s)
 	return (true);
 }
 
-void	ft_exit(char **s, t_reader *reader, t_cmd *cmd)
+void	ft_exit(char **s, t_reader *reader, t_cmd **cmd)
 {
 	unsigned char	exit_code;
 
@@ -68,8 +68,11 @@ void	ft_exit(char **s, t_reader *reader, t_cmd *cmd)
 	if (reader)
 		reader_free(reader);
 	write(1, "exit\n", 5);
-	//if(cmd)
-	//	ft_cleanup_cmd(cmd);
+	if(cmd && *cmd) 
+	{
+		ft_cleanup_cmd(*cmd);
+		*cmd = NULL;
+	}
 	(void)cmd;
 	exit(exit_code);
 }
