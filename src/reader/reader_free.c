@@ -6,12 +6,13 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 19:34:24 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/17 14:11:11 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/17 17:20:43 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "reader.h"
 #include <readline/readline.h>
+#include "shared.h"
 
 void	free_env(void *env)
 {
@@ -41,7 +42,7 @@ void	reader_free(t_reader *reader)
 		free(reader->linereader);
 	}
 	if (reader->commands)
-		free(reader->commands);
+		ft_cleanup_cmd(reader->commands);
 	if (reader->varnames)
 		free(reader->varnames);
 	free(reader);
