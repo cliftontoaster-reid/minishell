@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:03:33 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/17 13:13:05 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/17 14:02:41 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ void	ft_pipex(t_cmd *cmd, t_list *tenvp, t_reader *exit)
 	cmd->error = 0;
 	cmd->cmdnbr = ft_nbrofcmds(cmd);
 	if (!ft_strncmp(cmd->args[0], "exit", 5) && cmd->cmdnbr == 1)
-		ft_exit(cmd->args, NULL);
+		ft_exit(cmd->args, exit);
 	if (!ft_strncmp(cmd->args[0], "cd", 3) && cmd->cmdnbr == 1)
 	{
 		ft_cd(cmd->args, &tenvp);
