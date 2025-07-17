@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:03:33 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/17 14:02:41 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/17 14:51:24 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,11 @@ static void	fd_child(t_cmd *cmd, t_list *tenvp, int cmd_idx, t_reader *exit)
 	if (cmd[cmd_idx].pid == 0)
 	{
 		pipe_redirection(cmd, cmd_idx);
-		is_builtin(cmd, &tenvp, cmd_idx);
+		is_builtin(cmd, &tenvp, cmd_idx, exit);
 		if (cmd->error == 1)
-			closefd(cmd, EXIT_FAILURE, NULL);
+			closefd(cmd, EXIT_FAILURE, exit);
 		if (!cmd->cmdpathlist[cmd_idx])
-			closefd(cmd, EXIT_FAILURE, NULL);
+			closefd(cmd, EXIT_FAILURE, exit);
 		execve(cmd->cmdpathlist[cmd_idx], cmd[cmd_idx].args, b_getenv(NULL,
 				tenvp));
 		closefd(cmd, EXIT_FAILURE, exit);
