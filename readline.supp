@@ -1,0 +1,58 @@
+# Readline library suppressions
+{
+   readline_keymap_init
+   Memcheck:Leak
+   ...
+   fun:rl_make_bare_keymap
+   ...
+}
+
+{
+   readline_initialization
+   Memcheck:Leak
+   ...
+   fun:rl_initialize
+   ...
+}
+
+{
+   readline_bind_keys
+   Memcheck:Leak
+   ...
+   fun:rl_generic_bind
+   ...
+}
+
+{
+   readline_parse_and_bind
+   Memcheck:Leak
+   ...
+   fun:rl_parse_and_bind
+   ...
+}
+
+{
+   readline_read_init_file
+   Memcheck:Leak
+   ...
+   fun:_rl_read_init_file
+   ...
+}
+
+{
+   readline_xmalloc
+   Memcheck:Leak
+   ...
+   fun:xmalloc
+   ...
+}
+
+{
+   readline_internal_malloc
+   Memcheck:Leak
+   ...
+   fun:malloc
+   ...
+   fun:readline
+   ...
+}

@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 11:14:25 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/03 11:37:37 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/17 13:31:02 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ static void	try_join(t_list *token)
 		return ;
 	joined_value = get_joined_value(current, next);
 	new_token = create_token(joined_value, TOKEN_WORD);
+	free(joined_value);
 	if (!new_token)
 		return ;
 	del = token->next;
