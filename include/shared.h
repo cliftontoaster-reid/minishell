@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:24:32 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/16 19:59:47 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/17 10:41:36 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ t_list					*b_fromenvp(char *const *envp);
 typedef struct s_cmd
 {
 	bool				is_pipe;
-	bool				error;
+	int					error;
 	int					pid;
 	int					argc;
 	int					cmdnbr;

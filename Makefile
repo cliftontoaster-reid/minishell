@@ -176,19 +176,14 @@ LDFLAGS  = -O3 -g3 -std=gnu17 -pipe -lreadline
 TEST_CFLAGS = -I$(CRIT_INC)
 TEST_LDFLAGS = -L$(CRIT_DIR)/lib -Wl,-rpath=$(CRIT_DIR)/lib -lcriterion
 
+BUNDLE_CFLAGS   = -Wall -Wextra -Werror -std=gnu17 -I$(INC_DIR) -pipe -MMD -MP -I$(LFT_DIR) -Os -flto -ffunction-sections -fdata-sections -fno-exceptions 
+BUNDLE_LDFLAGS  = -std=gnu17 -pipe -lreadline -flto -Wl,--gc-sections -s -Wl,--as-needed
 
 # Compiler preference: clang > gcc for main binary
 ifeq ($(shell which clang),)
   CC = gcc
 else
   CC = clang
-endif
-
-# For tests, always use clang if available, else gcc (never zig cc)
-ifeq ($(shell which clang),)
-  TEST_CC = gcc
-else
-  TEST_CC = clang
 endif
 
 # If mold is installed, use it as the linker
@@ -218,7 +213,7 @@ $(NTEST): $(CRIT_PC) $(TESTOBJS)
 $(_LIB_FT):
 	@if [ ! -d $(LFT_DIR) ]; then \
 		if command -v rad >/dev/null 2>&1; then \
-			rad clone rad:z2r3ahNug1N33eWu4iD7NiuphqUL3 $(LFT_DIR); \
+			rad auth && rad node start && rad clone rad:z2r3ahNug1N33eWu4iD7NiuphqUL3 $(LFT_DIR); \
 		else \
 			git clone https://github.com/cliftontoaster-reid/libft $(LFT_DIR); \
 		fi; \
@@ -240,8 +235,8 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c  $(_LIB_FT)
 $(TEST_OBJD)/%.o: $(TEST_DIR)/%.c $(_LIB_FT)
 # Create the parent directory of the object file if it doesn't exist
 	@mkdir -p $(dir $@)
-	@echo "$(TEST_CC) $(CFLAGS) $(TEST_CFLAGS) -c $< -o $@"
-	@$(TEST_CC) $(CFLAGS) $(TEST_CFLAGS) -c $< -o $@
+	@echo "$(CC) $(CFLAGS) $(TEST_CFLAGS) -c $< -o $@"
+	@$(CC) $(CFLAGS) $(TEST_CFLAGS) -c $< -o $@
 
 clean:
 	@rm -rf $(OBJ_DIR)
@@ -262,9 +257,9 @@ bundle:
 	@echo "Creating bundle for $(NAME)..."
 	@if command -v bear >/dev/null 2>&1; then \
 		echo "Using bear to generate compile_commands.json..."; \
-		bear -- ${MAKE} test all CC=cc; \
+		bear -- ${MAKE} test all CC=cc CFLAGS="$(BUNDLE_CFLAGS)" LDFLAGS="$(BUNDLE_LDFLAGS)" -j$(shell nproc); \
 	else \
-		${MAKE} all CC=cc -j$(shell nproc); \
+		${MAKE} all CC=cc CFLAGS="$(BUNDLE_CFLAGS)" LDFLAGS="$(BUNDLE_LDFLAGS)" -j$(shell nproc); \
 	fi
 	@mkdir -p $(OBJ_DIR)/bundle
 	@cp $(NAME) $(OBJ_DIR)/bundle/

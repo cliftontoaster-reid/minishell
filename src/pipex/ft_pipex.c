@@ -6,17 +6,17 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:03:33 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/16 17:35:05 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/07/17 13:13:05 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #define _GNU_SOURCE
 #include "pipex.h"
+#include "reader.h"
 #include "shared.h"
 #include "utils.h"
 #include <sys/wait.h>
-#include "reader.h"
 
 static void	pipe_redirection(t_cmd *cmd, int cmd_idx)
 {
@@ -47,9 +47,8 @@ static void	fd_child(t_cmd *cmd, t_list *tenvp, int cmd_idx, t_reader *exit)
 			closefd(cmd, EXIT_FAILURE, NULL);
 		if (!cmd->cmdpathlist[cmd_idx])
 			closefd(cmd, EXIT_FAILURE, NULL);
-		execve(cmd->cmdpathlist[cmd_idx],
-			cmd[cmd_idx].args,
-			b_getenv(NULL, tenvp));
+		execve(cmd->cmdpathlist[cmd_idx], cmd[cmd_idx].args, b_getenv(NULL,
+				tenvp));
 		closefd(cmd, EXIT_FAILURE, exit);
 	}
 }
@@ -135,8 +134,6 @@ void	ft_pipex(t_cmd *cmd, t_list *tenvp, t_reader *exit)
 	}
 	fd_pipex_execute(cmd, tenvp, exit);
 	if (cmd->error != 0)
-	{
 		g_status_code = cmd->error;
-		ft_cleanup_cmd(cmd);
-	}
+	ft_cleanup_cmd(cmd);
 }
