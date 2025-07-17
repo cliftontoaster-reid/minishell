@@ -6,11 +6,12 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 19:34:24 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/16 19:35:15 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/17 13:39:32 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "reader.h"
+#include <readline/readline.h>
 
 void	reader_free(t_reader *reader)
 {
@@ -49,5 +50,6 @@ void	reader_free(t_reader *reader)
 	if (reader->varnames)
 		free(reader->varnames);
 	free(reader);
+	rl_clear_history();
 	errno = 0;
 }
