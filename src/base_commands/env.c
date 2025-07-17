@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 11:30:46 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/10 14:34:41 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/17 15:12:01 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,9 @@ void	ft_env(t_list **env)
 	{
 		write(1, envp[iteri], ft_strlen(envp[iteri]));
 		write(1, "\n", 1);
+		free(envp[iteri]);
 		iteri++;
 	}
+	free(envp);
 	g_status_code = 0;
 }
