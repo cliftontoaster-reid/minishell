@@ -6,15 +6,13 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 13:37:28 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/17 15:31:20 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/07/18 12:15:39 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "reader.h"
-#include <ctype.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
 
 int	lst_list(char **lst)
@@ -68,8 +66,6 @@ void	ft_exit(char **s, t_reader *reader, t_cmd *cmd)
 	if (reader)
 		reader_free(reader);
 	write(1, "exit\n", 5);
-	//if(cmd)
-	//	ft_cleanup_cmd(cmd);
 	(void)cmd;
 	exit(exit_code);
 }

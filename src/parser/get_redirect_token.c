@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:40:00 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/16 18:59:48 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/18 12:52:38 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,13 @@ t_token	*get_redirect_token(t_parser *parser)
 	{
 		token = (t_token *)ft_lstget(parser->token_list, parser->current_index,
 				parser->token_count);
+		// Validate that the next token is actually a word token
+		if (token && token->type != TOKEN_WORD)
+		{
+			errno = EINVAL;
+			parser->error = PARSING_MISSING_SPECIAL_TARGET;
+			return (NULL);
+		}
 	}
 	else
 	{

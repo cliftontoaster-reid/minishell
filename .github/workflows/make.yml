@@ -12,6 +12,7 @@ on:
     paths:
       - src/**
       - .test/**
+      - tools/**
       - Makefile
       - include/**
       - .github/workflows/make.yml
@@ -21,6 +22,7 @@ on:
     paths:
       - src/**
       - .test/**
+      - tools/**
       - Makefile
       - include/**
       - .github/workflows/make.yml

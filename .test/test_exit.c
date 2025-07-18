@@ -18,7 +18,7 @@
 #include <unistd.h>
 
 // Forward declaration for ft_exit if not in a header
-void		ft_exit(char **s, t_reader *reader);
+void		ft_exit(char **s, t_reader *reader, t_cmd *cmd);
 
 static int	run_exit_and_get_code(char **args)
 {
@@ -32,7 +32,7 @@ static int	run_exit_and_get_code(char **args)
 		// Redirect stdout and stderr to /dev/null
 		freopen("/dev/null", "w", stdout);
 		freopen("/dev/null", "w", stderr);
-		ft_exit(args, NULL);
+		ft_exit(args, NULL, NULL);
 		_exit(42); // Should never reach here
 	}
 	waitpid(pid, &status, 0);
@@ -89,7 +89,7 @@ Test(exit, non_numeric_argument)
 	{
 		freopen("/dev/null", "w", stdout);
 		freopen("/dev/null", "w", stderr);
-		ft_exit(args, NULL);
+		ft_exit(args, NULL, NULL);
 		_exit(42);
 	}
 	waitpid(pid, &status, 0);
@@ -108,7 +108,7 @@ Test(exit, too_many_arguments)
 	{
 		freopen("/dev/null", "w", stdout);
 		freopen("/dev/null", "w", stderr);
-		ft_exit(args, NULL);
+		ft_exit(args, NULL, NULL);
 		_exit(42);
 	}
 	waitpid(pid, &status, 0);

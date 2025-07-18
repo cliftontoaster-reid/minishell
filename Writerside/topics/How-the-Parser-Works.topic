@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="How the Parser Works" id="How-the-Parser-Works">
+
+    <tldr>
+        <p>
+            The parser transforms the lexer's token stream into a structured series of commands.
+            It uses a state machine to interpret tokens, build argument lists, and handle pipes and
+            redirections, creating an execution-ready command structure.
+        </p>
+    </tldr>
+
+    <chapter title="From Tokens to Commands: The Parser's Role" id="parser-role">
+        <p>
+            The parser is the second major phase in the shell's processing pipeline, acting as the bridge between lexical analysis and execution. While the <a href="How-to-design-a-lexer.topic">Lexer</a> breaks the raw input string into a flat list of tokens, the parser gives those tokens grammatical structure and meaning.
+        </p>
+        <p>
+            Its primary goal is to transform the token stream into one or more <code>t_cmd</code> structures. Each structure represents a single command and all its associated metadata, such as its arguments, I/O redirections, and its relationship to other commands in a pipeline.
+        </p>
+        <p>
+            For example, the token stream for <code>cat &lt; file.txt | grep hello</code> is not just a list of words and symbols. The parser understands that:
+        </p>
+        <list>
+            <li><code>cat</code> is a command that takes <code>file.txt</code> as its input.</li>
+            <li>The output of the <code>cat</code> command should not go to the screen, but instead be fed into the <code>grep</code> command.</li>
+            <li><code>grep</code> is a second command that takes <code>hello</code> as its argument.</li>
+        </list>
+        <p>This structured understanding is essential for the executor to correctly set up file descriptors, pipes, and processes.</p>
+    </chapter>
+
+    <chapter title="Core Data Structures" id="parser-data-structures">
+        <p>The parser's logic revolves around two main data structures defined in <code>include/parser.h</code>.</p>
+
+        <deflist collapsible="true" default-state="expanded">
+            <def title="t_cmd: The Command Structure" id="t_cmd-struct">
+                <p>This structure is the heart of the parser's output. It holds all information required to execute a single, simple command.</p>
+                <code-block lang="c">
+                    typedef struct s_cmd
+                    {
+                        bool        is_pipe;            // Is this command's output piped?
+                        int         argc;               // Argument count
+                        char        **args;             // Argument vector (e.g., {"ls", "-l", NULL})
+                        char        *redirect_in;       // Filename for input redirection (&lt;)
+                        char        *redirect_out;      // Filename for output redirection (&gt;)
+                        char        *redirect_append;   // Filename for append redirection (&gt;&gt;)
+                        char        *redirect_heredoc;  // Delimiter for here-document (&lt;&lt;)
+                        int         fd_infile;          // File descriptor for input
+                        int         fd_outfile;         // File descriptor for output
+                        // ... other fields for execution ...
+                    } t_cmd;
+                </code-block>
+                <p>The parser's job is to correctly populate these fields for each command it identifies in the token stream.</p>
+            </def>
+            <def title="t_parser: The Parser State" id="t_parser-struct">
+                <p>This structure holds the complete state of the parser as it iterates through the token stream. It's the parser's working memory.</p>
+                <code-block lang="c">
+                    typedef struct s_parser
+                    {
+                        t_list          *command_list;      // The final list of completed t_cmd structs
+                        t_cmd           *command;           // The command currently being built
+                        t_list          *argument_list;     // A temporary list for the current command's arguments
+                        t_list          *token_list;        // The original token stream from the lexer
+                        t_token         *current_token;     // The token currently being examined
+                        t_token_type    last_token_type;    // The type of the previously examined token
+                        size_t          current_index;      // Our position in the token stream
+                        t_parser_state  state;              // The current state of the FSM
+                        t_parsing_error error;              // Stores any error that occurs
+                    } t_parser;
+                </code-block>
+            </def>
+        </deflist>
+    </chapter>
+
+    <chapter title="The Parsing State Machine" id="parser-fsm">
+        <p>
+            The parser operates as a Finite State Machine (FSM), moving between states as it consumes tokens. This approach provides a structured way to handle the different grammatical contexts of a shell command. The main loop in <code>parser_parse.c</code> drives this process, calling <code>parser_step</code> for each token.
+        </p>
+        <procedure title="Parser States" id="parser-states">
+            <step>
+                <p><b>PARSER_NONE</b> - The initial and default state.</p>
+                <p>The parser is waiting for a new command or a special operator. It's the starting point for the entire parse and the state it returns to after a command or operator has been fully processed.
+                </p>
+                <list>
+                    <li>If it sees a <code>TOKEN_WORD</code>, it assumes a new command is beginning. It initializes a new <code>t_cmd</code> struct, adds the token to a temporary <code>argument_list</code>, and transitions to <code>PARSER_COMMAND</code>.</li>
+                    <li>If it sees a special token like <code>|</code> or <code>&gt;</code>, it transitions to <code>PARSER_SPECIAL</code> to handle the operator.</li>
+                    <li>Whitespace tokens (<code>TOKEN_NONE</code>) are simply skipped.</li>
+                </list>
+            </step>
+            <step>
+                <p><b>PARSER_COMMAND</b> - Building a command's argument list.</p>
+                <p>In this state, the parser is actively collecting parts of a simple command. It consumes consecutive <code>TOKEN_WORD</code> tokens and appends their values to the current command's <code>argument_list</code>. This continues until a non-word token is found, which signals the end of the simple command and causes a transition to <code>PARSER_SPECIAL</code> to handle the operator that follows.</p>
+            </step>
+            <step>
+                <p><b>PARSER_SPECIAL</b> - Handling operators.</p>
+                <p>This state is entered when an operator token (pipe or redirection) is encountered. The parser uses the <code>last_token_type</code> to identify which operator it's dealing with and calls a specific function (e.g., <code>parser_special_pipe</code>, <code>parser_special_redirect_in</code>) to process it. These functions are responsible for updating the current <code>t_cmd</code> structure with the relevant information (e.g., setting the <code>is_pipe</code> flag or opening a file for redirection). After handling the operator, it typically transitions back to <code>PARSER_NONE</code>.</p>
+            </step>
+        </procedure>
+
+        <chapter title="A Detailed Trace: `cat &lt; file.txt | wc`" id="parser-trace">
+            <p>Let's trace the parser's journey through a moderately complex command.</p>
+            <procedure title="Parsing Trace">
+                <step>
+                    <p><b>Initial State:</b> <code>state = PARSER_NONE</code>, <code>command_list = NULL</code>, <code>command = NULL</code>.</p>
+                </step>
+                <step>
+                    <p><b>Token 1: <code>TOKEN_WORD ("cat")</code></b></p>
+                    <p>In <code>PARSER_NONE</code>, a WORD token starts a new command. A new <code>t_cmd</code> is created, "cat" is added to its argument list, and the state becomes <code>PARSER_COMMAND</code>.</p>
+                </step>
+                <step>
+                    <p><b>Token 2: <code>TOKEN_REDIRECT_IN ("&lt;")</code></b></p>
+                    <p>In <code>PARSER_COMMAND</code>, a special token is found. The state changes to <code>PARSER_SPECIAL</code>. The parser notes that the last operator was <code>&lt;</code>.</p>
+                </step>
+                <step>
+                    <p><b>Token 3: <code>TOKEN_WORD ("file.txt")</code></b></p>
+                    <p>In <code>PARSER_SPECIAL</code>, the parser knows it needs a target for the input redirection. It consumes "file.txt", opens the file, and stores its file descriptor and path in the current <code>t_cmd</code>. The state returns to <code>PARSER_NONE</code>.</p>
+                </step>
+                <step>
+                    <p><b>Token 4: <code>TOKEN_PIPE ("|")</code></b></p>
+                    <p>In <code>PARSER_NONE</code>, a pipe token is found. The state becomes <code>PARSER_SPECIAL</code>. The parser calls <code>parser_special_pipe</code>, which sets the <code>is_pipe</code> flag on the current "cat" command to <code>true</code>. It then calls <code>end_command</code>, which finalizes the "cat" command and adds it to the <code>command_list</code>. The state returns to <code>PARSER_NONE</code>, ready for the next command.</p>
+                </step>
+                <step>
+                    <p><b>Token 5: <code>TOKEN_WORD ("wc")</code></b></p>
+                    <p>In <code>PARSER_NONE</code>, a new command begins. A new <code>t_cmd</code> is created for "wc", and the state becomes <code>PARSER_COMMAND</code>.</p>
+                </step>
+                 <step>
+                    <p><b>End of Input:</b></p>
+                    <p>The main loop finishes. The parser sees that a command ("wc") is still being built. It calls <code>end_command</code> one last time to finalize the "wc" command and add it to the list.</p>
+                </step>
+            </procedure>
+            <p><b>Final Result:</b> A <code>command_list</code> containing two <code>t_cmd</code> structs, one for `cat` with its input redirected, and one for `wc`. The first struct has its `is_pipe` flag set to true.</p>
+        </chapter>
+    </chapter>
+
+    <chapter title="Command Finalization and Redirection Logic" id="finalization-and-redirection">
+        <p>
+            Several key helper functions orchestrate the parsing logic.
+        </p>
+        <deflist collapsible="true" default-state="expanded">
+            <def title="end_command: Finalizing a Command" id="end_command-logic">
+                <p>Located in <code>src/parser/end_command.c</code>, this function is called whenever a command is considered complete (e.g., a pipe is found or the input ends).</p>
+                <p>It performs the crucial task of converting the temporary linked list of arguments (<code>parser-&gt;argument_list</code>) into a <code>NULL</code>-terminated <code>char**</code> array, which is the format required by <code>execve</code>. It allocates memory for this array, copies the argument strings, and attaches the array to the <code>t_cmd</code> struct. Finally, it adds the completed <code>t_cmd</code> to the main <code>command_list</code> and resets the parser's state for the next command.</p>
+            </def>
+            <def title="get_redirect_token: Finding the Target" id="get_redirect_token-logic">
+                <p>Found in <code>src/parser/get_redirect_token.c</code>, this utility is called by redirection handlers.</p>
+                <p>Its job is to find the filename or delimiter that must follow a redirection operator. It looks at the next token: if it's a <code>TOKEN_WORD</code>, it returns it directly. It's also smart enough to skip over a single, empty <code>TOKEN_NONE</code> (whitespace) to find the word, allowing for syntax like <code>&gt; file.txt</code>. If a valid word token isn't found, it sets the <code>PARSING_MISSING_SPECIAL_TARGET</code> error.</p>
+            </def>
+            <def title="Redirection Handlers: Overwriting and Precedence" id="redirection-precedence">
+                <p>The functions in <code>src/parser/parser_special_redirect_*.c</code> handle the logic for <code>&lt;</code>, <code>&gt;</code>, <code>&gt;&gt;</code>, and <code>&lt;&lt;</code>.</p>
+                <p>A key behavior is that for any given stream, the <b>last</b> redirection wins. For example, in <code>echo hello &gt; file1 &gt; file2</code>, the parser will first open <code>file1</code> and store its descriptor. When it then processes the redirection to <code>file2</code>, it will close the descriptor for <code>file1</code> and replace it with a new descriptor for <code>file2</code>. This ensures the shell behaves as expected.</p>
+            </def>
+        </deflist>
+    </chapter>
+
+    <chapter title="Final Output: From List to Array" id="parser-output">
+        <p>
+            The parser's internal representation of commands is a linked list (<code>t_list</code>) because it's easy to append new commands as they are discovered. However, a simple array is often easier for the executor to work with.
+        </p>
+        <p>
+            The <code>parser_to_list</code> function in <code>src/parser/parser_to_list.c</code> handles this final conversion. It allocates a single, contiguous block of memory large enough to hold all the <code>t_cmd</code> structs in the linked list. It then iterates through the list, copying each command into the array. The array is terminated with a sentinel command structure (with <code>args = NULL</code>) to make iteration straightforward for the executor.
+        </p>
+    </chapter>
+
+    <chapter title="Error Handling and Memory Management" id="parser-error-handling">
+        <p>
+            A robust parser must handle both syntactic errors and memory allocation failures gracefully.
+        </p>
+        <deflist>
+            <def title="Syntax Errors">
+                <p>The <code>t_parsing_error</code> enum defines possible error conditions:</p>
+                <list>
+                    <li><b>PARSING_MISSING_SPECIAL_TARGET:</b> Occurs when a redirection operator (<code>&gt;</code>, <code>&lt;</code>, etc.) is not followed by a valid filename. Example: <code>echo hello &gt; | world</code>.</li>
+                    <li><b>PARSING_DOUBLE_SPECIAL_DIRECTIVE:</b> Occurs when two operators appear consecutively without a valid target. Example: <code>ls || wc</code>.</li>
+                </list>
+                <p>When a syntax error is found, the <code>parser-&gt;error</code> field is set, and <code>parser_parse</code> returns immediately, preventing the execution of the malformed command.</p>
+            </def>
+            <def title="Memory Management">
+                <p>The parser allocates memory for many different objects: <code>t_cmd</code> structs, argument lists, argument strings, and redirection paths. The <code>parser_free</code> function in <code>src/parser/parser_free.c</code> is the central cleanup utility.</p>
+                <p>It recursively frees all associated memory: it iterates through the <code>command_list</code>, calling <code>free_command</code> on each node. <code>free_command</code> in turn frees the argument array, each individual argument string, and any redirection path strings before freeing the command struct itself. This ensures that no memory is leaked, even in the case of a parsing error partway through the input.</p>
+            </def>
+        </deflist>
+    </chapter>
+
+    <seealso>
+        <category ref="related">
+            <a href="How-to-design-a-lexer.topic"/>
+            <a href="About-Minishell.topic"/>
+            <a href="How-Variable-Expansion-Works.topic" />
+            <a href="How-the-Git-Integration-Works.topic" />
+        </category>
+    </seealso>
+</topic>

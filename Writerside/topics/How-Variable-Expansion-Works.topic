@@ -1,0 +1,466 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="Variable Expansion: A Deep Dive" id="How-Variable-Expansion-Works">
+
+    <tldr>
+        <p>
+            Variable expansion is a two-phase process. First, the shell scans the user's input to <b>extract</b> a list of all potential variable names (e.g., <code>$USER</code>). Second, after parsing, it <b>expands</b> these variables by replacing them with their values from the environment, handling special cases like <code>$?</code> and <code>$$</code> along the way.
+        </p>
+    </tldr>
+
+    <chapter title="The Two Phases of Variable Handling" id="variable-handling-phases">
+        <p>
+            Variable expansion is a fundamental feature of any shell, allowing dynamic content and configuration. In our Minishell, this complex process is meticulously divided into two distinct, sequential phases to ensure efficiency and correctness:
+        </p>
+        <list>
+            <li>
+                <b>Phase 1: Extraction (<code>b_varextract</code>):</b> This phase occurs immediately after lexical analysis (tokenization) and <em>before</em> parsing. Its sole purpose is to identify and collect all potential variable names (e.g., <code>$VAR</code>, <code>$_VAR</code>, <code>$?</code>, <code>$$</code>) present in the raw token stream. It builds a structured list of these names, grouped by the command they belong to.
+            </li>
+            <li>
+                <b>Phase 2: Expansion (<code>ft_var</code>):</b> This phase takes place after the parser has successfully constructed the command structures. For each command argument that might contain variables, the expansion logic replaces the identified variable names with their actual values retrieved from the shell's environment. This is where the string manipulation and substitution occur.
+            </li>
+        </list>
+        <p>
+            This clear separation of concerns is crucial. It allows the shell to first understand *what* variables need to be processed, and then, in a later, more context-aware stage, *how* to substitute their values into the command arguments. This design simplifies error handling and memory management.
+        </p>
+    </chapter>
+
+    <chapter title="Phase 1: Extracting Variable Names (<code>src/varextract/</code>)" id="extraction-phase">
+        <p>
+            The primary function for variable extraction is <code>b_varextract</code>, located in <code>src/varextract/extract_var_list.c</code>. Its output is a sophisticated data structure: a list of lists. Each outer list node corresponds to a command in the pipeline, and its content is another list containing the names of variables found within that specific command's arguments.
+        </p>
+
+        <code-block lang="c">
+// From include/varextract.h
+t_list *b_varextract(t_list *tokens);
+        </code-block>
+
+        <section title="The Extraction Process: Step-by-Step" id="extraction-steps">
+            <procedure title="Detailed b_varextract Workflow">
+                <step>
+                    <p><b>Initialization:</b> <code>b_varextract</code> starts by initializing two pointers: <code>cmd_var_lists</code> (the main list of lists, initially <code>NULL</code>) and <code>cur_var_list</code> (the current inner list for the command being processed, also initially <code>NULL</code>). This ensures a clean state for each new extraction process.</p>
+                </step>
+                <step>
+                    <p><b>Token Iteration:</b> The function iterates through the entire <code>token_list</code> provided by the lexer, processing each <code>t_token</code> one by one. This linear scan ensures all parts of the input are examined.</p>
+                </step>
+                <step>
+                    <p><b>Handling <code>TOKEN_PIPE</code>: Command Delimitation</b>
+                        <code-block lang="c">
+// From src/varextract/extract_var_list.c
+if (token->type == TOKEN_PIPE)
+{
+    ft_lstadd_back(&cmd_var_lists, ft_lstnew(cur_var_list));
+    cur_var_list = NULL;
+}
+                        </code-block>
+                        When a <code>TOKEN_PIPE</code> is encountered, it signifies the boundary between two commands in the pipeline. The currently accumulated <code>cur_var_list</code> (containing variables for the preceding command segment) is finalized and added as a new node to the <code>cmd_var_lists</code>. Subsequently, <code>cur_var_list</code> is reset to <code>NULL</code>, preparing it to collect variables for the next command segment after the pipe. This ensures variables are correctly associated with their respective commands.</p>
+                </step>
+                <step>
+                    <p><b>Handling <code>TOKEN_WORD</code>: Scanning for Variables</b>
+                        <code-block lang="c">
+// From src/varextract/extract_var_list.c
+else if (token->type == TOKEN_WORD)
+{
+    if (extract_vars_from_word(token->value, &cur_var_list, &cmd_var_lists) < 0)
+        return (NULL); // Handle memory allocation failure
+}
+                        </code-block>
+                        For each <code>TOKEN_WORD</code>, the <code>extract_vars_from_word</code> helper function is invoked. This is a critical step, as it delves into the actual string content of the word token to identify and extract variable names. This function is designed to be robust against various forms of variable usage within a word.</p>
+                        <section title="Inside <code>extract_vars_from_word</code>: The Dollar Sign Hunter" id="extract-vars-from-word">
+                            <p>This function systematically iterates through the <code>value</code> string of the <code>TOKEN_WORD</code>, specifically looking for the <code>$</code> character, which is the universal indicator for a variable in shell syntax.</p>
+                            <code-block lang="c">
+// From src/varextract/extract_var_list.c
+static int extract_vars_from_word(const char *value, t_list **cur_var_list, t_list **cmd_var_lists)
+{
+    const char *p = value; // Current position in the word string
+    const char *next_dollar = ft_strchr(p, '$'); // Find the first dollar sign
+    while (next_dollar)
+    {
+        // Check if it's a valid variable start (not just a literal $ or special char)
+        if (*(next_dollar + 1) && (ft_isalnum(*(next_dollar + 1)) || *(next_dollar + 1) == '_'))
+        {
+            // If it's a valid variable name character, extract the name
+            if (!handle_variable(next_dollar + 1, cur_var_list))
+            {
+                // Critical error: memory allocation failed during variable name extraction.
+                // Clean up all previously allocated lists to prevent leaks.
+                cleanup_var_lists(*cmd_var_lists, *cur_var_list);
+                errno = ENOMEM;
+                return (-1);
+            }
+        }
+        p = next_dollar + 1; // Move past the current $ to find the next one
+        next_dollar = ft_strchr(p, '$');
+    }
+    return (0); // Success
+}
+                            </code-block>
+                            <p>A crucial check is performed: <code>*(next_dollar + 1) && (ft_isalnum(*(next_dollar + 1)) || *(next_dollar + 1) == '_')</code>. This ensures that the character immediately following the <code>$</code> is a valid character for a variable name (alphanumeric or underscore). This prevents misinterpreting literal dollar signs (e.g., <code>$10</code> where <code>10</code> is not a variable name, or a lone <code>$</code> at the end of a string) as variable references. It also implicitly handles special variables like <code>$?</code> and <code>$$</code>, as their second character is not alphanumeric or underscore, causing them to be skipped by this specific extraction logic (they are handled later in the expansion phase).</p>
+                        </section>
+                        <section title="Inside <code>handle_variable</code>: Name Extraction and Storage" id="handle-variable">
+                            <p>When <code>extract_vars_from_word</code> identifies a valid variable start, it calls <code>handle_variable</code> to precisely extract the variable's name and add it to the current command's variable list.</p>
+                            <code-block lang="c">
+// From src/varextract/extract_var_list.c
+static int handle_variable(const char *start, t_list **cur_var_list)
+{
+    char *var_name;
+    int  len = 0;
+    // Collect all characters that are part of a valid variable name
+    while (ft_isalnum(start[len]) || start[len] == '_')
+        len++;
+    var_name = ft_substr(start, 0, len); // Extract the variable name string
+    if (!var_name || !add_var_to_list(cur_var_list, var_name))
+    {
+        free(var_name); // Free if allocation or list addition fails
+        return (0); // Indicate failure
+    }
+    return (1); // Indicate success
+}
+                            </code-block>
+                            <p>This function uses <code>ft_isalnum</code> and checks for underscores to determine the extent of the variable name. The extracted name (e.g., "USER", "PATH") is then dynamically allocated and added to the <code>cur_var_list</code> using <code>add_var_to_list</code>. This ensures that only valid and complete variable names are collected.</p>
+                        </section>
+                </step>
+                <step>
+                    <p><b>Finalization:</b> After the main loop finishes iterating through all tokens, the last <code>cur_var_list</code> (which contains variables for the final command segment in the pipeline) is added to <code>cmd_var_lists</code>. This completes the variable extraction for the entire input line.</p>
+                </step>
+            </procedure>
+        </section>
+
+        <section title="The Output Structure: A List of Lists (<code>t_list&lt;t_list&lt;char*&gt;*&gt;*</code>)" id="output-structure">
+            <p>The <code>t_list</code> structure is a generic linked list provided by the <code>libft</code>. For <code>b_varextract</code>, it's used in a nested fashion to precisely map variables to their command contexts:</p>
+            <code-block lang="text">
+// Conceptual structure for `echo $USER | grep $TERM`
+cmd_var_lists (t_list*)
+  |-> Node 1 (content: t_list* for first command)
+  |     |-> Node 1.1 (content: char* "USER")
+  |     |-> NULL (end of first command's variable list)
+  |
+  |-> Node 2 (content: t_list* for second command)
+  |     |-> Node 2.1 (content: char* "TERM")
+  |     |-> NULL (end of second command's variable list)
+  |
+  |-> NULL (end of pipeline's command variable lists)
+            </code-block>
+            <p>This hierarchical structure is critical. It ensures that each command receives only the variables relevant to its arguments, maintaining proper scope within the pipeline. For instance, if a variable is defined only for a specific command in a complex pipeline, this structure allows for that precise association.</p>
+        </section>
+    </chapter>
+
+    <chapter title="Phase 2: Expanding Variables (<code>src/utils/var/</code> and <code>src/utils/ft_var.c</code>)" id="expansion-phase-details">
+        <p>
+            The actual substitution of variable names with their values occurs in the <code>ft_var</code> function, defined in <code>src/utils/ft_var.c</code>. This function is called for each command argument (a string) that might contain a variable. It takes the original argument string, the array of extracted variable names (from Phase 1), and the environment list, and returns a new, dynamically allocated string with all variables expanded.
+        </p>
+
+        <code-block lang="c">
+// From src/utils/ft_var.c
+char *ft_var(char *var, char **varnames, t_list *env)
+{
+    size_t          len;         // Calculated length of the final expanded string
+    char            *result_str; // The new string with expanded variables
+    size_t          src_idx;     // Current index in the source string (var)
+    size_t          dest_idx;    // Current index in the destination string (result_str)
+    t_var_context   ctx;         // Context struct for passing multiple parameters efficiently
+
+    // Pass 1: Calculate the exact length of the final string to avoid reallocations
+    len = ft_strlen_or_something_i_do_not_know(var, varnames, env);
+
+    // Allocate memory for the new string based on the calculated length
+    result_str = malloc(len + 1);
+    if (!result_str) { perror("malloc"); return (NULL); } // Handle allocation failure
+
+    // Pass 2: Build the new string with substitutions
+    src_idx = 0;
+    dest_idx = 0;
+    // Initialize the context struct with all necessary parameters
+    ctx = (t_var_context){result_str, var, &src_idx, dest_idx, varnames, env, len};
+    while (var[src_idx] != '\0')
+        loopvar(&ctx); // Processes one character or one variable at a time
+    result_str[len] = '\0'; // Null-terminate the result string
+
+    // Final step: Revert backspace characters to dollar signs (for single quotes)
+    replace_backspace_with_dollar(result_str);
+
+    free(var); // Free the original argument string, as it's no longer needed
+    return (result_str);
+}
+        </code-block>
+
+        <section title="The Two-Pass Approach: Sizing and Building" id="two-pass-approach">
+            <p><code>ft_var</code> employs a robust two-pass strategy, a common optimization in C programming, to precisely manage memory allocation and prevent inefficient reallocations. This is particularly important when the final size of a string depends on dynamic content like variable values.</p>
+            <list>
+                <li>
+                    <b>Pass 1: Sizing (<code>ft_strlen_or_something_i_do_not_know</code>)</b>
+                    <p>This function performs a dry run through the input string <code>var</code>. Its sole purpose is to calculate the *exact* total length that the final, expanded string will occupy. It does not perform any actual string copying. For each character or variable encountered, it determines its contribution to the final length:</p>
+                    <deflist>
+                        <def title="<code>handle_regular_char</code>: Counting Literal Characters">
+                            <p>If the current character is not a <code>$</code> (meaning it's a literal character that doesn't require expansion), it simply contributes 1 to the total length. The source index is then advanced.</p>
+                            <code-block lang="c">
+// From src/utils/var/handle_regular_char.c
+size_t handle_regular_char(size_t *i)
+{
+    (*i)++; // Move past the current character in the source string
+    return (1); // This character contributes 1 byte to the final length
+}
+                            </code-block>
+                        </def>
+                        <def title="<code>handle_dollar_char</code>: Sizing Variable Expansions">
+                            <p>This is the core logic for the sizing pass when a <code>$</code> is encountered. It intelligently determines the type of variable (regular, special, or literal) and returns the precise length its expanded value will occupy in the final string.</p>
+                            <code-block lang="c">
+// From src/utils/var/handle_dollar_char.c
+size_t handle_dollar_char(char *str, size_t *i, char **varnames, t_list *env)
+{
+    (*i)++; // Consume the '$' character
+    if (iskey(str[*i])) // Check if the next character is valid for a variable name (alphanumeric or underscore)
+        return (handle_var_expansion(str, i, varnames, env)); // Handle regular variable expansion sizing
+    else if (str[*i] == '?' || str[*i] == '$') // Check for special variables: $? (exit status) or $$ (PID)
+    {
+        (*i)++; // Consume the special character (? or $)
+        return (handle_special_var(str[*i - 1])); // Return the length of the special variable's value
+    }
+    else // If it's not a valid variable name character or a special variable, treat the $ as literal
+        return (handle_regular_char(i)); // Treat the $ and the following character as literals
+}
+                            </code-block>
+                            <p><code>handle_dollar_char</code> acts as a dispatcher, delegating to other specialized sizing helpers:</p>
+                            <list type="bullet">
+                                <li>
+                                    <b><code>handle_var_expansion</code> (for regular variables):</b> This function (in <code>src/utils/var/handle_var_expansion.c</code>) is called for variables like <code>$USER</code>. It uses <code>find_var_match</code> to determine the exact length of the variable name (e.g., 4 for "USER"). It then retrieves the variable's value from the environment using <code>b_getenv_one</code> and returns the length of that value. If the variable is unset or empty, it contributes 0 to the length. Crucially, it also accounts for the special <code>\b</code> characters (used for single-quoted dollar signs) by treating them as literal characters that contribute 1 to the length, ensuring they are not expanded but their space is reserved.
+                                </li>
+                                <li>
+                                    <b><code>handle_special_var</code> (for <code>$?</code> and <code>$$</code>):</b> This function (in <code>src/utils/var/handle_special_var.c</code>) is responsible for calculating the length of special variables. For <code>$?</code>, it uses <code>num_places</code> to determine the number of digits in the global exit status (<code>g_status_code</code>). For <code>$$</code>, it calculates the number of digits in the current process ID (PID) obtained via <code>b_getpid()</code>. These lengths are then returned.
+                                </li>
+                            </list>
+                        </def>
+                    </deflist>
+                </li>
+                <li>
+                    <b>Pass 2: Building (<code>loopvar</code> and helpers)</b>
+                    <p>Once the exact total length (<code>len</code>) is known, <code>ft_var</code> allocates the <code>result_str</code> using <code>malloc</code>. This second pass then iterates through the original input string <code>var</code> again. This time, instead of merely calculating lengths, it actively copies characters and expanded variable values into the newly allocated <code>result_str</code>.</p>
+                    <deflist>
+                        <def title="<code>copy_regular_char</code>: Copying Literal Characters">
+                            <p>If the current character in the source string is not a <code>$</code>, it is a literal character and is directly copied to the destination string. Both source and destination indices are then advanced.</p>
+                            <code-block lang="c">
+// From src/utils/var/copy_regular_char.c
+size_t copy_regular_char(char *dest, char *src, size_t *i, size_t k)
+{
+    dest[k] = src[*i]; // Copy the character from source to destination
+    (*i)++; // Advance the source string index
+    return (k + 1); // Return the new destination string index
+}
+                            </code-block>
+                        </def>
+                        <def title="<code>handle_dollar_substitution</code>: Performing Variable Substitutions">
+                            <p>This function is the counterpart to <code>handle_dollar_char</code> in the sizing pass. When a <code>$</code> is encountered, it performs the actual copying of the expanded variable's value into the <code>result_str</code>.</p>
+                            <code-block lang="c">
+// From src/utils/var/handle_dollar_substitution.c
+size_t handle_dollar_substitution(t_var_context *ctx)
+{
+    (*ctx->i)++; // Consume the '$' character in the source string
+    if (iskey(ctx->src[*ctx->i])) // Check if it's a regular variable
+        return (handle_var_substitution(ctx)); // Delegate to handle regular variable substitution
+    else if (ctx->src[*ctx->i] == '?' || ctx->src[*ctx->i] == '$') // Check for special variables
+    {
+        // Expand special variable (exit status or PID) directly into the destination
+        ctx->k = expand_special_var(ctx->dest, ctx->src[*ctx->i], ctx->k, ctx->len);
+        (*ctx->i)++; // Consume the special character
+        return (ctx->k); // Return the new destination index
+    }
+    else // If not a variable, treat the $ and the following character as literals
+    {
+        ctx->dest[ctx->k++] = '$'; // Copy the literal $
+        ctx->dest[ctx->k++] = ctx->src[*ctx->i]; // Copy the character after $
+        (*ctx->i)++; // Consume the character after $
+        return (ctx->k); // Return the new destination index
+    }
+}
+                            </code-block>
+                            <p>It dispatches to:</p>
+                            <list type="bullet">
+                                <li>
+                                    <b><code>handle_var_substitution</code> (for regular variables):</b> This function (in <code>src/utils/var/handle_var_substitution.c</code>) is responsible for copying the value of a regular variable. It uses <code>find_var_match</code> to retrieve the variable's value from the environment. If a value is found (i.e., the variable is set), <code>expand_matched_var</code> copies that value into the <code>result_str</code>. If the variable is unset or explicitly empty, nothing is copied, effectively removing the variable reference from the final string.
+                                </li>
+                                <li>
+                                    <b><code>expand_special_var</code> (for <code>$?</code> and <code>$$</code>):</b> This function (in <code>src/utils/var/expand_special_var.c</code>) directly writes the string representation of the exit status (<code>g_status_code</code>) or the process ID (<code>b_getpid()</code>) into the destination buffer using <code>snprintf</code>. This ensures correct formatting of these numeric values.
+                                </li>
+                            </list>
+                        </def>
+                    </deflist>
+                </li>
+            </list>
+        </section>
+
+        <section title="The <code>t_var_context</code> Structure: Streamlining Parameter Passing" id="var-context">
+            <p>
+                Throughout the variable expansion process, many helper functions require access to the same set of parameters: the destination buffer, the source string, current indices, variable names, and the environment. To avoid long and cumbersome function signatures, the <code>t_var_context</code> structure is used.
+            </p>
+            <code-block lang="c">
+// From include/utils.h
+typedef struct s_var_context
+{
+    char            *dest;      // Pointer to the destination buffer (where expanded string is built)
+    char            *src;       // Pointer to the source string (original argument)
+    size_t          *i;         // Pointer to the current index in the source string (allows modification across calls)
+    size_t          k;          // Current index in the destination buffer
+    char            **varnames; // Array of variable names extracted in Phase 1
+    t_list          *env;       // The shell's environment list
+    size_t          len;        // Total allocated length of the destination buffer (for snprintf safety)
+} t_var_context;
+            </code-block>
+            <p>
+                By encapsulating these parameters into a single struct, function calls become cleaner and more readable, improving code maintainability and reducing the chance of errors due to mismatched arguments.
+            </p>
+        </section>
+
+        <section title="The Single-Quote Backspace Trick: Preserving Literals" id="backspace-trick">
+            <p>
+                One of the most ingenious aspects of our shell's variable expansion implementation is its method for handling dollar signs within single quotes. As meticulously detailed in the <a href="How-to-design-a-lexer.topic">Lexer documentation</a>, during the lexical analysis phase, any <code>$</code> character encountered inside single quotes is temporarily replaced with a backspace character (<code>\b</code>).
+            </p>
+            <p>
+                During the entire variable expansion process (both the sizing and building passes), the logic within <code>ft_var</code> and its numerous helper functions is designed to simply treat these <code>\b</code> characters as ordinary, literal characters. They are explicitly *not* interpreted as the beginning of a variable, thereby effectively preventing any form of expansion within single-quoted contexts.
+            </p>
+            <p>
+                The very final step in the <code>ft_var</code> function, after all other expansions and substitutions have been completed, is a crucial call to <code>replace_backspace_with_dollar</code>:
+            </p>
+            <code-block lang="c">
+// From src/utils/var/replace_backspace_with_dollar.c
+void replace_backspace_with_dollar(char *str)
+{
+    size_t i = 0;
+    while (str[i] != '\0')
+    {
+        if (str[i] == '\b')
+            str[i] = '$'; // Revert the backspace character back to its original dollar sign
+        i++;
+    }
+}
+            </code-block>
+            <p>
+                This elegant post-processing step iterates through the *final* expanded string and systematically converts any remaining <code>\b</code> characters back into their original <code>$</code> form. This ensures that dollar signs that were originally protected by single quotes are correctly rendered as literal dollar signs in the command argument, without ever having been subjected to variable expansion. This design choice maintains POSIX-like behavior for single quotes while simplifying the core expansion logic.
+            </p>
+        </section>
+
+        <section title="Handling Unset and Empty Variables" id="unset-empty-vars">
+            <p>
+                A robust shell must gracefully handle scenarios where variables are either undefined (unset) or explicitly set to an empty string. Our Minishell implements the following standard behaviors:
+            </p>
+            <list type="bullet">
+                <li>
+                    <b>Unset Variables:</b> If a variable (e.g., <code>$NONEXISTENT_VAR</code>) is referenced but is not found in the shell's environment, its expansion results in an empty string. Crucially, the variable name itself is completely removed from the argument string during the expansion process.
+                    <code-block lang="bash">
+# Example:
+$ unset MY_VAR
+$ echo "Hello $MY_VAR World"
+Hello  World
+                    </code-block>
+                </li>
+                <li>
+                    <b>Empty Variables:</b> If a variable is explicitly set to an empty string (e.g., <code>MY_VAR=""</code>), its expansion also results in an empty string. Similar to unset variables, the variable reference is removed from the argument.
+                    <code-block lang="bash">
+# Example:
+$ MY_VAR=""
+$ echo "Hello $MY_VAR World"
+Hello  World
+                    </code-block>
+                </li>
+            </list>
+            <p>
+                This behavior is primarily managed by the interaction between <code>find_var_match</code> and <code>expand_matched_var</code>. When <code>b_getenv_one</code> (which <code>find_var_match</code> uses) returns <code>NULL</code> (for unset variables) or an empty string (for empty variables), <code>expand_matched_var</code> simply copies nothing into the destination buffer, effectively removing the variable reference from the final string. This ensures that the argument string is correctly formed without any extraneous characters.
+            </p>
+        </section>
+
+        <section title="Special Variables: <code>$?</code> and <code>$$</code>" id="special-variables">
+            <p>
+                Minishell supports the two most common special shell variables, which provide dynamic information about the shell's state:
+            </p>
+            <list type="bullet">
+                <li>
+                    <b><code>$?</code> (Exit Status):</b> This variable expands to the decimal exit status of the most recently executed foreground pipeline. This value is stored in the global variable <code>g_status_code</code>, which is updated after each command execution.
+                    <code-block lang="bash">
+# Example:
+$ ls non_existent_file
+ls: non_existent_file: No such file or directory
+$ echo $?
+1
+$ echo "Last command exited with: $?"
+Last command exited with: 1
+                    </code-block>
+                </li>
+                <li>
+                    <b><code>$$</code> (Process ID):</b> This variable expands to the decimal process ID (PID) of the current shell instance. This is retrieved dynamically using the <code>b_getpid()</code> function.
+                    <code-block lang="bash">
+# Example:
+$ echo "My PID is: $$"
+My PID is: 12345
+                    </code-block>
+                </li>
+            </list>
+            <p>
+                These special variables are handled directly by <code>handle_special_var</code> (during the sizing pass) and <code>expand_special_var</code> (during the building pass). These functions convert the integer values (<code>g_status_code</code> or PID) into their string representations using <code>snprintf</code>, ensuring they are correctly embedded into the expanded argument string.
+            </p>
+        </section>
+
+        <section title="Word Splitting and Field Splitting (A Design Choice)" id="word-splitting">
+            <p>
+                It is crucial to understand a significant design choice in our Minishell's variable expansion: it <b>does not perform word splitting</b> (also known as field splitting) on the results of variable expansion. This is a key difference from POSIX-compliant shells like Bash or Zsh.
+            </p>
+            <p>
+                In standard shells, if a variable contains spaces or other characters defined in the <code>IFS</code> (Internal Field Separator) variable (e.g., <code>VAR="hello   world"</code>), then <code>echo $VAR</code> would typically expand to two separate arguments: "hello" and "world". The shell would split the expanded value into multiple arguments based on <code>IFS</code>.
+            </p>
+            <code-block lang="bash">
+# Behavior in Bash/Zsh:
+$ VAR="hello   world"
+$ echo $VAR
+hello world  # Two arguments passed to echo
+$ echo "$VAR"
+hello   world # One argument, quotes prevent splitting
+            </code-block>
+            <p>
+                In our Minishell implementation, however, the entire expanded value of a variable is always treated as a single unit, regardless of whether it contains spaces or not. This simplifies the parsing and execution logic significantly.
+            </p>
+            <code-block lang="bash">
+# Behavior in Minishell:
+$ VAR="hello   world"
+$ echo $VAR
+hello   world # One argument passed to echo
+$ echo "$VAR"
+hello   world # Still one argument, same as above
+            </code-block>
+            <p>
+                This design choice means that features relying on automatic word splitting (like iterating over space-separated lists in a variable without explicit quoting) will not behave as they would in more feature-rich shells. Users must explicitly quote arguments if they intend for spaces within a variable's value to be preserved as part of a single argument.
+            </p>
+        </section>
+
+        <section title="Memory Management in Expansion" id="expansion-memory-management">
+            <p>
+                Memory management is paramount in C programming, and the variable expansion module is designed with careful allocation and deallocation strategies.
+            </p>
+            <list type="bullet">
+                <li>
+                    <b>Dynamic Allocation:</b> The <code>ft_var</code> function dynamically allocates memory for the new, expanded string (<code>result_str</code>) using <code>malloc</code>. The precise size is determined by the sizing pass, minimizing wasted memory.
+                </li>
+                <li>
+                    <b>Original String Deallocation:</b> After the new expanded string is successfully created, the original input string (<code>var</code>) passed to <code>ft_var</code> is immediately freed using <code>free(var)</code>. This prevents memory leaks from the original argument strings.
+                </li>
+                <li>
+                    <b>Helper Function Allocations:</b> Helper functions like <code>ft_substr</code> (used in <code>handle_variable</code>) and <code>ft_strdup</code> (used in <code>b_getenv_one</code>) also perform dynamic allocations. It is the responsibility of the calling functions (e.g., <code>b_varextract</code>, <code>ft_var</code>) to ensure these temporary allocations are freed once their content has been used or copied.
+                </li>
+                <li>
+                    <b>Error Handling:</b> In case of memory allocation failures (e.g., <code>malloc</code> returns <code>NULL</code>), functions are designed to return <code>NULL</code> or set <code>errno</code> to <code>ENOMEM</code>, allowing the calling code to handle the error gracefully and prevent crashes.
+                </li>
+            </list>
+            <p>
+                The overall strategy aims for efficient, single-allocation string building where possible, coupled with diligent freeing of intermediate and original strings to maintain a lean memory footprint.
+            </p>
+        </section>
+    </chapter>
+
+    <seealso>
+        <category ref="related">
+            <a href="How-to-design-a-lexer.topic"/>
+            <a href="How-the-Parser-Works.topic"/>
+            <a href="How-the-Git-Integration-Works.topic"/>
+            <a href="About-Minishell.topic"/>
+        </category>
+    </seealso>
+</topic>

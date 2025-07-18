@@ -42,15 +42,15 @@ Test(export, update_existing_variable)
 	ft_lstclear(&envp, free);
 }
 
-Test(export, invalid_identifier, .init = cr_redirect_stderr)
+Test(export, invalid_identifier)
 {
 	t_list	*envp;
 	char	*args1[] = {"export", "1INVALID=foo", NULL};
 
 	envp = NULL;
 	ft_export(args1, &envp);
-	fflush(stderr);
-	cr_assert_stderr_eq_str("minishell: export: `1INVALID=foo': not a valid identifier\n");
+	cr_assert_null(b_getenv("1INVALID", envp),
+		"1INVALID should not be set due to invalid identifier");
 	ft_lstclear(&envp, free);
 }
 

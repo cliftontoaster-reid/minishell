@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="An In-Depth Look at the Git Integration" id="How-the-Git-Integration-Works">
+
+    <tldr>
+        <p>
+            The Git integration enhances the shell prompt by displaying the current branch name and status. This is achieved by traversing the filesystem to find a <code>.git</code> directory, reading and parsing the <code>.git/HEAD</code> file, and executing <code>git diff</code> commands to detect staged or unstaged changes.
+        </p>
+    </tldr>
+
+    <chapter title="Overview of the Git Prompt Feature" id="git-prompt-overview">
+        <p>
+            The primary goal of this feature is to provide immediate visual feedback on the state of the current Git repository directly in the shell prompt. This saves the user from frequently running <code>git status</code>. The final output is a compact message like <code>(git: main*)</code>, which is constructed by a series of functions that work together to gather the necessary information.
+        </p>
+        <p>The process can be broken down into three main stages:</p>
+        <list>
+            <li><b>Repository Detection:</b> Find the root of the Git repository.</li>
+            <li><b>Branch Discovery:</b> Determine the current branch name or commit hash.</li>
+            <li><b>Status Checking:</b> Check for modified files (staged or unstaged).</li>
+        </list>
+        <p>This document will break down the exact implementation of each stage, file by file.</p>
+    </chapter>
+
+    <chapter title="The Core Logic: git_message()" id="git-message-function">
+        <p>The entire process is initiated by a single function, <code>git_message()</code>, defined in <code>src/git/git_message.c</code>. This function is the conductor of the orchestra, calling other helper functions to gather data and then assembling the final, color-coded string for the prompt.</p>
+        <code-block lang="c">
+// From src/git/git_message.c
+void git_message(void)
+{
+    char *branch;
+    bool uncommitted_changes;
+    bool staged_changes;
+
+    branch = git_getbranch(); // Get the branch name
+    if (branch)
+    {
+        ft_putstr_fd(" (git: " COLOUR_YELLOW, STDOUT_FILENO);
+        ft_putstr_fd(branch, STDOUT_FILENO);
+
+        // Check for changes
+        uncommitted_changes = is_git_changes();
+        staged_changes = is_git_changes_staged();
+
+        // Append status symbols
+        if (uncommitted_changes || staged_changes)
+            ft_putstr_fd(COLOUR_PINK "*", STDOUT_FILENO);
+        if (uncommitted_changes)
+            ft_putstr_fd(COLOUR_RED "!", STDOUT_FILENO);
+
+        ft_putstr_fd(COLOUR_RESET ")", STDOUT_FILENO);
+        free(branch);
+    }
+}
+        </code-block>
+        <p>The logic is straightforward: it first attempts to get the branch name. If successful, it proceeds to check for staged and unstaged changes and prints the appropriate symbols (<code>*</code> and <code>!</code>) with colors.</p>
+    </chapter>
+
+    <chapter title="Stage 1: Finding the Repository" id="finding-the-repo">
+        <p>Before any Git information can be gathered, the shell must confirm it's inside a Git repository. This is handled by the functions in <code>find_git_dir.c</code> and <code>is_repo.c</code>.</p>
+        <deflist>
+            <def title="find_git_dir.c">
+                <p>This file contains the logic for locating the <code>.git</code> directory. It works by starting from the current working directory and searching upwards.</p>
+                <code-block lang="c">
+// From src/git/find_git_dir.c
+char *find_git_dir(void)
+{
+    char *cwd = getcwd(NULL, 0); // Get current working directory
+    if (!cwd) return (NULL);
+
+    // Loop upwards from cwd
+    char *path;
+    struct stat st;
+    char *slash;
+    while (1)
+    {
+        path = ft_strjoin(cwd, "/.git"); // Append "/.git"
+        if (stat(path, &st) == 0 && S_ISDIR(st.st_mode)) // Check if it exists and is a directory
+            return (path); // Success!
+        free(path);
+
+        slash = ft_strrchr(cwd, '/'); // Find the last slash
+        if (!slash) break; // Reached the root
+        *slash = '\0'; // Truncate the path to go one level up
+    }
+    // ...
+}
+                </code-block>
+                <p>The function repeatedly shortens the current path until it either finds a <code>.git</code> directory or reaches the filesystem root.</p>
+            </def>
+            <def title="is_repo.c">
+                <p>This is a simple boolean wrapper around <code>find_git_dir()</code>. It calls <code>find_git_dir()</code>, frees the returned path if it's not NULL, and returns <code>true</code> if a path was found, or <code>false</code> otherwise. It provides a clean way to check for a repository without needing to manage the returned path string.</p>
+            </def>
+        </deflist>
+    </chapter>
+
+    <chapter title="Stage 2: Discovering the Branch Name" id="discovering-branch">
+        <p>Once the repository is found, the <code>git_getbranch()</code> function coordinates the effort to read the current branch name from the <code>.git/HEAD</code> file.</p>
+        <procedure title="The git_getbranch() Workflow">
+            <step>
+                <p><b>Find .git Directory:</b> It first calls <code>find_git_dir()</code>.</p>
+            </step>
+            <step>
+                <p><b>Open HEAD File:</b> It passes the path to <code>open_head_file()</code>, which appends "/HEAD" to the path, opens the file, and returns the file descriptor as a string.</p>
+            </step>
+            <step>
+                <p><b>Read HEAD Content:</b> The file descriptor is passed to <code>read_head_file()</code>, which reads the file's contents into a buffer.</p>
+            </step>
+            <step>
+                <p><b>Parse the Content:</b> The buffer is passed to <code>get_branch_name()</code>, which extracts the actual branch name. This is the most nuanced part of the process.</p>
+            </step>
+        </procedure>
+
+        <chapter title="Parsing .git/HEAD" id="parsing-head">
+            <p>The <code>get_branch_name()</code> function in <code>src/git/get_branch_name.c</code> is designed to handle the two possible states of the <code>HEAD</code> file:</p>
+            <deflist>
+                <def title="Symbolic Reference (On a Branch)">
+                    <p>Typically, <code>HEAD</code> contains a symbolic reference to the current branch, like: <code>ref: refs/heads/main</code>.</p>
+                    <code-block lang="c">
+// From src/git/get_branch_name.c
+if (ft_strncmp(buffer, "ref: refs/heads/", 16) == 0)
+{
+    // Find the newline to correctly terminate the string
+    newline = ft_strchr(buffer, '\n');
+    if (newline)
+        len = (size_t)(newline - (buffer + 16));
+    else
+        len = (size_t)(n - 16);
+    return (ft_strndup(buffer + 16, len)); // Return the part after "ref: refs/heads/"
+}
+                    </code-block>
+                    <p>The code checks for the "ref: refs/heads/" prefix and, if found, extracts the substring that follows it.</p>
+                </def>
+                <def title="Detached HEAD (On a Commit)">
+                    <p>If you check out a specific commit, <code>HEAD</code> will contain the raw commit hash directly: <code>a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0</code>.</p>
+                     <code-block lang="c">
+// From src/git/get_branch_name.c
+else
+{
+    // It's not a symbolic ref, so it must be a commit hash.
+    // Truncate to 7 characters for a short, clean display.
+    if (n > 7)
+        return (ft_strndup(buffer, 7));
+    else
+        return (ft_strndup(buffer, (size_t)n));
+}
+                    </code-block>
+                    <p>In this case, the function simply returns the first 7 characters of the hash to represent the detached HEAD state concisely.</p>
+                </def>
+            </deflist>
+        </chapter>
+    </chapter>
+
+    <chapter title="Stage 3: Checking for File Changes" id="checking-for-changes">
+        <p>To determine if status symbols (<code>*</code> or <code>!</code>) should be displayed, the shell runs actual <code>git</code> commands in a subprocess. This is handled by <code>is_git_changes()</code> and <code>is_git_changes_staged()</code>.</p>
+        <p>The implementation for both is nearly identical, differing only in the arguments passed to <code>git diff</code>.</p>
+        <code-block lang="c">
+// From src/git/is_git_changes.c
+bool is_git_changes(void)
+{
+    pid_t pid = fork(); // Create a child process
+    if (pid == 0)
+    {
+        // In the child process, execute git diff
+        // --quiet makes it faster by not generating output
+        // --exit-code makes it exit with 1 if changes are found, 0 otherwise
+        execve("/usr/bin/git", argv, environ);
+        _exit(1); // Exit if execve fails
+    }
+
+    // In the parent process, wait for the child to finish
+    int status;
+    waitpid(pid, &status, 0);
+
+    // Check the child's exit code
+    if (WIFEXITED(status))
+        return (WEXITSTATUS(status) != 0); // Return true if exit code is not 0
+
+    return (false);
+}
+        </code-block>
+        <p>This is an efficient way to check for changes. Instead of parsing the text output of <code>git status</code>, the shell leverages the exit code of <code>git diff</code>, which is designed for exactly this kind of programmatic check.</p>
+    </chapter>
+
+    <seealso>
+        <category ref="related">
+            <a href="How-to-design-a-lexer.topic"/>
+            <a href="How-the-Parser-Works.topic"/>
+            <a href="How-Variable-Expansion-Works.topic"/>
+            <a href="About-Minishell.topic"/>
+        </category>
+    </seealso>
+</topic>

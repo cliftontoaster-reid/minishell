@@ -6,10 +6,11 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 00:00:00 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/16 14:23:48 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/18 14:01:37 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "main.h"
 #include "reader.h"
 
 static void	attach_vars_to_cmds(t_reader *reader)
@@ -58,8 +59,10 @@ bool	try_parse(t_reader *reader)
 	if (error != PARSING_NO_ERROR)
 	{
 		parser_free(reader->parser);
+		free_varlists(reader->vars);
 		reader->parser = NULL;
 		errno = EINVAL;
+		g_status_code = 2;
 		printf("Parsing error: %s\n", p_strerror(error));
 		return (false);
 	}
