@@ -336,7 +336,7 @@ class MinishellTester {
         command: "echo $USER",
         expectedExitCode: 0,
         description: "Test basic variable expansion",
-        expectedOutputContains: ["creid"],
+        expectedOutputContains: [Deno.env.get("USER") || ""],
       },
       {
         name: "variable_expansion_path",
