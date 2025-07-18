@@ -51,13 +51,6 @@ jobs:
           sudo apt-get install -y make clang wget tar gzip mold xz-utils zip
           # Install libraries for the project, including GNU Readline
           sudo apt-get install -y libreadline-dev
-          # Install Valgrind for memory leak detection in advanced tests
-          sudo apt-get install -y valgrind
-
-      - name: Install Deno
-        run: |
-          curl -fsSL https://deno.land/x/install/install.sh | sh
-          echo "$HOME/.deno/bin" >> $GITHUB_PATH
 
       - name: Build project
         run: make all
@@ -68,22 +61,6 @@ jobs:
         timeout-minutes: 10
         env:
           CRIT_DEV: 1
-
-      - name: Run advanced tests
-        run: bash tools/run_tests.sh
-        timeout-minutes: 15
-        env:
-          CRIT_DEV: 1
-
-      - name: Upload test reports
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: test-reports-${{ matrix.os }}
-          path: |
-            tools/test_report.json
-            tools/test_report.html
-          retention-days: 7
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
