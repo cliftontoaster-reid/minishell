@@ -207,8 +207,8 @@ test: $(NTEST)
 
 
 $(NTEST): $(CRIT_PC) $(TESTOBJS)
-	@echo "$(TEST_CC) $(LDFLAGS) $(TEST_LDFLAGS) -o $@ $(TESTOBJS) $(_LIB_FT)"
-	@$(TEST_CC) $(LDFLAGS) $(TEST_LDFLAGS) -o $@ $(TESTOBJS) $(_LIB_FT)
+	@echo "$(CC) $(LDFLAGS) $(TEST_LDFLAGS) -o $@ $(TESTOBJS) $(_LIB_FT)"
+	@$(CC) $(LDFLAGS) $(TEST_LDFLAGS) -o $@ $(TESTOBJS) $(_LIB_FT)
 
 $(_LIB_FT):
 	@if [ ! -d $(LFT_DIR) ]; then \
