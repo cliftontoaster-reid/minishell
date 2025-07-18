@@ -6,10 +6,11 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 10:25:58 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/16 19:19:24 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/18 13:58:47 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "main.h"
 #include "parser.h"
 #include "shared.h"
 #include <errno.h>
@@ -116,6 +117,11 @@ t_parsing_error	parser_parse(t_parser *parser)
 		if (parser->error != PARSING_NO_ERROR)
 			return (parser->error);
 		parser->last_token_type = parser->current_token->type;
+	}
+	if (parser->state == PARSER_SPECIAL)
+	{
+		end_command(parser);
+		return (PARSING_MISSING_SPECIAL_TARGET);
 	}
 	if (parser->command != NULL || parser->argument_list != NULL)
 		end_command(parser);

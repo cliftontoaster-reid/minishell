@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:43:00 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/16 19:00:53 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/18 13:46:30 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,10 @@ void	parser_special_redirect_heredoc(t_parser *parser)
 
 	token = get_redirect_token(parser);
 	if (!token)
+	{
+		parser->error = PARSING_MISSING_SPECIAL_TARGET;
 		return ;
+	}
 	if (parser->command == NULL)
 		parser->command = cmd_init();
 	if (parser->command->heredoc_delimiters == NULL)

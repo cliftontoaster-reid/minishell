@@ -52,6 +52,7 @@ void	parser_special_redirect_in(t_parser *parser)
 	token = get_redirect_token(parser);
 	if (!token)
 	{
+		parser->error = PARSING_MISSING_SPECIAL_TARGET;
 		return ;
 	}
 	fd = open(token->value, O_RDONLY);

@@ -8,4 +8,7 @@
 
     <toc-element topic="About-Minishell.topic"/>
     <toc-element topic="How-to-design-a-lexer.topic"/>
+        <toc-element topic="How-the-Parser-Works.topic"/>
+        <toc-element topic="How-Variable-Expansion-Works.topic"/>
+        <toc-element topic="How-the-Git-Integration-Works.topic"/>
 </instance-profile>
