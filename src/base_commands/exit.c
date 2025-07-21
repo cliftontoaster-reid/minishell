@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 13:37:28 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/21 12:43:16 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/17 17:22:19 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ bool	isstring_noomber(char *s)
 	return (true);
 }
 
-void	ft_exit(char **s, t_reader *reader, t_cmd *cmd)
+void	ft_exit(char **s, t_reader *reader, t_cmd **cmd)
 {
 	unsigned char	exit_code;
 

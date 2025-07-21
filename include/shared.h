@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:24:32 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/17 15:25:45 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/07/17 16:16:55 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ void					ft_free_split(char **split);
 
 // pipex/ft_error.c
 void					ft_cmdpathlist(t_cmd *cmd, t_list *tenvp);
+int						ft_check_if_builtin(t_cmd *cmd, int cmd_idx);
 
 // pipex/ft_utils.c
 void					closefd(t_cmd *cmd, int exitnbr, t_reader *reader);
@@ -115,13 +116,13 @@ void					ft_cleanup_cmd(t_cmd *cmd);
 int						ft_nbrofcmds(t_cmd *cmd);
 
 // pipex/ft_builtin.c
-void					is_builtin(t_cmd *cmd, t_list **env, int cmd_idx, t_reader *exit);
+void					is_builtin(t_cmd **cmd, t_list **env, int cmd_idx, t_reader *exit);
 
 // base_commands/(...).c
 void					ft_cd(char **argv, t_list **envp);
 void					ft_echo(int argc, char **argv);
 void					ft_env(t_list **env);
-void					ft_exit(char **s, t_reader *reader, t_cmd *cmd);
+void					ft_exit(char **s, t_reader *reader, t_cmd **cmd);
 void					ft_export(char **argv, t_list **envp);
 void					ft_pwd(t_list **envp);
 void					ft_unset(char **args, t_list **envp);

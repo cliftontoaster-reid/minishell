@@ -6,7 +6,7 @@
 /*   By: jfranc <jfranc@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 18:51:56 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/15 16:33:37 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/07/17 16:16:14 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,7 @@
 #include "utils.h"
 #include "pipex.h"
 
-//static void   exit_failure_free_all(TODO)
-
-static int	ft_check_if_builtin(t_cmd *cmd, int cmd_idx)
+int	ft_check_if_builtin(t_cmd *cmd, int cmd_idx)
 {
 	if (!ft_strncmp(cmd[cmd_idx].args[0], "cd", 3)
 		|| !ft_strncmp(cmd[cmd_idx].args[0], "echo", 5)

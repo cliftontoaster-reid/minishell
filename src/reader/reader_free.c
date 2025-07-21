@@ -6,13 +6,14 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 19:34:24 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/21 12:53:20 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/17 17:20:43 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "reader.h"
 #include "shared.h"
 #include <readline/readline.h>
+#include "shared.h"
 
 void	free_env(void *env)
 {

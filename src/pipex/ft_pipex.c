@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:03:33 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/21 12:44:14 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/17 16:54:54 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,26 +31,28 @@ static void	pipe_redirection(t_cmd *cmd, int cmd_idx)
 	closefd(cmd, NO_EXIT, NULL);
 }
 
-static void	fd_child(t_cmd *cmd, t_list *tenvp, int cmd_idx, t_reader *exit)
+static void    fd_child(t_cmd *cmd, t_list *tenvp, int cmd_idx, t_reader *exit)
 {
-	cmd[cmd_idx].pid = fork();
-	if (cmd[cmd_idx].pid == -1)
-	{
-		printf("error fork of pid %d", cmd_idx);
-		closefd(cmd, EXIT_FAILURE, exit);
-	}
-	if (cmd[cmd_idx].pid == 0)
-	{
-		pipe_redirection(cmd, cmd_idx);
-		is_builtin(cmd, &tenvp, cmd_idx, exit);
-		if (cmd->error == 1)
-			closefd(cmd, EXIT_FAILURE, exit);
-		if (!cmd->cmdpathlist[cmd_idx])
-			closefd(cmd, EXIT_FAILURE, exit);
-		execve(cmd->cmdpathlist[cmd_idx], cmd[cmd_idx].args, b_getenv(NULL,
-				tenvp));
-		closefd(cmd, EXIT_FAILURE, exit);
-	}
+    cmd[cmd_idx].pid = fork();
+    if (cmd[cmd_idx].pid == -1)
+    {
+        printf("error fork of pid %d", cmd_idx);
+        closefd(cmd, EXIT_FAILURE, exit);
+    }
+    if (cmd[cmd_idx].pid == 0) // Child process
+    {
+        pipe_redirection(cmd, cmd_idx);
+        if (ft_check_if_builtin(cmd, cmd_idx))
+            is_builtin(&cmd, &tenvp, cmd_idx, exit);
+        if (cmd->error == 1) // Handle errors found before fork
+            closefd(cmd, EXIT_FAILURE, exit);
+        if (!cmd->cmdpathlist[cmd_idx])
+            closefd(cmd, 127, exit); // Exit with status 127
+        execve(cmd->cmdpathlist[cmd_idx], cmd[cmd_idx].args, b_getenv(NULL,
+                tenvp));
+        perror(cmd[cmd_idx].args[0]);
+        closefd(cmd, EXIT_FAILURE, exit);
+    }
 }
 
 void	ft_wait_for_children(int last_pid)

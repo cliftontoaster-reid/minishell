@@ -135,7 +135,6 @@ SRCS     = \
 	\
 	$(SRC_DIR)/sigint/register_reader.c \
 	$(SRC_DIR)/sigint/sigint_handler.c \
-  # TODO added $(SRC_DIR)/pipex/ft_builtin.c \ TODO
   
   
  # add the source files from SRCS to the test files excluding 'src/main.c'
@@ -171,8 +170,8 @@ _LIB_FT	 = $(LFT_DIR)libft.a
 CRIT_DIR = $(OBJ_DIR)/criterion-2.4.2
 CRIT_INC = $(CRIT_DIR)/include
 CRIT_PC  = $(CRIT_DIR)/lib/pkgconfig/criterion.pc
-CFLAGS   = -Wall -Wextra -Werror -g3 -std=gnu17 -I$(INC_DIR) -pipe -MMD -MP -I$(LFT_DIR)
-LDFLAGS  = -O3 -g3 -std=gnu17 -pipe -lreadline
+CFLAGS   = -Wall -Wextra -Werror -g3 -fsanitize=address -std=gnu17 -I$(INC_DIR) -pipe -MMD -MP -I$(LFT_DIR)
+LDFLAGS  = -fsanitize=address -O3 -g3 -std=gnu17 -pipe -lreadline
 TEST_CFLAGS = -I$(CRIT_INC)
 TEST_LDFLAGS = -L$(CRIT_DIR)/lib -Wl,-rpath=$(CRIT_DIR)/lib -lcriterion
 
