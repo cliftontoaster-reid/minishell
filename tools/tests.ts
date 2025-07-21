@@ -550,6 +550,12 @@ class MinishellTester {
         expectedExitCode: 0,
         description: "Test exit without argument",
       },
+      {
+        name: "Piped exit",
+        command: "exit | ls",
+        expectedExitCode: 0,
+        description: "Test exit command piped to another command",
+      },
     ];
   }
 
