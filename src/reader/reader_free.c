@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "reader.h"
+#include "shared.h"
 #include <readline/readline.h>
 #include "shared.h"
 

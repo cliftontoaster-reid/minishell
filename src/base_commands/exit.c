@@ -12,9 +12,7 @@
 
 #include "libft.h"
 #include "reader.h"
-#include <ctype.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
 
 int	lst_list(char **lst)

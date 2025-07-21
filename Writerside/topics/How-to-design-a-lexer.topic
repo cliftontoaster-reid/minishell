@@ -410,36 +410,35 @@
 
         <chapter title="Single Quote Behaviour" id="single-quotes">
             <p>
-                Single quotes preserve everything literally. No special characters, variables,
-                or escape sequences are interpreted within single quotes.
+                Single quotes are the most straightforward: they preserve the literal value of each character within the quotes. No special characters, variables, or escape sequences are interpreted.
             </p>
 
             <code-block lang="bash">
                 # Examples of single quote behaviour
-                echo 'Hello $USER' # Outputs: Hello $USER
+                echo 'Hello $USER'      # Outputs: Hello $USER
                 echo 'pipe | redirect >' # Outputs: pipe | redirect >
-                echo 'multi
-                line
-                text' # Preserves newlines literally
             </code-block>
 
-            <procedure title="Single Quote Processing" id="single-quote-process">
+            <procedure title="Single Quote Processing in the Lexer" id="single-quote-process">
                 <step>
-                    <p>Encounter opening single quote → State = LEXER_UNI</p>
+                    <p><b>State Transition:</b> When an opening single quote <code>'</code> is encountered, the lexer enters the <code>LEXER_UNI</code> state.</p>
                 </step>
                 <step>
-                    <p>Set start position to character after opening quote</p>
+                    <p><b>Literal Consumption:</b> All characters are consumed literally until a closing single quote is found.</p>
                 </step>
                 <step>
-                    <p>Consume all characters literally until closing quote</p>
+                    <p><b>Dollar Sign Handling:</b> As a special case to prevent variable expansion, if a dollar sign <code>$</code> is found inside single quotes, the lexer temporarily replaces it with a backspace character (<code>\b</code>). This acts as a marker to distinguish it from unquoted dollar signs.</p>
                 </step>
                 <step>
-                    <p>Create TOKEN_WORD with content between quotes</p>
-                </step>
-                <step>
-                    <p>Return to LEXER_NONE state</p>
+                    <p><b>Token Creation:</b> When the closing single quote is found, a <code>TOKEN_WORD</code> is created with the content between the quotes. The lexer then returns to the <code>LEXER_NONE</code> state.</p>
                 </step>
             </procedure>
+
+            <note>
+                <p>
+                    <b>Post-Processing:</b> After the main variable expansion phase, a cleanup step in <code>replace_backspace_with_dollar.c</code> reverts any <code>\b</code> characters back to <code>$</code>, ensuring that dollar signs within single quotes remain literal.
+                </p>
+            </note>
         </chapter>
 
         <chapter title="Double Quote Behaviour" id="double-quotes">
@@ -502,73 +501,70 @@
     <chapter title="Word Token Joining" id="word-joining">
         <p>
             After initial tokenization, the lexer performs a post-processing step to join
-            adjacent word tokens. This handles cases where quoted strings appear next to
-            regular words or other quoted strings.
+            adjacent tokens that should be treated as a single word. This is essential for handling
+            shell syntax like <code>file"name".txt</code> or <code>"hello"'world'</code>, where parts of a word
+            are unquoted, single-quoted, and double-quoted right next to each other.
         </p>
 
         <p>
-            <b>Why join tokens?</b> Consider the input <code>hello"world"test</code>.
-            During lexical analysis, this becomes three separate tokens:
+            <b>Why join tokens?</b> Consider the input <code>hello"world"</code>.
+            The initial, literal tokenization process might produce a sequence of tokens, such as:
         </p>
 
         <list>
             <li><code>TOKEN_WORD ("hello")</code></li>
             <li><code>TOKEN_WORD ("world")</code></li>
-            <li><code>TOKEN_WORD ("test")</code></li>
         </list>
 
         <p>
-            But semantically, this should be treated as a single argument: <code>helloworldtest</code>.
-            The joining process combines these into one TOKEN_WORD.
+            Semantically, this should be a single argument: <code>helloworld</code>.
+            The joining process iterates through the token list and merges adjacent "joinable" tokens.
         </p>
 
         <code-block lang="c">
-            // Simplified joining logic
+            // Simplified joining logic from join_words.c
             static void try_join(t_list *token)
             {
-            t_token *current = token->content;
-            t_token *next = token->next->content;
+                t_token *current = token->content;
+                t_token *next = token->next->content;
 
-            // Only join adjacent word tokens
-            if (current->type != TOKEN_WORD || next->type != TOKEN_WORD)
-            return;
+                // Check if both current and next tokens can be joined.
+                // Joinable tokens are TOKEN_WORD, and also empty TOKEN_NONE
+                // which can appear between adjacent quotes like ""''
+                if (!is_joinable_token(current) || !is_joinable_token(next))
+                    return;
 
-            // Create new combined token
-            t_token *new_token = create_token(
-            ft_strjoin(current->value, next->value),
-            TOKEN_WORD
-            );
+                // Create a new token with the combined value
+                t_token *new_token = create_token(...);
 
-            // Replace current token and remove next
-            token->content = new_token;
-            // ... clean-up and continue joining
+                // Replace current token, remove the next one, and
+                // recursively try to join with the following token.
+                ...
+                try_join(token);
             }
         </code-block>
 
         <procedure title="Joining Examples" id="joining-examples">
             <step>
                 <p><b>Input:</b> <code>file"name".txt</code></p>
-                <p><b>Initial tokens:</b> ["file", "name", ".txt"]</p>
-                <p><b>After joining:</b> ["filename.txt"]</p>
+                <p><b>Initial tokens (simplified):</b> <code>["file", "name", ".txt"]</code></p>
+                <p><b>After joining:</b> <code>["filename.txt"]</code></p>
             </step>
             <step>
                 <p><b>Input:</b> <code>echo "Hello "'World'</code></p>
-                <p><b>Initial tokens:</b> <code>["echo", "Hello ", "World"]</code></p>
-                <p><b>After joining:</b> <code>["echo", "Hello World"]</code></p>
+                <p><b>Initial tokens (simplified):</b> <code>["echo", "Hello ", "World"]</code></p>
+                <p><b>After joining:</b> <code>["echo", "Hello World"]</code>. Note that <code>echo</code> is not joined because it is separated by space, which acts as a delimiter.</p>
             </step>
             <step>
                 <p><b>Input:</b> <code>command arg1 | next</code></p>
                 <p><b>Tokens:</b> <code>["command", "arg1", "|", "next"]</code></p>
-                <p><b>No joining:</b> Pipe breaks word adjacency</p>
+                <p><b>No joining:</b> The pipe token is not joinable and acts as a boundary.</p>
             </step>
         </procedure>
 
         <warning>
             <p>
-                <b>Joining Rules:</b> Only adjacent TOKEN_WORD tokens are joined.
-                Special operators (pipes, redirections) act as boundaries that prevent
-                joining across them. This ensures that <code>file|command</code> doesn't
-                become a single word token.
+                <b>Joining Rules:</b> Tokens are joined if they are adjacent and "joinable". In our implementation, joinable tokens are of type <code>TOKEN_WORD</code>, or empty <code>TOKEN_NONE</code> tokens. Any non-joinable token, such as a special operator (pipe, redirection) or a token representing whitespace, acts as a boundary that prevents joining across it.
             </p>
         </warning>
     </chapter>
@@ -911,6 +907,9 @@
     <seealso>
         <category ref="related">
             <a href="About-Minishell.topic" />
+            <a href="How-the-Parser-Works.topic" />
+            <a href="How-Variable-Expansion-Works.topic" />
+            <a href="How-the-Git-Integration-Works.topic" />
         </category>
         <category ref="external">
             <a href="https://en.wikipedia.org/wiki/Lexical_analysis">Lexical Analysis on Wikipedia</a>
