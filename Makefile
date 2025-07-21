@@ -175,6 +175,10 @@ LDFLAGS  = -fsanitize=address -O3 -g3 -std=gnu17 -pipe -lreadline
 TEST_CFLAGS = -I$(CRIT_INC)
 TEST_LDFLAGS = -L$(CRIT_DIR)/lib -Wl,-rpath=$(CRIT_DIR)/lib -lcriterion
 
+# Valgrind-compatible flags (no AddressSanitizer)
+VALGRIND_CFLAGS   = -Wall -Wextra -Werror -g3 -std=gnu17 -I$(INC_DIR) -pipe -MMD -MP -I$(LFT_DIR)
+VALGRIND_LDFLAGS  = -O0 -g3 -std=gnu17 -pipe -lreadline
+
 BUNDLE_CFLAGS   = -Wall -Wextra -Werror -std=gnu17 -I$(INC_DIR) -pipe -MMD -MP -I$(LFT_DIR) -Os -flto -ffunction-sections -fdata-sections -fno-exceptions 
 BUNDLE_LDFLAGS  = -std=gnu17 -pipe -lreadline -flto -Wl,--gc-sections -s -Wl,--as-needed
 
@@ -191,6 +195,11 @@ LDFLAGS += -fuse-ld=mold
 endif
 
 all: $(NAME)
+
+# Valgrind-compatible build (no AddressSanitizer)
+valgrind: CFLAGS = $(VALGRIND_CFLAGS)
+valgrind: LDFLAGS = $(VALGRIND_LDFLAGS)
+valgrind: fclean $(NAME)
 
 $(NAME): $(OBJS)
 	@echo "$(CC) $(LDFLAGS) -o $@ $(OBJS) $(_LIB_FT)"
@@ -318,4 +327,4 @@ format: $(HOME)/.local/bin/trunk
 	@$(HOME)/.local/bin/trunk fmt --all
 	@echo "Trunk format completed."
 
-.PHONY: all clean fclean re bundle test run_test check format
+.PHONY: all clean fclean re bundle test run_test check format valgrind

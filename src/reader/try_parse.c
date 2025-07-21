@@ -6,14 +6,14 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 00:00:00 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/18 14:01:37 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/21 13:04:29 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 #include "reader.h"
 
-static void	attach_vars_to_cmds(t_reader *reader)
+static bool	attach_vars_to_cmds(t_reader *reader)
 {
 	t_list	*current;
 	int		i;
@@ -38,6 +38,7 @@ static void	attach_vars_to_cmds(t_reader *reader)
 		current = current->next;
 		i++;
 	}
+	return (true);
 }
 
 bool	try_parse(t_reader *reader)
@@ -66,6 +67,5 @@ bool	try_parse(t_reader *reader)
 		printf("Parsing error: %s\n", p_strerror(error));
 		return (false);
 	}
-	attach_vars_to_cmds(reader);
-	return (true);
+	return (attach_vars_to_cmds(reader));
 }
