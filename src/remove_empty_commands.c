@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 19:37:49 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/16 19:38:44 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/21 13:28:44 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ t_cmd	*remove_empty_commands(t_cmd *commands)
 	size_t	count;
 	size_t	valid_count;
 	t_cmd	*new_commands;
+	t_cmd	*result;
 
 	if (!commands)
 		return (NULL);
@@ -50,5 +51,6 @@ t_cmd	*remove_empty_commands(t_cmd *commands)
 	new_commands = ft_calloc(valid_count + 1, sizeof(t_cmd));
 	if (!new_commands)
 		return (NULL);
-	return (copy_valid_commands(commands, new_commands, count, valid_count));
+	result = copy_valid_commands(commands, new_commands, count, valid_count);
+	return (result);
 }

@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 19:34:24 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/21 13:00:25 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/21 13:21:13 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ void	reader_free(t_reader *reader)
 {
 	if (reader == NULL)
 		return ;
+	gaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaay(reader);
 	if (reader->env)
 		ft_lstclear(&reader->env, free_env);
 	if (reader->linereader)
