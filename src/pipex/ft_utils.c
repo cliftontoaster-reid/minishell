@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 13:34:25 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/21 13:23:14 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/21 16:09:19 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ void	closefd(t_cmd *cmd, int exitnbr, t_reader *reader)
 	if (exitnbr > -1)
 	{
 		ft_cleanup_cmd(cmd);
+		free(cmd);
 		if (reader)
 		{
 			reader->commands = NULL;
