@@ -18,7 +18,7 @@
 #include <unistd.h>
 
 // Forward declaration for ft_exit if not in a header
-void		ft_exit(char **s, t_reader *reader, t_cmd *cmd);
+void            ft_exit(char **s, t_reader *reader, t_cmd **cmd);
 
 static int	run_exit_and_get_code(char **args)
 {

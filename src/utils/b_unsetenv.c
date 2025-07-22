@@ -6,11 +6,12 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 11:00:00 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/10 12:13:34 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/22 13:41:31 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shared.h"
+#include <stdlib.h>
 
 static int	str_equal(const char *s1, const char *s2)
 {
@@ -74,7 +75,7 @@ void	b_unsetenv(const char *key, void (*del)(void *), t_list **envp)
 	if (!key || !envp || !*envp)
 		return ;
 	if (ft_strncmp(key, "PWD", 4) == 0 || ft_strncmp(key, "OLDPWD", 7) == 0)
-		return ;
+		return (b_setenv(key, getenv(key), envp));
 	current = *envp;
 	prev = NULL;
 	while (current)
