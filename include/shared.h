@@ -20,6 +20,7 @@
 # include <stdint.h>
 
 # define NO_EXIT -1
+# define NO_INDEX 0
 
 typedef struct s_reader	t_reader;
 
@@ -74,7 +75,8 @@ typedef struct s_cmd
 	int					fd_infile;
 	int					fd_outfile;
 	int					**pipes;
-	int					fd[2];
+	int					stdin_backup;
+	int					stdout_backup;
 	char				**args;
 	char				**cmdpathlist;
 	char				*redirect_in;
@@ -113,6 +115,7 @@ int						ft_check_if_builtin(t_cmd *cmd, int cmd_idx);
 // pipex/ft_utils.c
 void					closefd(t_cmd *cmd, int exitnbr, t_reader *reader);
 void					ft_cleanup_cmd(t_cmd *cmd);
+void					ft_exec_solobuiltin(t_cmd *cmd, t_list **tenvp, t_reader *exit);
 int						ft_nbrofcmds(t_cmd *cmd);
 
 // pipex/ft_builtin.c
