@@ -35,6 +35,13 @@ void	parser_handle_special(t_parser *parser)
 	if (parser->current_token->type != TOKEN_NONE
 		&& parser->current_token->type != TOKEN_WORD)
 	{
+		if (parser->last_token_type != TOKEN_NONE
+			&& parser->last_token_type != TOKEN_WORD)
+		{
+			errno = EINVAL;
+			parser->error = PARSING_DOUBLE_SPECIAL_DIRECTIVE;
+			return ;
+		}
 		errno = EINVAL;
 		parser->error = PARSING_MISSING_SPECIAL_TARGET;
 		return ;

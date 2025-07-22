@@ -15,22 +15,23 @@
 #include <errno.h>
 #include <readline/history.h>
 #include <readline/readline.h>
-#include <stdio.h>
 #include <unistd.h>
 
 #define PROMPT "picoshell> "
 
-int	read_input(t_reader *reader_ptr)
-{
-	print_prompt(reader_ptr->env);
-	reader_ptr->cached_input = readline(PROMPT);
-	add_history(reader_ptr->cached_input);
-	if (!reader_ptr->cached_input)
-	{
-		if (errno == EINTR)
-			return (1);
-		write(1, "exit\n", 5);
-		return (0);
-	}
-	return (2);
+int read_input(t_reader *reader_ptr) {
+  print_prompt(reader_ptr->env);
+  reader_ptr->cached_input = readline(PROMPT);
+  if (str_is_whitespace(reader_ptr->cached_input)) {
+    g_status_code = 0;
+    return 2;
+  }
+  add_history(reader_ptr->cached_input);
+  if (!reader_ptr->cached_input) {
+    if (errno == EINTR)
+      return (1);
+    write(1, "exit\n", 5);
+    return (0);
+  }
+  return (2);
 }
