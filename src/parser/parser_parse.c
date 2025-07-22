@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 10:25:58 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/18 13:58:47 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/22 13:38:57 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,21 +24,8 @@
 //   continue until it finds a token that is not a word or none.
 // -  special tokens like redirections should be handled accordingly.
 
-/// @brief Handles various special tokens (pipe,
-///         redirections) based on the `last_token_type`.
-/// It calls the appropriate specific handler for the encountered special token.
-/// Sets parser error if an unexpected token sequence is found or if a required
-/// target for a special token is missing.
-/// @param parser The parser instance.
-void	parser_handle_special(t_parser *parser)
+static void	handle_special_token(t_parser *parser)
 {
-	if (parser->current_token->type != TOKEN_NONE
-		&& parser->current_token->type != TOKEN_WORD)
-	{
-		errno = EINVAL;
-		parser->error = PARSING_MISSING_SPECIAL_TARGET;
-		return ;
-	}
 	if (parser->last_token_type == TOKEN_PIPE)
 		parser_special_pipe(parser);
 	else if (parser->last_token_type == TOKEN_REDIRECT_IN)
@@ -53,10 +40,37 @@ void	parser_handle_special(t_parser *parser)
 	{
 		errno = EINVAL;
 		parser->error = PARSING_ERROR_MALLOC;
+	}
+}
+
+/// @brief Handles various special tokens (pipe,
+///         redirections) based on the `last_token_type`.
+/// It calls the appropriate specific handler for the encountered special token.
+/// Sets parser error if an unexpected token sequence is found or if a required
+/// target for a special token is missing.
+/// @param parser The parser instance.
+void	parser_handle_special(t_parser *parser)
+{
+	if (parser->current_token->type != TOKEN_NONE
+		&& parser->current_token->type != TOKEN_WORD)
+	{
+		if (parser->last_token_type != TOKEN_NONE
+			&& parser->last_token_type != TOKEN_WORD)
+		{
+			errno = EINVAL;
+			parser->error = PARSING_DOUBLE_SPECIAL_DIRECTIVE;
+			return ;
+		}
+		errno = EINVAL;
+		parser->error = PARSING_MISSING_SPECIAL_TARGET;
 		return ;
 	}
-	parser->current_index++;
-	parser->state = PARSER_NONE;
+	handle_special_token(parser);
+	if (parser->error == PARSING_NO_ERROR)
+	{
+		parser->current_index++;
+		parser->state = PARSER_NONE;
+	}
 }
 
 /// @brief Executes a single step in the parsing process based on the current
@@ -86,6 +100,21 @@ t_parsing_error	parser_step(t_parser *parser)
 	return (parser->error);
 }
 
+t_parsing_error	parser_loop(t_parser *parser)
+{
+	parser->current_token = ft_lstget(parser->token_list, parser->current_index,
+			parser->token_count);
+	if (!parser->current_token)
+	{
+		errno = EINVAL;
+		return (PARSING_ERROR_MALLOC);
+	}
+	parser_step(parser);
+	if (parser->error != PARSING_NO_ERROR)
+		return (parser->error);
+	parser->last_token_type = parser->current_token->type;
+}
+
 /// @brief Main parsing function that iterates through the token list and
 /// processes them. It initializes the parser state and repeatedly calls
 /// `parser_step` to build the command structure. It advances through the tokens
@@ -97,6 +126,8 @@ t_parsing_error	parser_step(t_parser *parser)
 ///          or an error code if an issue occurred.
 t_parsing_error	parser_parse(t_parser *parser)
 {
+	t_parsing_error	error;
+
 	if (!parser || !parser->token_list)
 	{
 		errno = EINVAL;
@@ -106,17 +137,9 @@ t_parsing_error	parser_parse(t_parser *parser)
 	parser->current_index = 0;
 	while (parser->current_index < parser->token_count)
 	{
-		parser->current_token = ft_lstget(parser->token_list,
-				parser->current_index, parser->token_count);
-		if (!parser->current_token)
-		{
-			errno = EINVAL;
-			return (PARSING_ERROR_MALLOC);
-		}
-		parser_step(parser);
-		if (parser->error != PARSING_NO_ERROR)
-			return (parser->error);
-		parser->last_token_type = parser->current_token->type;
+		error = parser_loop(parser);
+		if (error != PARSING_NO_ERROR)
+			return (error);
 	}
 	if (parser->state == PARSER_SPECIAL)
 	{

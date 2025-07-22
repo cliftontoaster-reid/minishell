@@ -19,7 +19,10 @@
 void	parser_special_pipe(t_parser *parser)
 {
 	if (parser->command == NULL)
-		parser->command = cmd_init();
+	{
+		parser->error = PARSING_DOUBLE_SPECIAL_DIRECTIVE;
+		return ;
+	}
 	parser->command->is_pipe = true;
 	end_command(parser);
 	parser->state = PARSER_NONE;

@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 17:21:40 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/18 12:25:19 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/22 13:35:44 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,18 @@ static void	cd_go_previous(t_list **envp)
 	free(oldpwd_env);
 }
 
+void	cd_go_to_path(char *path, t_list **envp)
+{
+	if (chdir(argv[1]) != 0)
+	{
+		write(1, "cd: no such file or directory: ", 31);
+		write(1, argv[1], ft_strlen(argv[1]));
+		write(1, "\n", 1);
+		g_status_code = 1;
+		return ;
+	}
+}
+
 void	ft_cd(char **argv, t_list **envp)
 {
 	char	cwd[PATH_MAX];
@@ -89,16 +101,7 @@ void	ft_cd(char **argv, t_list **envp)
 	else if (ft_strncmp(argv[1], "-", 2) == 0)
 		cd_go_previous(envp);
 	else
-	{
-		if (chdir(argv[1]) != 0)
-		{
-			write(1, "cd: no such file or directory: ", 31);
-			write(1, argv[1], ft_strlen(argv[1]));
-			write(1, "\n", 1);
-			g_status_code = 1;
-			return ;
-		}
-	}
+		cd_go_to_path(argv[1], envp);
 	set_oldpwd(envp);
 	if (getcwd(cwd, sizeof(cwd)) != NULL)
 	{

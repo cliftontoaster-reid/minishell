@@ -58,7 +58,7 @@ class MinishellTester {
   async init(): Promise<boolean> {
     // Recompile minishell
     const makeProcess = new Deno.Command("make", {
-      args: ["re"],
+      args: ["valgrind"],
       stdout: "piped",
       stderr: "piped",
     });
@@ -359,6 +359,26 @@ class MinishellTester {
         description: "Test exit status variable expansion",
         expectedOutputContains: ["0"],
       },
+      {
+        name: "variable_double_dollar",
+        command: "echo $$",
+        expectedExitCode: 0,
+      },
+      {
+        name: "variable_triple_dollar",
+        command: "echo $$$",
+        expectedExitCode: 0,
+      },
+      {
+        name: "variable_triple_dollar_nstuff",
+        command: "echo $$$fini",
+        expectedExitCode: 0,
+      },
+      {
+        name: "variable_triple_dollar_I_need_a_medic_bag",
+        command: "echo $$$fini$",
+        expectedExitCode: 0,
+      },
 
       // Pipe tests
       {
@@ -411,9 +431,16 @@ class MinishellTester {
       },
       {
         name: "multiple_commands_with_variables",
-        command: "export TEST=value; echo $TEST",
+        command: "export TEST=value echo $TEST",
         expectedExitCode: 0,
         description: "Test multiple commands with variables",
+      },
+      {
+        name: "complex_export_stuff",
+        command: "export VAR1=ec VAR2=ho \n\n $VAR1$VAR2 $VAR2$VAR1",
+        expectedExitCode: 0,
+        description: "Test complex export and variable expansion",
+        expectedOutputContains: ["hoec"],
       },
 
       // Error handling tests

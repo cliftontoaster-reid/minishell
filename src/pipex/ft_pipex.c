@@ -39,15 +39,15 @@ static void	fd_child(t_cmd *cmd, t_list *tenvp, int cmd_idx, t_reader *exit)
 		printf("error fork of pid %d", cmd_idx);
 		closefd(cmd, EXIT_FAILURE, exit);
 	}
-	if (cmd[cmd_idx].pid == 0) // Child process
+	if (cmd[cmd_idx].pid == 0)
 	{
 		pipe_redirection(cmd, cmd_idx);
 		if (ft_check_if_builtin(cmd, cmd_idx))
 			is_builtin(&cmd, &tenvp, cmd_idx, exit);
-		if (cmd->error == 1) // Handle errors found before fork
+		if (cmd->error == 1)
 			closefd(cmd, EXIT_FAILURE, exit);
 		if (!cmd->cmdpathlist[cmd_idx])
-			closefd(cmd, 127, exit); // Exit with status 127
+			closefd(cmd, 127, exit);
 		execve(cmd->cmdpathlist[cmd_idx], cmd[cmd_idx].args, b_getenv(NULL,
 				tenvp));
 		perror(cmd[cmd_idx].args[0]);

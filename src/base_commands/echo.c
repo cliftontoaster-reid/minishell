@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfranc <jfranc@student.42nice.fr>          +#+  +:+       +#+        */
+/*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 10:58:57 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/09 11:13:29 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/07/22 13:44:59 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <shared.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-#include <shared.h>
 
 static void	ft_echo_screen(int argc, char **argv, int newline, int iter)
 {
