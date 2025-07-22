@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 20:00:00 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/16 20:15:21 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/22 13:41:52 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,19 +19,22 @@
 
 #define PROMPT "picoshell> "
 
-int read_input(t_reader *reader_ptr) {
-  print_prompt(reader_ptr->env);
-  reader_ptr->cached_input = readline(PROMPT);
-  if (str_is_whitespace(reader_ptr->cached_input)) {
-    g_status_code = 0;
-    return 2;
-  }
-  add_history(reader_ptr->cached_input);
-  if (!reader_ptr->cached_input) {
-    if (errno == EINTR)
-      return (1);
-    write(1, "exit\n", 5);
-    return (0);
-  }
-  return (2);
+int	read_input(t_reader *reader_ptr)
+{
+	print_prompt(reader_ptr->env);
+	reader_ptr->cached_input = readline(PROMPT);
+	if (str_is_whitespace(reader_ptr->cached_input))
+	{
+		g_status_code = 0;
+		return (2);
+	}
+	add_history(reader_ptr->cached_input);
+	if (!reader_ptr->cached_input)
+	{
+		if (errno == EINTR)
+			return (1);
+		write(1, "exit\n", 5);
+		return (0);
+	}
+	return (2);
 }

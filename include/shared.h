@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:24:32 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/17 16:16:55 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/07/22 13:42:13 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,8 @@ void					ft_cleanup_cmd(t_cmd *cmd);
 int						ft_nbrofcmds(t_cmd *cmd);
 
 // pipex/ft_builtin.c
-void					is_builtin(t_cmd **cmd, t_list **env, int cmd_idx, t_reader *exit);
+void					is_builtin(t_cmd **cmd, t_list **env, int idx,
+							t_reader *e);
 
 // base_commands/(...).c
 void					ft_cd(char **argv, t_list **envp);
