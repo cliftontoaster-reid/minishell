@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:03:33 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/21 14:51:41 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/07/22 16:18:33 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,24 +113,15 @@ static void	fd_pipex_execute(t_cmd *cmd, t_list *tenvp, t_reader *exit)
 	ft_wait_for_children(cmd[cmd->cmdnbr - 1].pid);
 }
 
-void	ft_pipex(t_cmd *cmd, t_list *tenvp, t_reader *exit)
+void ft_pipex(t_cmd *cmd, t_list *tenvp, t_reader *exit)
 {
 	cmd->error = 0;
 	cmd->cmdnbr = ft_nbrofcmds(cmd);
-	if (!ft_strncmp(cmd->args[0], "exit", 5) && cmd->cmdnbr == 1)
-		ft_exit(cmd->args, exit, NULL);
-	else if (!ft_strncmp(cmd->args[0], "cd", 3) && cmd->cmdnbr == 1)
-		ft_cd(cmd->args, &tenvp);
-	else if (!ft_strncmp(cmd->args[0], "export", 7) && cmd->cmdnbr == 1)
-		ft_export(cmd->args, &tenvp);
-	else if (!ft_strncmp(cmd->args[0], "unset", 6) && cmd->cmdnbr == 1)
-		ft_unset(cmd->args, &tenvp);
-	else if (!ft_strncmp(cmd->args[0], "pwd", 4) && cmd->cmdnbr == 1)
-		ft_pwd(&tenvp);
-	else if (!ft_strncmp(cmd->args[0], "env", 4) && cmd->cmdnbr == 1)
-		ft_env(&tenvp);
-	else if (!ft_strncmp(cmd->args[0], "echo", 5) && cmd->cmdnbr == 1)
-		ft_echo(cmd->argc, cmd->args);
+	cmd->stdin_backup = -1;
+	cmd->stdout_backup = -1;
+
+	if (cmd->cmdnbr == 1)
+		ft_exec_solobuiltin(cmd, &tenvp, exit);
 	else
 		fd_pipex_execute(cmd, tenvp, exit);
 	if (cmd->error != 0)
