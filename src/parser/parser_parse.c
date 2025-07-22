@@ -113,6 +113,7 @@ t_parsing_error	parser_loop(t_parser *parser)
 	if (parser->error != PARSING_NO_ERROR)
 		return (parser->error);
 	parser->last_token_type = parser->current_token->type;
+	return (PARSING_NO_ERROR);
 }
 
 /// @brief Main parsing function that iterates through the token list and

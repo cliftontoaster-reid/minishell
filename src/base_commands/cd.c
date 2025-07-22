@@ -80,7 +80,7 @@ static void	cd_go_previous(t_list **envp)
 	free(oldpwd_env);
 }
 
-void	cd_go_to_path(char *path, t_list **envp)
+void	cd_go_to_path(char **argv)
 {
 	if (chdir(argv[1]) != 0)
 	{
@@ -101,7 +101,7 @@ void	ft_cd(char **argv, t_list **envp)
 	else if (ft_strncmp(argv[1], "-", 2) == 0)
 		cd_go_previous(envp);
 	else
-		cd_go_to_path(argv[1], envp);
+		cd_go_to_path(argv);
 	set_oldpwd(envp);
 	if (getcwd(cwd, sizeof(cwd)) != NULL)
 	{
