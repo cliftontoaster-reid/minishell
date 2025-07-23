@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 00:00:00 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/23 16:58:16 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/23 17:59:41 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,6 @@ void	print_exported_vars(t_list *envp)
 		i++;
 	}
 	while (env_vars[i])
-	{
-		free(env_vars[i]);
-		i++;
-	}
+		free(env_vars[i++]);
 	free(env_vars);
 }

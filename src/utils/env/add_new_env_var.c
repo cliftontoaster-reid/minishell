@@ -6,12 +6,21 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 15:00:00 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/23 16:55:23 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/23 17:58:11 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shared.h"
 #include <stdlib.h>
+
+static void	free_env_var(t_env *env_var)
+{
+	if (env_var->key)
+		free(env_var->key);
+	if (env_var->value)
+		free(env_var->value);
+	free(env_var);
+}
 
 void	add_new_env_var(const char *key, const char *value, t_list **envp)
 {
@@ -27,12 +36,7 @@ void	add_new_env_var(const char *key, const char *value, t_list **envp)
 	new_env->value = ft_strdup(value);
 	if (!new_env->key || !new_env->value)
 	{
-		if (new_env->key)
-			free(new_env->key);
-		if (new_env->value)
-			free(new_env->value);
-		free(new_env);
-		return ;
+		return (free_env_var(new_env));
 	}
 	new_node = ft_lstnew(new_env);
 	if (!new_node)
