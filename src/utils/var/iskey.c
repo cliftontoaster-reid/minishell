@@ -11,10 +11,6 @@
 /* ************************************************************************** */
 
 #include "utils.h"
-#include <ctype.h>
 #include <stdbool.h>
 
-bool	iskey(char c)
-{
-	return (isalpha(c) || c == '_');
-}
+bool iskey(char c) { return (ft_isalnum(c) || c == '_'); }
