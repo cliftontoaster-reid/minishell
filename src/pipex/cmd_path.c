@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 13:21:12 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/23 18:22:45 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/23 19:05:20 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,10 @@ char	*ft_get_cmd_path(char *cmd, t_list *tenvp)
 		return (pd.full_path);
 	pd.i = 0;
 	while (pd.paths && pd.paths[pd.i])
-		ft_try_path_entry(&pd, cmd);
+	{
+		if (ft_try_path_entry(&pd, cmd))
+			break ;
+	}
 	ft_free_split(pd.paths);
 	return (pd.full_path);
 }
