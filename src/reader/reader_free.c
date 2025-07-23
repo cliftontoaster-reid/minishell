@@ -6,13 +6,14 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 19:34:24 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/22 13:34:12 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/23 19:48:04 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "reader.h"
 #include "shared.h"
 #include <readline/readline.h>
+#include <unistd.h>
 
 void	free_env(void *env)
 {
@@ -31,6 +32,16 @@ void	gaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaay(t_reader *reader)
 		free_lexer(reader->lexer);
 	if (reader->parser)
 		parser_free(reader->parser);
+	if (reader->history_file > STDERR_FILENO)
+	{
+		close(reader->history_file);
+		reader->history_file = -1;
+	}
+	if (reader->history_last)
+	{
+		free(reader->history_last);
+		reader->history_last = NULL;
+	}
 }
 
 void	reader_free(t_reader *reader)

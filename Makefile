@@ -84,6 +84,7 @@ SRCS     = \
 	$(SRC_DIR)/utils/var/handle_var_substitution.c \
 	$(SRC_DIR)/utils/var/handle_dollar_substitution.c \
 	$(SRC_DIR)/utils/var/replace_backspace_with_dollar.c \
+	$(SRC_DIR)/utils/get_next_line.c \
   \
   $(SRC_DIR)/parser/p_strerror.c \
   $(SRC_DIR)/parser/parser_init.c \
