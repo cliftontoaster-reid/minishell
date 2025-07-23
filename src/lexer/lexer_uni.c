@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:43:28 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/16 16:43:40 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/23 18:07:08 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,6 @@ void	lexer_uni(t_lexer *lexer)
 		lexer->start = lexer->pos + 1;
 	}
 	if (lexer->text[lexer->pos] == '$')
-		lexer->text[lexer->pos] = '\b';
+		lexer->text[lexer->pos] = '\x80';
 	lexer->pos++;
 }

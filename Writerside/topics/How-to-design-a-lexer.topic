@@ -427,7 +427,7 @@
                     <p><b>Literal Consumption:</b> All characters are consumed literally until a closing single quote is found.</p>
                 </step>
                 <step>
-                    <p><b>Dollar Sign Handling:</b> As a special case to prevent variable expansion, if a dollar sign <code>$</code> is found inside single quotes, the lexer temporarily replaces it with a backspace character (<code>\b</code>). This acts as a marker to distinguish it from unquoted dollar signs.</p>
+                    <p><b>Dollar Sign Handling:</b> As a special case to prevent variable expansion, if a dollar sign <code>$</code> is found inside single quotes, the lexer temporarily replaces it with a backspace character (<code>\x80</code>). This acts as a marker to distinguish it from unquoted dollar signs.</p>
                 </step>
                 <step>
                     <p><b>Token Creation:</b> When the closing single quote is found, a <code>TOKEN_WORD</code> is created with the content between the quotes. The lexer then returns to the <code>LEXER_NONE</code> state.</p>
@@ -436,7 +436,7 @@
 
             <note>
                 <p>
-                    <b>Post-Processing:</b> After the main variable expansion phase, a cleanup step in <code>replace_backspace_with_dollar.c</code> reverts any <code>\b</code> characters back to <code>$</code>, ensuring that dollar signs within single quotes remain literal.
+                    <b>Post-Processing:</b> After the main variable expansion phase, a cleanup step in <code>replace_backspace_with_dollar.c</code> reverts any <code>\x80</code> characters back to <code>$</code>, ensuring that dollar signs within single quotes remain literal.
                 </p>
             </note>
         </chapter>
