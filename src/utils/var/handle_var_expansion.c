@@ -31,7 +31,7 @@ size_t	handle_var_expansion(char *str, size_t *i, char **varnames, t_list *env)
 	else
 	{
 		len = count_unmatched_var(str, *i);
-		while (iskey(str[*i]))
+		while (str[*i] != '\0' && iskey(str[*i]))
 			(*i)++;
 		return (len);
 	}

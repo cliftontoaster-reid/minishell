@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 09:38:39 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/21 15:56:51 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/07/23 11:52:39 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	is_builtin(t_cmd **cmd, t_list **env, int cmd_idx, t_reader *exit)
 	else if (!ft_strncmp((*cmd)[cmd_idx].args[0], "export", 7))
 		ft_export((*cmd)[cmd_idx].args, env);
 	else if (!ft_strncmp((*cmd)[cmd_idx].args[0], "pwd", 4))
-		ft_pwd(env);
+		ft_pwd();
 	else if (!ft_strncmp((*cmd)[cmd_idx].args[0], "unset", 6))
 		ft_unset((*cmd)[cmd_idx].args, env);
 	else if (!ft_strncmp((*cmd)[cmd_idx].args[0], "exit", 5))

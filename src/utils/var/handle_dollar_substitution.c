@@ -15,20 +15,25 @@
 size_t	handle_dollar_substitution(t_var_context *ctx)
 {
 	(*ctx->i)++;
-	if (iskey(ctx->src[*ctx->i]))
+	if (ctx->src[*ctx->i] != '\0' && iskey(ctx->src[*ctx->i]))
 		return (handle_var_substitution(ctx));
-	else if (ctx->src[*ctx->i] == '?' || ctx->src[*ctx->i] == '$')
+	else if (ctx->src[*ctx->i] != '\0' && (ctx->src[*ctx->i] == '?' || ctx->src[*ctx->i] == '$'))
 	{
 		ctx->k = expand_special_var(ctx->dest, ctx->src[*ctx->i], ctx->k,
 				ctx->len);
 		(*ctx->i)++;
 		return (ctx->k);
 	}
-	else
+	else if (ctx->src[*ctx->i] != '\0')
 	{
 		ctx->dest[ctx->k++] = '$';
 		ctx->dest[ctx->k++] = ctx->src[*ctx->i];
 		(*ctx->i)++;
+		return (ctx->k);
+	}
+	else
+	{
+		ctx->dest[ctx->k++] = '$';
 		return (ctx->k);
 	}
 }

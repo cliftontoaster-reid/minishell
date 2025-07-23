@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 13:34:25 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/22 16:18:15 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/07/23 11:53:15 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,47 +71,47 @@ int	ft_nbrofcmds(t_cmd *cmd)
 	return (nbr);
 }
 
-static void ft_dispatch_builtin(t_cmd *cmd, t_list **tenvp, t_reader *exit)
+static void	ft_dispatch_builtin(t_cmd *cmd, t_list **tenvp, t_reader *exit)
 {
-    if (!ft_strncmp(cmd->args[0], "exit", 5))
-        ft_exit(cmd->args, exit, NULL);
-    else if (!ft_strncmp(cmd->args[0], "cd", 3))
-        ft_cd(cmd->args, tenvp);
-    else if (!ft_strncmp(cmd->args[0], "export", 7))
-        ft_export(cmd->args, tenvp);
-    else if (!ft_strncmp(cmd->args[0], "unset", 6))
-        ft_unset(cmd->args, tenvp);
-    else if (!ft_strncmp(cmd->args[0], "pwd", 4))
-        ft_pwd(tenvp);
-    else if (!ft_strncmp(cmd->args[0], "env", 4))
-        ft_env(tenvp);
-    else if (!ft_strncmp(cmd->args[0], "echo", 5))
-        ft_echo(cmd->argc, cmd->args);
+	if (!ft_strncmp(cmd->args[0], "exit", 5))
+		ft_exit(cmd->args, exit, NULL);
+	else if (!ft_strncmp(cmd->args[0], "cd", 3))
+		ft_cd(cmd->args, tenvp);
+	else if (!ft_strncmp(cmd->args[0], "export", 7))
+		ft_export(cmd->args, tenvp);
+	else if (!ft_strncmp(cmd->args[0], "unset", 6))
+		ft_unset(cmd->args, tenvp);
+	else if (!ft_strncmp(cmd->args[0], "pwd", 4))
+		ft_pwd();
+	else if (!ft_strncmp(cmd->args[0], "env", 4))
+		ft_env(tenvp);
+	else if (!ft_strncmp(cmd->args[0], "echo", 5))
+		ft_echo(cmd->argc, cmd->args);
 }
 
-void    ft_exec_solobuiltin(t_cmd *cmd, t_list **tenvp, t_reader *exit)
+void	ft_exec_solobuiltin(t_cmd *cmd, t_list **tenvp, t_reader *exit)
 {
-    if (cmd->fd_infile != STDIN_FILENO)
-    {
-        cmd->stdin_backup = dup(STDIN_FILENO); 
-        if (dup2(cmd->fd_infile, STDIN_FILENO) == -1)
-            perror("dup2 infile");
-    }
-    if (cmd->fd_outfile != STDOUT_FILENO)
-    {   
-        cmd->stdout_backup = dup(STDOUT_FILENO); 
-        if (dup2(cmd->fd_outfile, STDOUT_FILENO) == -1)
-            perror("dup2 outfile");
-    }
-    ft_dispatch_builtin(cmd, tenvp, exit);
-    if (cmd->stdin_backup != -1)
-    {
-        dup2(cmd->stdin_backup, STDIN_FILENO);
-        close(cmd->stdin_backup);
-    }
-    if (cmd->stdout_backup != -1)
-    {
-        dup2(cmd->stdout_backup, STDOUT_FILENO);
-        close(cmd->stdout_backup);
-    }
+	if (cmd->fd_infile != STDIN_FILENO)
+	{
+		cmd->stdin_backup = dup(STDIN_FILENO);
+		if (dup2(cmd->fd_infile, STDIN_FILENO) == -1)
+			perror("dup2 infile");
+	}
+	if (cmd->fd_outfile != STDOUT_FILENO)
+	{
+		cmd->stdout_backup = dup(STDOUT_FILENO);
+		if (dup2(cmd->fd_outfile, STDOUT_FILENO) == -1)
+			perror("dup2 outfile");
+	}
+	ft_dispatch_builtin(cmd, tenvp, exit);
+	if (cmd->stdin_backup != -1)
+	{
+		dup2(cmd->stdin_backup, STDIN_FILENO);
+		close(cmd->stdin_backup);
+	}
+	if (cmd->stdout_backup != -1)
+	{
+		dup2(cmd->stdout_backup, STDOUT_FILENO);
+		close(cmd->stdout_backup);
+	}
 }

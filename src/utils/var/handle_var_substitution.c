@@ -25,7 +25,7 @@ size_t	handle_var_substitution(t_var_context *ctx)
 	else
 	{
 		ctx->k = expand_unmatched_var(ctx->dest, ctx->src, *ctx->i, ctx->k);
-		while (iskey(ctx->src[*ctx->i]))
+		while (ctx->src[*ctx->i] != '\0' && iskey(ctx->src[*ctx->i]))
 			(*ctx->i)++;
 	}
 	return (ctx->k);

@@ -18,7 +18,7 @@ size_t	count_unmatched_var(char *str, size_t i)
 	size_t	count;
 
 	count = 1;
-	while (iskey(str[i]))
+	while (str[i] != '\0' && iskey(str[i]))
 	{
 		count++;
 		i++;
