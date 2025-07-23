@@ -26,7 +26,7 @@ void	b_envspecial(char *key, char **value)
 	int		lvl;
 	char	*new_val;
 
-	if (str_equal(key, "SHLVL") == 0)
+	if (str_equal(key, "SHLVL") != 0)
 	{
 		lvl = ft_atoi(*value);
 		new_val = ft_itoa(lvl + 1);
