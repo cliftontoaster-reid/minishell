@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 13:21:12 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/22 13:35:04 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/23 15:15:53 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,14 +38,13 @@ char *ft_get_cmd_path(char *cmd, t_list *tenvp) {
   t_path_data pd;
   char **freeleak;
 
-  pd.full_path = NULL;
+  pd.full_path = ft_check_direct_path(cmd);
   freeleak = b_getenv("PATH", tenvp);
   if (freeleak == NULL)
-    return (NULL);
+    return (pd.full_path);
   pd.paths = ft_split(*freeleak, ':');
   free(*freeleak);
   free(freeleak);
-  pd.full_path = ft_check_direct_path(cmd);
   if (pd.full_path)
     return (pd.full_path);
   pd.i = 0;
