@@ -6,12 +6,13 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:03:33 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/23 14:53:37 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/23 14:25:25 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #define _GNU_SOURCE
+#define MAX_PIPE_DEPTH 256
 #include "pipex.h"
 #include "reader.h"
 #include "shared.h"
@@ -75,6 +76,7 @@ void	ft_wait_for_children(int last_pid)
 					ft_putstr_fd(" (core dumped)", 2);
 				ft_putstr_fd("\n", 2);
 				g_status_code = 128 + sig;
+
 			}
 			else
 				g_status_code = EXIT_FAILURE;
