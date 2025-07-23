@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:49:10 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/17 10:41:57 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/23 11:53:38 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,20 @@
 #include "varextract.h"
 #include <readline/history.h>
 #include <readline/readline.h>
+#include <string.h>
 #include <unistd.h>
+
+void	default_env(t_reader *reader)
+{
+		char cwd[420];
+
+	if (reader->env == NULL)
+	{
+		getcwd(cwd, 419);
+		b_setenv("PWD", cwd, &reader->env);
+		b_setenv("SHLVL", "1", &reader->env);
+	}
+}
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -27,6 +40,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	reader_ptr = init_shell(envp);
+	default_env(reader_ptr);
 	while (1)
 	{
 		input_status = read_input(reader_ptr);

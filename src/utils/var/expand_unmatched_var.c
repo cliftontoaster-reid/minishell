@@ -16,7 +16,7 @@
 size_t	expand_unmatched_var(char *dest, char *src, size_t i, size_t k)
 {
 	dest[k++] = '$';
-	while (iskey(src[i]))
+	while (src[i] != '\0' && iskey(src[i]))
 	{
 		dest[k++] = src[i++];
 	}

@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:24:32 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/22 13:42:13 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/23 11:52:23 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,8 @@ int						ft_check_if_builtin(t_cmd *cmd, int cmd_idx);
 // pipex/ft_utils.c
 void					closefd(t_cmd *cmd, int exitnbr, t_reader *reader);
 void					ft_cleanup_cmd(t_cmd *cmd);
-void					ft_exec_solobuiltin(t_cmd *cmd, t_list **tenvp, t_reader *exit);
+void					ft_exec_solobuiltin(t_cmd *cmd, t_list **tenvp,
+							t_reader *exit);
 int						ft_nbrofcmds(t_cmd *cmd);
 
 // pipex/ft_builtin.c
@@ -128,7 +129,7 @@ void					ft_echo(int argc, char **argv);
 void					ft_env(t_list **env);
 void					ft_exit(char **s, t_reader *reader, t_cmd **cmd);
 void					ft_export(char **argv, t_list **envp);
-void					ft_pwd(t_list **envp);
+void					ft_pwd(void);
 void					ft_unset(char **args, t_list **envp);
 
 #endif

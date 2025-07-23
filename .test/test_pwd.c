@@ -32,7 +32,7 @@ Test(pwd, prints_current_directory, .init = cr_redirect_stdout)
 	envp = NULL;
 	getcwd(cwd, sizeof(cwd));
 	b_setenv("PWD", cwd, &envp);
-	ft_pwd(&envp);
+	ft_pwd();
 	fflush(stdout);
 	snprintf(expected, sizeof(expected), "%s\n", cwd);
 	cr_assert_stdout_eq_str(expected);
@@ -44,7 +44,7 @@ Test(pwd, missing_pwd_env, .init = cr_redirect_stderr)
 	t_list	*envp;
 
 	envp = NULL;
-	ft_pwd(&envp);
+	ft_pwd();
 	fflush(stderr);
 	cr_assert_stderr_eq_str("pwd: error retrieving current directory\n");
 	ft_lstclear(&envp, free);
@@ -56,7 +56,7 @@ Test(pwd, empty_pwd_env, .init = cr_redirect_stdout)
 
 	envp = NULL;
 	b_setenv("PWD", "", &envp);
-	ft_pwd(&envp);
+	ft_pwd();
 	fflush(stdout);
 	cr_assert_stdout_eq_str("\n");
 	ft_lstclear(&envp, free);

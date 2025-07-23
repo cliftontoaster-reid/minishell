@@ -16,13 +16,15 @@ size_t	handle_dollar_char(char *str, size_t *i, char **varnames,
 		t_list *env)
 {
 	(*i)++;
-	if (iskey(str[*i]))
+	if (str[*i] != '\0' && iskey(str[*i]))
 		return (handle_var_expansion(str, i, varnames, env));
-	else if (str[*i] == '?' || str[*i] == '$')
+	else if (str[*i] != '\0' && (str[*i] == '?' || str[*i] == '$'))
 	{
 		(*i)++;
 		return (handle_special_var(str[*i - 1]));
 	}
-	else
+	else if (str[*i] != '\0')
 		return (handle_regular_char(i));
+	else
+		return (1); // Just the '$' character
 }

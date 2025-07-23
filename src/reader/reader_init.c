@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 19:42:35 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/22 13:34:49 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/23 11:53:26 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,11 @@ static t_reader	*allocate_reader(void)
 
 static int	initialize_env(t_reader *reader, char *const *envp)
 {
+	if (envp == NULL || *envp == NULL)
+	{
+		reader->env = NULL;
+		return (1);
+	}
 	reader->env = b_fromenvp(envp);
 	if (reader->env == NULL)
 	{

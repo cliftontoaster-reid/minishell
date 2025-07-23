@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 11:55:23 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/09 11:07:45 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/07/23 11:52:33 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,14 @@
 #include <string.h>
 #include <unistd.h>
 
-void	ft_pwd(t_list **envp)
+void	ft_pwd(void)
 {
-	char	**pwd;
+	char	pwd[420];
 
-	pwd = b_getenv("PWD", *envp);
-	if (pwd && pwd[0])
+	getcwd(pwd, 419);
+	if (pwd[0])
 	{
-		printf("%s\n", pwd[0]);
-		free(pwd[0]);
-		free(pwd);
+		printf("%s\n", pwd);
 		g_status_code = 0;
 	}
 	else
