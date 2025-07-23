@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 13:21:12 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/23 15:15:53 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/07/23 18:22:45 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,28 +56,20 @@ char	*ft_get_cmd_path(char *cmd, t_list *tenvp)
 	t_path_data	pd;
 	char		**freeleak;
 
-  pd.full_path = ft_check_direct_path(cmd);
-  freeleak = b_getenv("PATH", tenvp);
-  if (freeleak == NULL)
-    return (pd.full_path);
-  pd.paths = ft_split(*freeleak, ':');
-  free(*freeleak);
-  free(freeleak);
-  if (pd.full_path)
-    return (pd.full_path);
-  pd.i = 0;
-  while (pd.paths && pd.paths[pd.i]) {
-    pd.tmp = ft_strjoin(pd.paths[pd.i], "/");
-    pd.full_path = ft_strjoin(pd.tmp, cmd);
-    free(pd.tmp);
-    if (access(pd.full_path, X_OK) == 0)
-      break;
-    free(pd.full_path);
-    pd.full_path = NULL;
-    pd.i++;
-  }
-  ft_free_split(pd.paths);
-  return (pd.full_path);
+	pd.full_path = ft_check_direct_path(cmd);
+	freeleak = b_getenv("PATH", tenvp);
+	if (freeleak == NULL)
+		return (pd.full_path);
+	pd.paths = ft_split(*freeleak, ':');
+	free(*freeleak);
+	free(freeleak);
+	if (pd.full_path)
+		return (pd.full_path);
+	pd.i = 0;
+	while (pd.paths && pd.paths[pd.i])
+		ft_try_path_entry(&pd, cmd);
+	ft_free_split(pd.paths);
+	return (pd.full_path);
 }
 
 /*
