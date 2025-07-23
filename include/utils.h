@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 15:31:30 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/23 20:08:09 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/23 20:31:11 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -438,5 +438,7 @@ void					update_existing_var(t_env *env_entry,
 /// @param envp Pointer to the environment list
 void					add_new_env_var(const char *key, const char *value,
 							t_list **envp);
+
+void					b_envspecial(char *key, char **value);
 
 #endif
