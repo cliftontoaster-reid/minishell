@@ -12,31 +12,49 @@
 
 #include "pipex.h"
 #include "shared.h"
+#include <stdbool.h>
 #include <unistd.h>
 
-void ft_free_split(char **split) {
-  int i;
+void	ft_free_split(char **split)
+{
+	int	i;
 
-  i = 0;
-  if (!split)
-    return;
-  while (split[i])
-    free(split[i++]);
-  free(split);
+	i = 0;
+	if (!split)
+		return ;
+	while (split[i])
+		free(split[i++]);
+	free(split);
 }
 
-static char *ft_check_direct_path(char *cmd) {
-  if (ft_strchr(cmd, '/')) {
-    if (access(cmd, X_OK) == 0)
-      return (ft_strdup(cmd));
-    return (NULL);
-  }
-  return (NULL);
+static char	*ft_check_direct_path(char *cmd)
+{
+	if (ft_strchr(cmd, '/'))
+	{
+		if (access(cmd, X_OK) == 0)
+			return (ft_strdup(cmd));
+		return (NULL);
+	}
+	return (NULL);
 }
 
-char *ft_get_cmd_path(char *cmd, t_list *tenvp) {
-  t_path_data pd;
-  char **freeleak;
+static bool	ft_try_path_entry(t_path_data *pd, char *cmd)
+{
+	pd->tmp = ft_strjoin(pd->paths[pd->i], "/");
+	pd->full_path = ft_strjoin(pd->tmp, cmd);
+	free(pd->tmp);
+	if (access(pd->full_path, X_OK) == 0)
+		return (true);
+	free(pd->full_path);
+	pd->full_path = NULL;
+	pd->i++;
+	return (false);
+}
+
+char	*ft_get_cmd_path(char *cmd, t_list *tenvp)
+{
+	t_path_data	pd;
+	char		**freeleak;
 
   pd.full_path = ft_check_direct_path(cmd);
   freeleak = b_getenv("PATH", tenvp);
@@ -65,14 +83,14 @@ char *ft_get_cmd_path(char *cmd, t_list *tenvp) {
 /*
 int	main(int ac, char **av, char **envp)
 {
-        char	*argv[] = {"./pipex", "infile", "ls", "-l", NULL};
-        int		k;
-        char	*s;
+		char	*argv[] = {"./pipex", "infile", "ls", "-l", NULL};
+		int		k;
+		char	*s;
 
-        k = 0;
-        s = ft_get_cmd_path(argv[2], envp);
-        ft_printf("%s\n", s);
-        free(s);
-        return (0);
+		k = 0;
+		s = ft_get_cmd_path(argv[2], envp);
+		ft_printf("%s\n", s);
+		free(s);
+		return (0);
 }
 */

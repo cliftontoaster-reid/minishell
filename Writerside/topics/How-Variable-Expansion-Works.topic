@@ -225,7 +225,7 @@ size_t handle_dollar_char(char *str, size_t *i, char **varnames, t_list *env)
                             <p><code>handle_dollar_char</code> acts as a dispatcher, delegating to other specialized sizing helpers:</p>
                             <list type="bullet">
                                 <li>
-                                    <b><code>handle_var_expansion</code> (for regular variables):</b> This function (in <code>src/utils/var/handle_var_expansion.c</code>) is called for variables like <code>$USER</code>. It uses <code>find_var_match</code> to determine the exact length of the variable name (e.g., 4 for "USER"). It then retrieves the variable's value from the environment using <code>b_getenv_one</code> and returns the length of that value. If the variable is unset or empty, it contributes 0 to the length. Crucially, it also accounts for the special <code>\b</code> characters (used for single-quoted dollar signs) by treating them as literal characters that contribute 1 to the length, ensuring they are not expanded but their space is reserved.
+                                    <b><code>handle_var_expansion</code> (for regular variables):</b> This function (in <code>src/utils/var/handle_var_expansion.c</code>) is called for variables like <code>$USER</code>. It uses <code>find_var_match</code> to determine the exact length of the variable name (e.g., 4 for "USER"). It then retrieves the variable's value from the environment using <code>b_getenv_one</code> and returns the length of that value. If the variable is unset or empty, it contributes 0 to the length. Crucially, it also accounts for the special <code>\x80</code> characters (used for single-quoted dollar signs) by treating them as literal characters that contribute 1 to the length, ensuring they are not expanded but their space is reserved.
                                 </li>
                                 <li>
                                     <b><code>handle_special_var</code> (for <code>$?</code> and <code>$$</code>):</b> This function (in <code>src/utils/var/handle_special_var.c</code>) is responsible for calculating the length of special variables. For <code>$?</code>, it uses <code>num_places</code> to determine the number of digits in the global exit status (<code>g_status_code</code>). For <code>$$</code>, it calculates the number of digits in the current process ID (PID) obtained via <code>b_getpid()</code>. These lengths are then returned.
@@ -314,10 +314,10 @@ typedef struct s_var_context
 
         <section title="The Single-Quote Backspace Trick: Preserving Literals" id="backspace-trick">
             <p>
-                One of the most ingenious aspects of our shell's variable expansion implementation is its method for handling dollar signs within single quotes. As meticulously detailed in the <a href="How-to-design-a-lexer.topic">Lexer documentation</a>, during the lexical analysis phase, any <code>$</code> character encountered inside single quotes is temporarily replaced with a backspace character (<code>\b</code>).
+                One of the most ingenious aspects of our shell's variable expansion implementation is its method for handling dollar signs within single quotes. As meticulously detailed in the <a href="How-to-design-a-lexer.topic">Lexer documentation</a>, during the lexical analysis phase, any <code>$</code> character encountered inside single quotes is temporarily replaced with a backspace character (<code>\x80</code>).
             </p>
             <p>
-                During the entire variable expansion process (both the sizing and building passes), the logic within <code>ft_var</code> and its numerous helper functions is designed to simply treat these <code>\b</code> characters as ordinary, literal characters. They are explicitly *not* interpreted as the beginning of a variable, thereby effectively preventing any form of expansion within single-quoted contexts.
+                During the entire variable expansion process (both the sizing and building passes), the logic within <code>ft_var</code> and its numerous helper functions is designed to simply treat these <code>\x80</code> characters as ordinary, literal characters. They are explicitly *not* interpreted as the beginning of a variable, thereby effectively preventing any form of expansion within single-quoted contexts.
             </p>
             <p>
                 The very final step in the <code>ft_var</code> function, after all other expansions and substitutions have been completed, is a crucial call to <code>replace_backspace_with_dollar</code>:
@@ -329,14 +329,14 @@ void replace_backspace_with_dollar(char *str)
     size_t i = 0;
     while (str[i] != '\0')
     {
-        if (str[i] == '\b')
+        if (str[i] == '\x80')
             str[i] = '$'; // Revert the backspace character back to its original dollar sign
         i++;
     }
 }
             </code-block>
             <p>
-                This elegant post-processing step iterates through the *final* expanded string and systematically converts any remaining <code>\b</code> characters back into their original <code>$</code> form. This ensures that dollar signs that were originally protected by single quotes are correctly rendered as literal dollar signs in the command argument, without ever having been subjected to variable expansion. This design choice maintains POSIX-like behavior for single quotes while simplifying the core expansion logic.
+                This elegant post-processing step iterates through the *final* expanded string and systematically converts any remaining <code>\x80</code> characters back into their original <code>$</code> form. This ensures that dollar signs that were originally protected by single quotes are correctly rendered as literal dollar signs in the command argument, without ever having been subjected to variable expansion. This design choice maintains POSIX-like behavior for single quotes while simplifying the core expansion logic.
             </p>
         </section>
 

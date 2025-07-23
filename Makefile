@@ -59,6 +59,14 @@ SRCS     = \
   $(SRC_DIR)/utils/ft_opentmp.c \
 	$(SRC_DIR)/utils/print_prompt.c \
 	\
+	$(SRC_DIR)/utils/env/str_equal.c \
+	$(SRC_DIR)/utils/env/free_env_entry.c \
+	$(SRC_DIR)/utils/env/set_pwd_to_current_dir.c \
+	$(SRC_DIR)/utils/env/remove_env_node.c \
+	$(SRC_DIR)/utils/env/is_matching_env.c \
+	$(SRC_DIR)/utils/env/update_existing_var.c \
+	$(SRC_DIR)/utils/env/add_new_env_var.c \
+	\
 	$(SRC_DIR)/utils/var/b_getenv_one.c \
 	$(SRC_DIR)/utils/var/find_var_match.c \
 	$(SRC_DIR)/utils/var/handle_special_var.c \
@@ -170,14 +178,14 @@ _LIB_FT	 = $(LFT_DIR)libft.a
 CRIT_DIR = $(OBJ_DIR)/criterion-2.4.2
 CRIT_INC = $(CRIT_DIR)/include
 CRIT_PC  = $(CRIT_DIR)/lib/pkgconfig/criterion.pc
-CFLAGS   = -Wall -Wextra -Werror -g3 -fsanitize=address -std=gnu17 -I$(INC_DIR) -pipe -MMD -MP -I$(LFT_DIR)
-LDFLAGS  = -fsanitize=address -O3 -g3 -std=gnu17 -pipe -lreadline
+CFLAGS   = -Wall -Wextra -Werror -g3 -std=gnu17 -I$(INC_DIR) -pipe -MMD -MP -I$(LFT_DIR)
+LDFLAGS  = -O3 -g3 -std=gnu17 -pipe -lreadline
 TEST_CFLAGS = -I$(CRIT_INC)
 TEST_LDFLAGS = -L$(CRIT_DIR)/lib -Wl,-rpath=$(CRIT_DIR)/lib -lcriterion
 
 # Valgrind-compatible flags (no AddressSanitizer)
-VALGRIND_CFLAGS   = -Wall -Wextra -Werror -g3 -std=gnu17 -I$(INC_DIR) -pipe -MMD -MP -I$(LFT_DIR)
-VALGRIND_LDFLAGS  = -O0 -g3 -std=gnu17 -pipe -lreadline
+FSAN_CFLAGS   = -fsanitize=address -Wall -Wextra -Werror -g3 -std=gnu17 -I$(INC_DIR) -pipe -MMD -MP -I$(LFT_DIR)
+FSAN_LDFLAGS  = -fsanitize=address -O0 -g3 -std=gnu17 -pipe -lreadline
 
 BUNDLE_CFLAGS   = -Wall -Wextra -Werror -std=gnu17 -I$(INC_DIR) -pipe -MMD -MP -I$(LFT_DIR) -Os -flto -ffunction-sections -fdata-sections -fno-exceptions 
 BUNDLE_LDFLAGS  = -std=gnu17 -pipe -lreadline -flto -Wl,--gc-sections -s -Wl,--as-needed
@@ -196,10 +204,10 @@ endif
 
 all: $(NAME)
 
-# Valgrind-compatible build (no AddressSanitizer)
-valgrind: CFLAGS = $(VALGRIND_CFLAGS)
-valgrind: LDFLAGS = $(VALGRIND_LDFLAGS)
-valgrind: fclean $(NAME)
+# Fsanitize-compatible build (no AddressSanitizer)
+fsanitize: CFLAGS = $(FSAN_CFLAGS)
+fsanitize: LDFLAGS = $(FSAN_LDFLAGS)
+fsanitize: fclean $(NAME)
 
 $(NAME): $(OBJS)
 	@echo "$(CC) $(LDFLAGS) -o $@ $(OBJS) $(_LIB_FT)"

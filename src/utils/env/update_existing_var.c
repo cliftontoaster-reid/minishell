@@ -1,19 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   iskey.c                                            :+:      :+:    :+:   */
+/*   update_existing_var.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/16 15:25:00 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/23 14:53:56 by lfiorell@st      ###   ########.fr       */
+/*   Created: 2025/07/23 15:00:00 by lfiorell@st       #+#    #+#             */
+/*   Updated: 2025/07/23 16:55:23 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "utils.h"
-#include <stdbool.h>
+#include "shared.h"
+#include <stdlib.h>
 
-bool	iskey(char c)
+void	update_existing_var(t_env *env_entry, const char *value)
 {
-	return (ft_isalnum(c) || c == '_');
+	if (!env_entry || !value)
+		return ;
+	if (env_entry->value)
+		free(env_entry->value);
+	env_entry->value = ft_strdup(value);
 }

@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 14:21:36 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/15 16:22:06 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/23 17:32:31 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,17 @@ static int	is_valid_identifiir(const char *str)
 	return (1);
 }
 
+static bool	printstuff(char **args, int i)
+{
+	if (write(2, "minishell: unset: `", 19) == -1 || write(2, args[i],
+			ft_strlen(args[i])) == -1 || write(2, "': not a valid identifier\n",
+			26) == -1)
+	{
+		return (true);
+	}
+	return (false);
+}
+
 void	ft_unset(char **args, t_list **envp)
 {
 	int	i;
@@ -64,9 +75,8 @@ void	ft_unset(char **args, t_list **envp)
 			b_unsetenv(args[i], freeenv, envp);
 		else
 		{
-			write(2, "minishell: unset: `", 19);
-			write(2, args[i], ft_strlen(args[i]));
-			write(2, "': not a valid identifier\n", 26);
+			if (printstuff(args, i))
+				return ;
 			exit_status = 1;
 		}
 		i++;

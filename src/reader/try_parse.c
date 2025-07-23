@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 00:00:00 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/21 13:04:29 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/23 14:53:23 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,6 @@ static bool	attach_vars_to_cmds(t_reader *reader)
 		cmd = (t_cmd *)ft_lstget(reader->parser->command_list, i, len);
 		if (cmd && cmd->args != NULL)
 			cmd->var_list = (t_list *)current->content;
-		printf("Command %s has %d variables\n", cmd->args[0],
-			ft_lstsize(cmd->var_list));
 		current = current->next;
 		i++;
 	}

@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 13:37:32 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/16 15:12:56 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/23 14:53:09 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ static int	add_var_to_list(t_list **var_list, char *var_name)
 		return (0);
 	}
 	ft_lstadd_back(var_list, new_node);
-	printf("Added variable: %s\n", var_name);
 	return (1);
 }
 

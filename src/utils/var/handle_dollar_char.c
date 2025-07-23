@@ -6,14 +6,13 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 15:40:00 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/16 15:44:41 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/23 14:54:08 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "utils.h"
 
-size_t	handle_dollar_char(char *str, size_t *i, char **varnames,
-		t_list *env)
+size_t	handle_dollar_char(char *str, size_t *i, char **varnames, t_list *env)
 {
 	(*i)++;
 	if (str[*i] != '\0' && iskey(str[*i]))
@@ -26,5 +25,5 @@ size_t	handle_dollar_char(char *str, size_t *i, char **varnames,
 	else if (str[*i] != '\0')
 		return (handle_regular_char(i));
 	else
-		return (1); // Just the '$' character
+		return (1);
 }
