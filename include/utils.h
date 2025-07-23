@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 15:31:30 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/16 16:05:26 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/23 15:01:35 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,9 @@
 # include "libft.h"
 # include <fcntl.h>
 # include <stdbool.h>
+
+// Forward declarations
+typedef struct s_env	t_env;
 
 /**
  * @struct s_iteration
@@ -377,5 +380,47 @@ size_t				handle_dollar_substitution(t_var_context *ctx);
 /// @brief Replaces backspace characters with dollar signs
 /// @param str String to process
 void				replace_backspace_with_dollar(char *str);
+
+// Environment utility functions
+/// @brief Compares two strings for equality
+/// @param s1 First string
+/// @param s2 Second string
+/// @return 1 if strings are equal, 0 otherwise
+int					str_equal(const char *s1, const char *s2);
+
+/// @brief Frees an environment entry structure
+/// @param content Pointer to the environment entry to free
+void				free_env_entry(void *content);
+
+/// @brief Sets PWD environment variable to current working directory
+/// @param key The environment variable key
+/// @param envp Pointer to the environment list
+void				set_pwd_to_current_dir(const char *key, t_list **envp);
+
+/// @brief Removes an environment node from the linked list
+/// @param prev Previous node in the list
+/// @param current Current node to remove
+/// @param envp Pointer to the environment list
+/// @param del Optional custom deletion function
+void				remove_env_node(t_list *prev, t_list *current,
+						t_list **envp, void (*del)(void *));
+
+/// @brief Checks if a list node matches the given environment key
+/// @param node Node to check
+/// @param key Key to match against
+/// @return 1 if matching, 0 otherwise
+int					is_matching_env(t_list *node, const char *key);
+
+/// @brief Updates the value of an existing environment variable
+/// @param env_entry Environment entry to update
+/// @param value New value to set
+void				update_existing_var(t_env *env_entry, const char *value);
+
+/// @brief Adds a new environment variable to the environment list
+/// @param key Environment variable key
+/// @param value Environment variable value
+/// @param envp Pointer to the environment list
+void				add_new_env_var(const char *key, const char *value,
+						t_list **envp);
 
 #endif

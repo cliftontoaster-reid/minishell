@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:49:10 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/23 11:53:38 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/23 14:55:38 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 
 void	default_env(t_reader *reader)
 {
-		char cwd[420];
+	char	cwd[420];
 
 	if (reader->env == NULL)
 	{

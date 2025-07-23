@@ -59,6 +59,14 @@ SRCS     = \
   $(SRC_DIR)/utils/ft_opentmp.c \
 	$(SRC_DIR)/utils/print_prompt.c \
 	\
+	$(SRC_DIR)/utils/env/str_equal.c \
+	$(SRC_DIR)/utils/env/free_env_entry.c \
+	$(SRC_DIR)/utils/env/set_pwd_to_current_dir.c \
+	$(SRC_DIR)/utils/env/remove_env_node.c \
+	$(SRC_DIR)/utils/env/is_matching_env.c \
+	$(SRC_DIR)/utils/env/update_existing_var.c \
+	$(SRC_DIR)/utils/env/add_new_env_var.c \
+	\
 	$(SRC_DIR)/utils/var/b_getenv_one.c \
 	$(SRC_DIR)/utils/var/find_var_match.c \
 	$(SRC_DIR)/utils/var/handle_special_var.c \
