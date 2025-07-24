@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 18:43:50 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/16 14:23:48 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/23 20:12:35 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,9 @@ typedef struct s_reader
 	t_linereader		*linereader;
 	t_cmd				*commands;
 	char				**varnames;
+
+	int					history_file;
+	char				*history_last;
 }						t_reader;
 
 t_reader				*reader_init(char *const *envp);
@@ -63,5 +66,7 @@ bool					try_parse(t_reader *reader);
 bool					str_is_whitespace(const char *str);
 
 bool					handle_read_two(t_reader *reader);
+
+void					read_fluff_history(int fd, t_reader *reader);
 
 #endif

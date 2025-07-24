@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 16:09:52 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/15 16:12:17 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/23 19:47:09 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,4 +26,6 @@ void	register_reader(void)
 	sa.sa_flags = 0;
 	sigaction(SIGINT, &sa, NULL);
 	sigaction(SIGQUIT, &sa, NULL);
+	sa.sa_handler = SIG_IGN;
+	sigaction(SIGPIPE, &sa, NULL);
 }

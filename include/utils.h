@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 15:31:30 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/23 16:55:23 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/23 20:31:11 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,19 @@ char					*ft_strjoin_free(char *s1, char *s2);
  * in the reader structure. The line is stored in the reader's line buffer.
  */
 char					*ft_readline(t_linereader *reader);
+
+/**
+ * @brief Reads a line from a file descriptor
+ * @param fd File descriptor to read from
+ * @param buffer Pointer to buffer pointer for maintaining state between calls
+ * @return Next line from file excluding newline character, or NULL on EOF/error
+ *
+ * This function reads from the given file descriptor and returns the next line
+ * found in the file. The line excludes the terminating newline character.
+ * Returns NULL when end of file is reached or on error.
+ * Uses the provided buffer pointer to maintain state between calls.
+ */
+char					*get_next_line(int fd, char **buffer);
 
 /**
  * @brief Frees memory allocated for a linereader structure
@@ -425,5 +438,7 @@ void					update_existing_var(t_env *env_entry,
 /// @param envp Pointer to the environment list
 void					add_new_env_var(const char *key, const char *value,
 							t_list **envp);
+
+void					b_envspecial(char *key, char **value);
 
 #endif

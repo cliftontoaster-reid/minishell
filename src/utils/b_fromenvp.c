@@ -6,12 +6,13 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 12:00:57 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/06/06 14:58:18 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/23 20:28:22 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "shared.h"
+#include "utils.h"
 #include <errno.h>
 
 void	free_split(char **split)
@@ -94,6 +95,7 @@ static int	process_env_entry(char *env_str, t_list **env_list)
 
 	if (!parse_env_string(env_str, &key, &value))
 		return (0);
+	b_envspecial(key, &value);
 	env = create_env_entry(key, value);
 	free(key);
 	free(value);
