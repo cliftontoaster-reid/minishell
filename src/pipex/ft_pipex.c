@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:03:33 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/23 18:23:02 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/24 14:10:07 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,12 @@ void	ft_pipex(t_cmd *cmd, t_list *tenvp, t_reader *exit)
 	cmd->cmdnbr = ft_nbrofcmds(cmd);
 	cmd->stdin_backup = -1;
 	cmd->stdout_backup = -1;
-	if (cmd->cmdnbr != 0)
+	if (cmd->cmdnbr > MAX_PIPE_DEPTH)
+	{
+		printf("max pipe reached. STOP, you're breaking the law.\n");
+		return ;
+	}
+	else if (cmd->cmdnbr != 0)
 	{
 		if (cmd->cmdnbr == 1 && ft_check_if_builtin(cmd, 0))
 			ft_exec_solobuiltin(cmd, &tenvp, exit);

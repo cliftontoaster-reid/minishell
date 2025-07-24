@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_shell.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
+/*   By: jfranc <jfranc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 20:00:00 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/23 20:09:39 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/24 12:59:26 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,9 @@
 
 #define HISTORY_FILE ".picoshell_history"
 
+/// @brief Returns a string containing $HOME/.picoshell_history
+/// 
+/// @return A valid ACII string or NULL if HOME is not in the environement 
 char	*get_history_file_path(void)
 {
 	char	*home;
@@ -31,6 +34,9 @@ char	*get_history_file_path(void)
 	return (ft_strjoin(home, "/" HISTORY_FILE));
 }
 
+/// @brief Reads from fd and puts every line of the file to history
+/// @param fd The file descriptor for the history file.
+/// @param reader The main reader structure pointer
 void	read_fluff_history(int fd, t_reader *reader)
 {
 	char	*buffer;
@@ -52,6 +58,16 @@ void	read_fluff_history(int fd, t_reader *reader)
 		free(buffer);
 }
 
+/// @brief Opens and reads the history if possible
+/// then opens it again for appending to/creating the new history
+///
+/// ### Warning
+///
+/// If it fails to create or get the path to the history file
+/// no error will be raised, the shell will simply not write
+/// to an history file further on.
+///
+/// @param reader The main reader structure pointer
 void	load_history_file(t_reader *reader)
 {
 	char	*history_path;
@@ -73,6 +89,16 @@ void	load_history_file(t_reader *reader)
 		reader->history_file = -1;
 }
 
+/// @brief Initializes the shell environement, including env variables,
+/// as well as the necessary allocs to store the future data used by the shell.
+///
+/// ### Reader signal handling
+///
+/// The `rl_catch_signals = 0;`line is used so that readline does not attempt
+/// to handle signals on its own.
+///
+/// @param envp The environement variables sent by C
+/// @return The main reader structure pointer
 t_reader	*init_shell(char **envp)
 {
 	t_reader	*reader_ptr;

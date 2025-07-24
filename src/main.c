@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
+/*   By: jfranc <jfranc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:49:10 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/23 14:55:38 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/24 13:02:32 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 #include <string.h>
 #include <unistd.h>
 
+/// @brief If `reader->env == NULL` we populate it with default values 
+/// @param reader The main reader structure pointer
 void	default_env(t_reader *reader)
 {
 	char	cwd[420];

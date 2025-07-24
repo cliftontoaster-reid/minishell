@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   register_reader.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
+/*   By: jfranc <jfranc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 16:09:52 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/23 19:47:09 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/24 12:57:32 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <signal.h>
 #include <stdio.h>
 
+/// @brief Registers all the signals and their actions through sigaction.
 void	register_reader(void)
 {
 	struct sigaction	sa;
