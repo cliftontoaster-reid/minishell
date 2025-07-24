@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_input.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
+/*   By: jfranc <jfranc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 20:00:00 by lfiorell@st       #+#    #+#             */
-/*   Updated: 2025/07/23 19:51:05 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/24 13:08:05 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,10 @@
 #include <unistd.h>
 
 #define PROMPT "picoshell> "
+
+#define CONTINUE 2
+#define EXIT_PIPE 1
+#define ERROR 0
 
 static inline void	add_stuff_to_history(t_reader *r, char *input)
 {
@@ -39,15 +43,15 @@ int	read_input(t_reader *reader_ptr)
 	if (str_is_whitespace(reader_ptr->cached_input))
 	{
 		g_status_code = 0;
-		return (2);
+		return (CONTINUE);
 	}
 	add_stuff_to_history(reader_ptr, reader_ptr->cached_input);
 	if (!reader_ptr->cached_input)
 	{
 		if (errno == EINTR)
-			return (1);
+			return (EXIT_PIPE);
 		write(1, "exit\n", 5);
-		return (0);
+		return (ERROR);
 	}
-	return (2);
+	return (CONTINUE);
 }

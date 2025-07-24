@@ -64,3 +64,24 @@
    fun:rl_set_prompt
    ...
 }
+
+{
+   libtinfo_tiparm
+   Memcheck:Leak
+   fun:realloc
+   fun:_nc_doalloc
+   fun:_nc_tiparm
+   obj:/usr/lib/x86_64-linux-gnu/libtinfo.so.*
+}
+
+{
+   readline_internal
+   Memcheck:Leak
+   fun:calloc
+   fun:_nc_doalloc
+   fun:_nc_tiparm
+   fun:__rl_redisplay
+   fun:readline_internal_char
+   obj:/usr/lib/x86_64-linux-gnu/libreadline.so.*
+}
+
