@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 13:21:12 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/24 18:51:37 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/07/28 11:25:01 by jfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 #include "shared.h"
 #include <stdbool.h>
 #include <unistd.h>
+#define CMD_NOT_EXECUTABLE ((char *)-1)
+
 
 void	ft_free_split(char **split)
 {
@@ -29,11 +31,11 @@ void	ft_free_split(char **split)
 
 static char	*ft_check_direct_path(char *cmd)
 {
-	if (ft_strchr(cmd, '/'))
+	if (!ft_strncmp(cmd, "/", 1) || !ft_strncmp(cmd, "./", 2))
 	{
 		if (access(cmd, X_OK) == 0)
 			return (ft_strdup(cmd));
-		return (NULL);
+		return (CMD_NOT_EXECUTABLE);
 	}
 	return (NULL);
 }
@@ -57,6 +59,8 @@ char	*ft_get_cmd_path(char *cmd, t_list *tenvp)
 	char		**freeleak;
 
 	pd.full_path = ft_check_direct_path(cmd);
+	if (pd.full_path == CMD_NOT_EXECUTABLE)
+		return (NULL);
 	freeleak = b_getenv("PATH", tenvp);
 	if (freeleak == NULL)
 		return (pd.full_path);
