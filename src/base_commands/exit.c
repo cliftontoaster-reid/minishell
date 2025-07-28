@@ -6,7 +6,7 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 13:37:28 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/23 20:18:00 by lfiorell@st      ###   ########.fr       */
+/*   Updated: 2025/07/28 10:42:10 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ bool	isstring_noomber(char *s)
 	return (true);
 }
 
-static void exit_exec(int exit_code, t_reader *reader)
+static void	exit_exec(int exit_code, t_reader *reader)
 {
 	if (reader)
 		reader_free(reader);
