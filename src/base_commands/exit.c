@@ -45,10 +45,20 @@ bool	isstring_noomber(char *s)
 	return (true);
 }
 
+static void exit_exec(int exit_code, t_reader *reader)
+{
+	if (reader)
+		reader_free(reader);
+	clear_history();
+	write(1, "exit\n", 5);
+	exit(exit_code);
+}
+
 void	ft_exit(char **s, t_reader *reader, t_cmd **cmd)
 {
 	unsigned char	exit_code;
 
+	(void)cmd;
 	if (!s || !*s)
 		return ;
 	if (lst_list(s) > 2)
@@ -59,15 +69,11 @@ void	ft_exit(char **s, t_reader *reader, t_cmd **cmd)
 	if (s[1] && !isstring_noomber(s[1]))
 	{
 		ft_putstr_fd("exit: numeric argument required\n", 2);
-		return ;
+		exit_code = 2;
+		exit_exec(exit_code, reader);
 	}
 	exit_code = 0;
 	if (s[1])
 		exit_code = ft_atoi(s[1]);
-	if (reader)
-		reader_free(reader);
-	clear_history();
-	write(1, "exit\n", 5);
-	(void)cmd;
-	exit(exit_code);
+	exit_exec(exit_code, reader);
 }
