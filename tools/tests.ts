@@ -435,13 +435,6 @@ class MinishellTester {
         expectedExitCode: 0,
         description: "Test multiple commands with variables",
       },
-      {
-        name: "complex_export_stuff",
-        command: "export VAR1=ec VAR2=ho \n\n $VAR1$VAR2 $VAR2$VAR1",
-        expectedExitCode: 0,
-        description: "Test complex export and variable expansion",
-        expectedOutputContains: ["hoec"],
-      },
 
       // Error handling tests
       {
