@@ -6,20 +6,21 @@
 /*   By: lfiorell@student.42nice.fr <lfiorell>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:03:33 by jfranc            #+#    #+#             */
-/*   Updated: 2025/07/24 14:10:07 by jfranc           ###   ########.fr       */
+/*   Updated: 2025/07/28 10:58:15 by lfiorell@st      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
 #define _GNU_SOURCE
+#include "libft.h"
 #define MAX_PIPE_DEPTH 256
 #include "pipex.h"
 #include "reader.h"
 #include "shared.h"
 #include "utils.h"
+#include <signal.h>
 #include <sys/wait.h>
 
-static void	pipe_redirection(t_cmd *cmd, int cmd_idx)
+static int	pipe_redirection(t_cmd *cmd, int cmd_idx)
 {
 	if (cmd[cmd_idx].fd_infile != STDIN_FILENO)
 		dup2(cmd[cmd_idx].fd_infile, STDIN_FILENO);
@@ -30,10 +31,13 @@ static void	pipe_redirection(t_cmd *cmd, int cmd_idx)
 	else if (cmd_idx < cmd->cmdnbr - 1)
 		dup2(cmd->pipes[cmd_idx][1], STDOUT_FILENO);
 	closefd(cmd, NO_EXIT, NULL);
+	return (0);
 }
 
 static void	fd_child(t_cmd *cmd, t_list *tenvp, int cmd_idx, t_reader *exit)
 {
+	struct sigaction	sa;
+
 	cmd[cmd_idx].pid = fork();
 	if (cmd[cmd_idx].pid == -1)
 	{
@@ -42,7 +46,10 @@ static void	fd_child(t_cmd *cmd, t_list *tenvp, int cmd_idx, t_reader *exit)
 	}
 	if (cmd[cmd_idx].pid == 0)
 	{
-		pipe_redirection(cmd, cmd_idx);
+		sa.sa_handler = SIG_DFL;
+		sigemptyset(&sa.sa_mask);
+		sa.sa_flags = 0 + pipe_redirection(cmd, cmd_idx);
+		sigaction(SIGPIPE, &sa, NULL);
 		if (ft_check_if_builtin(cmd, cmd_idx))
 			is_builtin(&cmd, &tenvp, cmd_idx, exit);
 		if (cmd->error == 1)
